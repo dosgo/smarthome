@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
                 printf("gohome\r\n");
                  popen(gohomecmd, "r");
             }
-
+            lastinfo=info;
         }
         sleeps(checktime*1000);//ms
     }

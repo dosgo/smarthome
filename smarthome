@@ -1,0 +1,17 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2007 OpenWrt.org
+
+START=99
+start() {
+	smarthome -mac "d0:5b:a8:21:a2:6b" -ip 192.168.43.1  -gcmd "motion -c /etc/motion.conf " -bcmd "killall motion" &
+}
+
+stop() {
+	killall smarthome
+	sleep 2
+}
+
+boot() {
+	sleep 10
+	start
+}

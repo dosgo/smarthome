@@ -29,7 +29,6 @@ CPing::CPing()
 
     if( m_socket == INVALID_SOCKET )
     {
-        printf("Socket err:%d\r\n",WSAGetLastError());
 
         #if WIN32
         WSACleanup();
