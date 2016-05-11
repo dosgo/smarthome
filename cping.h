@@ -8,8 +8,26 @@ Author： Ryan Zhang
 
 
 #pragma once
-
+#if WIN32
 #include <WinSock2.h>
+#else
+typedef unsigned char UCHAR;
+typedef unsigned short USHORT;
+typedef unsigned short u_short;
+typedef unsigned long ULONG;
+#define INVALID_SOCKET -1
+#include<netdb.h>
+#include<string.h>
+#include <sys/socket.h>
+#include <fcntl.h>
+#include <netinet/in.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#include <time.h>
+
+unsigned long GetTickCount();
+#endif
 #include <string>
 #define DATA_SIZE 32
 #define RECV_SIZE 1024
@@ -51,6 +69,6 @@ public:
     void InitICMP(PICMPHDR icmpHDR,int nSequence);
     u_short CheckSum(u_short *pBuf,int nLen);
 private:
-    SOCKET m_socket;
+    int m_socket;
 
 };

@@ -3,6 +3,7 @@
 
 CPing::CPing()
 {
+    #if WIN32
     WSADATA wsaData;
     WORD wVersion;
     wVersion = MAKEWORD(2,2);
@@ -21,13 +22,19 @@ CPing::CPing()
         WSACleanup();
         return;
     }
+    #else
 
+    #endif
     m_socket = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
 
     if( m_socket == INVALID_SOCKET )
     {
         printf("Socket err\n");
+        #if WIN32
         WSACleanup();
+        #else
+
+        #endif
         return;
     }
 
@@ -37,9 +44,17 @@ CPing::~CPing()
 {
     if( INVALID_SOCKET != m_socket )
     {
-        closesocket(m_socket);
+         #if WIN32
+         closesocket(m_socket);
+         #else
+         close(m_socket);
+         #endif
     }
+    #if WIN32
     WSACleanup();
+    #else
+
+    #endif
 }
 
 void CPing::Ping(std::string strAddr)
@@ -59,7 +74,12 @@ void CPing::Ping(std::string strAddr)
     addr.sin_addr = *((struct in_addr *)(host->h_addr));
 
     char* icmp = new char[sizeof(ICMPHDR) + DATA_SIZE];
+    #if WIN32
     ZeroMemory(icmp,sizeof(ICMPHDR) + DATA_SIZE);
+    #else
+    memset(icmp,0,sizeof(ICMPHDR) + DATA_SIZE);
+    #endif
+
     PICMPHDR picmp = (PICMPHDR)icmp;
     int nSequence = 0;
     int nCount = 4;
@@ -91,8 +111,12 @@ void CPing::Ping(std::string strAddr)
             printf("Icmp Type err~\n");
             continue;
         }
-
+        #if WIN32
         if( icmpRecv->icmp_id != GetCurrentProcessId() )
+        #else
+
+        if( icmpRecv->icmp_id != getpid() )
+        #endif
         {
             printf("Icmp ID err~\n");
             continue;
@@ -113,7 +137,7 @@ bool CPing::PingScanf(std::string strAddr)
     if( host == NULL )
     {
         printf("gethostbyname err\n");
-        return FALSE;
+        return false;
     }
 
     sockaddr_in addr;
@@ -122,7 +146,11 @@ bool CPing::PingScanf(std::string strAddr)
     addr.sin_addr = *((struct in_addr *)(host->h_addr));
 
     char* icmp = new char[sizeof(ICMPHDR) + DATA_SIZE];
+    #if WIN32
     ZeroMemory(icmp,sizeof(ICMPHDR) + DATA_SIZE);
+    #else
+    memset(icmp,0,sizeof(ICMPHDR) + DATA_SIZE);
+    #endif
     PICMPHDR picmp = (PICMPHDR)icmp;
     int nSequence = 0;
     InitICMP(picmp, nSequence++);
@@ -137,7 +165,7 @@ bool CPing::PingCheck(std::string strAddr)
     if( host == NULL )
     {
         //printf("gethostbyname err\n");
-        return FALSE;
+        return false;
     }
 
     sockaddr_in addr;
@@ -146,7 +174,11 @@ bool CPing::PingCheck(std::string strAddr)
     addr.sin_addr = *((struct in_addr *)(host->h_addr));
 
     char* icmp = new char[sizeof(ICMPHDR) + DATA_SIZE];
+    #if WIN32
     ZeroMemory(icmp,sizeof(ICMPHDR) + DATA_SIZE);
+    #else
+    memset(icmp,0,sizeof(ICMPHDR) + DATA_SIZE);
+    #endif
     PICMPHDR picmp = (PICMPHDR)icmp;
     int nSequence = 0;
     InitICMP(picmp, nSequence++);
@@ -164,8 +196,6 @@ bool CPing::PingCheck(std::string strAddr)
         //printf("tool few data~\n");
         return false;
     }
-
-    IPHDR *ipHead = (IPHDR *)cBuf;
     PICMPHDR icmpRecv = (PICMPHDR) (cBuf + sizeof(IPHDR));
 
     if( icmpRecv->icmp_type != 0 )
@@ -173,8 +203,11 @@ bool CPing::PingCheck(std::string strAddr)
        // printf("Icmp Type err~\n");
          return false;
     }
-
+    #if WIN32
     if( icmpRecv->icmp_id != GetCurrentProcessId() )
+    #else
+    if( icmpRecv->icmp_id != getpid() )
+    #endif
     {
        // printf("Icmp ID err~\n");
          return false;
@@ -195,7 +228,7 @@ bool CPing::SendData(char* buf,int nBufLen,sockaddr_in* pAddr)
     int timeOut = 1000;
     int nRet = setsockopt(m_socket,SOL_SOCKET,SO_SNDTIMEO,(char*)&timeOut, sizeof(int));
 
-    if( nRet == SOCKET_ERROR )
+    if( nRet == -1 )
     {
         //printf("setsockopt SO_SNDTIMEO err\n");
         return false;
@@ -203,18 +236,9 @@ bool CPing::SendData(char* buf,int nBufLen,sockaddr_in* pAddr)
 
     nRet = sendto(m_socket,buf,nBufLen,0,(sockaddr*)pAddr,sizeof(sockaddr));
 
-    if( nRet == SOCKET_ERROR )
+    if( nRet == -1 )
     {
-        if (WSAETIMEDOUT == WSAGetLastError())
-        {
-           // printf("timeout err\n");
-            return false;
-        }
-        else
-        {
-            //printf("sendto err\n");
-            return false;
-        }
+       return false;
     }
 
     return true;
@@ -228,27 +252,20 @@ bool CPing::RecvData(char* buf,int nBufLen,sockaddr_in* pRecvAddr,int &nRecvLen)
     int nTimeOut = 1000;
     int nRet = setsockopt(m_socket,SOL_SOCKET,SO_RCVTIMEO ,(char*)&nTimeOut,sizeof(int));
 
-    if( SOCKET_ERROR == nRet )
+    if( -1 == nRet )
     {
         printf("setsockopt SO_RCVTIMEO err\n");
         return false;
     }
 
     int nAddrLen = sizeof(sockaddr);
-    nRet = recvfrom(m_socket,buf,nBufLen,0,(sockaddr*)pRecvAddr,&nAddrLen);
+    nRet = recvfrom(m_socket,buf,nBufLen,0,(sockaddr*)pRecvAddr,(socklen_t*)&nAddrLen);
 
-    if( SOCKET_ERROR == nRet )
+    if( -1 == nRet )
     {
-        if (WSAETIMEDOUT == WSAGetLastError())
-        {
-            printf("timeout err\n");
+
             return false;
-        }
-        else
-        {
-            printf("sendto err\n");
-            return false;
-        }
+
     }
 
     nRecvLen = nRet;
@@ -262,7 +279,11 @@ void CPing::InitICMP(PICMPHDR icmpHDR,int nSequence)
     icmpHDR->icmp_type = 8; //request
     icmpHDR->icmp_code = 0; //icmp request
     icmpHDR->icmp_sequence = nSequence;
+    #if WIN32
     icmpHDR->icmp_id = (u_short)GetCurrentProcessId();
+    #else
+    icmpHDR->icmp_id = (u_short)getpid();
+    #endif
     icmpHDR->icmp_timestamp = GetTickCount();
     icmpHDR->icmp_checksum = 0; //Ð£ÑéÖµ
 }
@@ -281,3 +302,16 @@ u_short CPing::CheckSum(u_short *pBuf,int nLen)
     cksum+=(cksum>>16);
     return (USHORT)(~cksum);
 }
+
+
+#if WIN32
+#else
+unsigned long GetTickCount()
+{
+    struct timespec ts;
+
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+
+    return (ts.tv_sec * 1000 + ts.tv_nsec / 1000000);
+}
+#endif // WIN32

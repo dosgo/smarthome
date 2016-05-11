@@ -11,7 +11,8 @@ extern "C"{
 #include <windows.h>
 #include <Iphlpapi.h>
 #else
-
+#include <stdlib.h>
+#include <getopt.h>
 #endif
 using namespace std;
 int checktime=60;

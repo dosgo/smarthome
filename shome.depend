@@ -32,3 +32,42 @@
 	<malloc.h>
 	"getopt.h"
 
+1462969000 source:e:\dosgo\c\smarthome\getopt.c
+	<stdlib.h>
+	<stdio.h>
+	<malloc.h>
+	"getopt.h"
+
+1462969000 e:\dosgo\c\smarthome\getopt.h
+	<string.h>
+	<wchar.h>
+
+1462969502 source:e:\dosgo\c\smarthome\main.cpp
+	<iostream>
+	"cping.h"
+	"mytime.h"
+	<stdio.h>
+	"getopt.h"
+	<windows.h>
+	<Iphlpapi.h>
+	<getopt.h>
+
+1462971549 e:\dosgo\c\smarthome\cping.h
+	<WinSock2.h>
+	<netdb.h>
+	<string.h>
+	<sys/socket.h>
+	<fcntl.h>
+	<netinet/in.h>
+	<sys/types.h>
+	<unistd.h>
+	<arpa/inet.h>
+	<time.h>
+	<string>
+
+1462969000 e:\dosgo\c\smarthome\mytime.h
+	<windows.h>
+	<errno.h>
+	<sys/select.h>
+	<netinet/in.h>
+
