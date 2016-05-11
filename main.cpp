@@ -88,13 +88,14 @@ bool CheckMac(char *ip,char *mac){
          printf("ip error exit. \r\n");
          exit(0);
      }
-     for(int i=100;i<120;i++){
+     for(int i=1;i<255;i++){
         sprintf(ip,"%s.%d",prefix_ip,i);
+        printf("ip:%s ping\r\n",ip);
         ping.PingScanf(ip);
      }
 
     if(FindIP(ip,mac)==0){
-            return ping.PingCheck(ip);
+        return ping.PingCheck(ip);
     }
     return false;
 }

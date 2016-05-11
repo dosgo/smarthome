@@ -154,6 +154,7 @@ bool CPing::PingScanf(std::string strAddr)
     PICMPHDR picmp = (PICMPHDR)icmp;
     int nSequence = 0;
     InitICMP(picmp, nSequence++);
+    printf("InitICMP\r\n");
     picmp->icmp_checksum = CheckSum((u_short*)picmp,sizeof(ICMPHDR) + DATA_SIZE); //–£—È÷µ
     return SendData((char*)picmp,sizeof(ICMPHDR) + DATA_SIZE,&addr);
 }
@@ -225,8 +226,12 @@ bool CPing::SendData(char* buf,int nBufLen,sockaddr_in* pAddr)
         return false;
     }
 
+    #if WIN32
     int timeOut = 1000;
-    int nRet = setsockopt(m_socket,SOL_SOCKET,SO_SNDTIMEO,(char*)&timeOut, sizeof(int));
+    #else
+    struct timeval timeOut={1,0};//3s
+    #endif
+    int nRet = setsockopt(m_socket,SOL_SOCKET,SO_SNDTIMEO,(char*)&timeOut, sizeof(timeOut));
 
     if( nRet == -1 )
     {
@@ -259,8 +264,11 @@ bool CPing::RecvData(char* buf,int nBufLen,sockaddr_in* pRecvAddr,int &nRecvLen)
     }
 
     int nAddrLen = sizeof(sockaddr);
+    #if WIN32
+    nRet = recvfrom(m_socket,buf,nBufLen,0,(sockaddr*)pRecvAddr,&nAddrLen);
+    #else
     nRet = recvfrom(m_socket,buf,nBufLen,0,(sockaddr*)pRecvAddr,(socklen_t*)&nAddrLen);
-
+    #endif
     if( -1 == nRet )
     {
 
