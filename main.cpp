@@ -1,0 +1,164 @@
+#include <iostream>
+#include "cping.h"
+#include "mytime.h"
+#include <stdio.h>
+#if WIN32
+extern "C"{
+#define STATIC_GETOPT 1
+#include "getopt.h"
+
+}
+#include <windows.h>
+#include <Iphlpapi.h>
+#else
+
+#endif
+using namespace std;
+int checktime=60;
+int FindIP(char *mac,char *ip);
+char backhomecmd[1024]="cmd.exe";//返回家
+char gohomecmd[1024]="cmd.exe";//离开家
+char mac[30]={0};
+char ip[30]={0};
+//-config[BackHomeCmd:"",GoHomeCmd:cmd.exe,Mac:xxx,IP:""]
+int lastinfo=0;
+bool CheckMac(char *ip,char *mac);
+int main(int argc, char *argv[])
+{
+
+
+    struct option long_options[] = {
+    { "mac", 1, NULL, 'm'},
+    { "ip", 1, NULL, 'i'},
+    { "gcmd", 1, NULL, 'g' },
+    { "bcmd", 1, NULL, 'b' },
+    };
+    int c;
+    while((c = getopt_long_only (argc, argv, "m:i:b:g:", long_options, NULL)) != -1)
+    {
+        switch (c)
+        {
+            case 'm':
+                memcpy(mac,optarg,strlen(optarg));
+                break;
+            case 'i':
+                 memcpy(ip,optarg,strlen(optarg));
+                break;
+            case 'b':
+                 memcpy(backhomecmd,optarg,strlen(optarg));
+                break;
+            case 'g':
+                 memcpy(gohomecmd,optarg,strlen(optarg));
+                break;
+            default:
+                printf("use  -mac  -ip -bcmd -gcmd \r\n");
+        }
+    }
+
+     // printf("argc mac:%s ip :%s bcmd:%s gcmd:%s \r\n",mac,ip,backhomecmd,gohomecmd);
+
+    while(true){
+        int info=(int)CheckMac(ip,mac);
+        if(info!=lastinfo){
+            //进入wifi
+            if(info==1){
+
+                 popen(backhomecmd, "r");
+
+            }else{
+                //离开wifi
+                 popen(gohomecmd, "r");
+            }
+
+        }
+        sleeps(checktime*1000);//ms
+    }
+    return 0;
+}
+
+/*检测mac地址是否在内存*/
+bool CheckMac(char *ip,char *mac){
+     CPing ping;
+     char prefix_ip[30]={0};
+     char *prefix_pos=strrchr(ip,'.');
+     if(prefix_pos!=NULL){
+        memcpy(prefix_ip,ip,prefix_pos-ip);//截取强最
+     }else{
+         printf("ip error exit. \r\n");
+         exit(0);
+     }
+     for(int i=100;i<120;i++){
+        sprintf(ip,"%s.%d",prefix_ip,i);
+        ping.PingScanf(ip);
+     }
+
+    if(FindIP(ip,mac)==0){
+            return ping.PingCheck(ip);
+    }
+    return false;
+}
+/*读取mac查询IP*/
+
+
+#if WIN32
+int FindIP(char *DestIP,char *DestMac)
+{
+    MIB_IPNETTABLE *ipNetTable = NULL;
+    ULONG size = 0;
+    DWORD result = 0;
+    result = GetIpNetTable(ipNetTable, &size, TRUE);
+    ipNetTable = (MIB_IPNETTABLE *)malloc(size);
+    result = GetIpNetTable(ipNetTable, &size, TRUE);
+    if(result)
+    {
+        return -1;
+    }
+    int i = 0;
+    IN_ADDR ip;
+
+    char ipstr[30]={0};
+    char mac[30]={0};
+    for(; i < ipNetTable->dwNumEntries; i++)
+    {
+        ip.S_un.S_addr = ipNetTable->table[i].dwAddr;
+        memset(ipstr,0,30);
+        memset(mac,0,30);
+        sprintf(ipstr,"%s",inet_ntoa(ip));
+        sprintf(mac,"%2x:%2x:%2x:%2x:%2x:%2x",ipNetTable->table[i].bPhysAddr[0],ipNetTable->table[i].bPhysAddr[1],ipNetTable->table[i].bPhysAddr[2],ipNetTable->table[i].bPhysAddr[3],ipNetTable->table[i].bPhysAddr[4],ipNetTable->table[i].bPhysAddr[5]);
+        if(strncmp(mac,DestMac,17)==0){
+            memcpy(DestIP,ipstr,strlen(ipstr));
+            return 0;
+        }
+    }
+    return -1;
+}
+#else
+int FindIP(char *DestIP,char *DestMac){
+    FILE *fp = fopen("/proc/stat","r");
+    //FILE *fp = fopen("D:\\c\\shome\\xx.txt","r");
+    int i=0;
+    if(fp==NULL)
+    {
+       return -1;
+    }
+    char buf[1024]={0};
+    char ip[30]={0};
+    char mac[30]={0};
+    char hwtype[30]={0};
+    char Flags[30]={0};
+    char Mask[30]={0};
+    char Device[30]={0};
+
+    while(fgets(buf,sizeof(buf),fp)!=NULL){
+        if(i>0){
+            sscanf(buf,"%s %s %s %s %s %s",ip,hwtype,Flags,mac,Mask,Device);
+            if(strncmp(mac,DestMac,17)==0){
+                memcpy(DestIP,ip,strlen(ip));
+                return 0;
+            }
+        }
+        i++;
+    }
+    return -1;
+}
+#endif

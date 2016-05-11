@@ -1,0 +1,34 @@
+# depslib dependency file v1.0
+1462856454 source:d:\c\shome\cping.cpp
+	"cping.h"
+	<stdio.h>
+
+1460945318 d:\c\shome\cping.h
+	<WinSock2.h>
+	<string>
+
+1462949999 source:d:\c\shome\main.cpp
+	<iostream>
+	"cping.h"
+	"mytime.h"
+	<stdio.h>
+	"getopt.h"
+	<windows.h>
+	<Iphlpapi.h>
+
+1462755752 d:\c\shome\mytime.h
+	<windows.h>
+	<errno.h>
+	<sys/select.h>
+	<netinet/in.h>
+
+1462945998 d:\c\shome\getopt.h
+	<string.h>
+	<wchar.h>
+
+1462945524 source:d:\c\shome\getopt.c
+	<stdlib.h>
+	<stdio.h>
+	<malloc.h>
+	"getopt.h"
+
