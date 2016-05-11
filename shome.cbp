@@ -11,12 +11,13 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option parameters='-mac &quot;d0:5b:a8:21:a2:6b&quot; -ip 192.168.43.1 -bhome &quot;killall motion&quot;' />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
-					<Add library="C:/Program Files/CodeBlocks/MinGW/lib/libws2_32.a" />
-					<Add library="C:/Program Files/CodeBlocks/MinGW/lib/libiphlpapi.a" />
+					<Add library="D:\TDM-GCC-32\lib\libws2_32.a" />
+					<Add library="D:\TDM-GCC-32\lib\libiphlpapi.a" />
 				</Linker>
 			</Target>
 			<Target title="Release">

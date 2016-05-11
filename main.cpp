@@ -33,41 +33,47 @@ int main(int argc, char *argv[])
     { "ip", 1, NULL, 'i'},
     { "gcmd", 1, NULL, 'g' },
     { "bcmd", 1, NULL, 'b' },
+    {0, 0, 0, 0}//必须保留，不然不存在会崩溃
     };
     int c;
-    while((c = getopt_long_only (argc, argv, "m:i:b:g:", long_options, NULL)) != -1)
+    while((c = getopt_long_only(argc, argv, "m:i:b:g:", long_options, NULL)) != -1)
     {
         switch (c)
         {
             case 'm':
+                memset(mac,0,30);
                 memcpy(mac,optarg,strlen(optarg));
                 break;
             case 'i':
-                 memcpy(ip,optarg,strlen(optarg));
+                memset(ip,0,30);
+                memcpy(ip,optarg,strlen(optarg));
                 break;
             case 'b':
-                 memcpy(backhomecmd,optarg,strlen(optarg));
+                memset(backhomecmd,0,1024);
+                memcpy(backhomecmd,optarg,strlen(optarg));
                 break;
             case 'g':
-                 memcpy(gohomecmd,optarg,strlen(optarg));
+                memset(gohomecmd,0,1024);
+                memcpy(gohomecmd,optarg,strlen(optarg));
                 break;
             default:
                 printf("use  -mac  -ip -bcmd -gcmd \r\n");
         }
     }
 
-     // printf("argc mac:%s ip :%s bcmd:%s gcmd:%s \r\n",mac,ip,backhomecmd,gohomecmd);
+    // printf("argc mac:%s ip :%s bcmd:%s gcmd:%s \r\n",mac,ip,backhomecmd,gohomecmd);
 
     while(true){
         int info=(int)CheckMac(ip,mac);
         if(info!=lastinfo){
             //进入wifi
             if(info==1){
-
+                 printf("backhome\r\n");
                  popen(backhomecmd, "r");
 
             }else{
                 //离开wifi
+                printf("gohome\r\n");
                  popen(gohomecmd, "r");
             }
 
@@ -90,11 +96,11 @@ bool CheckMac(char *ip,char *mac){
      }
      for(int i=1;i<255;i++){
         sprintf(ip,"%s.%d",prefix_ip,i);
-        printf("ip:%s ping\r\n",ip);
+        //printf("ip:%s ping\r\n",ip);
         ping.PingScanf(ip);
      }
-
     if(FindIP(ip,mac)==0){
+        printf("find ip:%s\r\n",ip);
         return ping.PingCheck(ip);
     }
     return false;
@@ -136,7 +142,7 @@ int FindIP(char *DestIP,char *DestMac)
 }
 #else
 int FindIP(char *DestIP,char *DestMac){
-    FILE *fp = fopen("/proc/stat","r");
+    FILE *fp = fopen("/proc/net/arp","r");
     //FILE *fp = fopen("D:\\c\\shome\\xx.txt","r");
     int i=0;
     if(fp==NULL)

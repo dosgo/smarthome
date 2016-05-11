@@ -29,7 +29,8 @@ CPing::CPing()
 
     if( m_socket == INVALID_SOCKET )
     {
-        printf("Socket err\n");
+        printf("Socket err:%d\r\n",WSAGetLastError());
+
         #if WIN32
         WSACleanup();
         #else
@@ -136,7 +137,7 @@ bool CPing::PingScanf(std::string strAddr)
     host = gethostbyname(strAddr.c_str());
     if( host == NULL )
     {
-        printf("gethostbyname err\n");
+        //printf("gethostbyname err\n");
         return false;
     }
 
@@ -154,7 +155,7 @@ bool CPing::PingScanf(std::string strAddr)
     PICMPHDR picmp = (PICMPHDR)icmp;
     int nSequence = 0;
     InitICMP(picmp, nSequence++);
-    printf("InitICMP\r\n");
+   // printf("InitICMP\r\n");
     picmp->icmp_checksum = CheckSum((u_short*)picmp,sizeof(ICMPHDR) + DATA_SIZE); //–£—È÷µ
     return SendData((char*)picmp,sizeof(ICMPHDR) + DATA_SIZE,&addr);
 }
@@ -229,7 +230,7 @@ bool CPing::SendData(char* buf,int nBufLen,sockaddr_in* pAddr)
     #if WIN32
     int timeOut = 1000;
     #else
-    struct timeval timeOut={1,0};//3s
+    struct timeval timeOut={1,0};//1s
     #endif
     int nRet = setsockopt(m_socket,SOL_SOCKET,SO_SNDTIMEO,(char*)&timeOut, sizeof(timeOut));
 
@@ -254,8 +255,13 @@ bool CPing::RecvData(char* buf,int nBufLen,sockaddr_in* pRecvAddr,int &nRecvLen)
     if( INVALID_SOCKET == m_socket )
         return false;
 
+
+    #if WIN32
     int nTimeOut = 1000;
-    int nRet = setsockopt(m_socket,SOL_SOCKET,SO_RCVTIMEO ,(char*)&nTimeOut,sizeof(int));
+    #else
+    struct timeval nTimeOut={1,0};//1s
+    #endif
+    int nRet = setsockopt(m_socket,SOL_SOCKET,SO_RCVTIMEO ,(char*)&nTimeOut,sizeof(nTimeOut));
 
     if( -1 == nRet )
     {
