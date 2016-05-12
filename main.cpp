@@ -16,6 +16,7 @@ extern "C"{
 #endif
 using namespace std;
 int checktime=60;
+string VER="v1.0-(2016/5/12)";
 int FindIP(char *mac,char *ip);
 char backhomecmd[1024]="cmd.exe";//返回家
 char gohomecmd[1024]="cmd.exe";//离开家
@@ -26,8 +27,7 @@ int lastinfo=0;
 bool CheckMac(char *ip,char *mac);
 int main(int argc, char *argv[])
 {
-
-
+    printf("smarthome %s\r\n",VER.c_str());
     struct option long_options[] = {
     { "mac", 1, NULL, 'm'},
     { "ip", 1, NULL, 'i'},

@@ -76,3 +76,30 @@
 	"cping.h"
 	<stdio.h>
 
+1463017848 source:d:\c\smarthome\cping.cpp
+	"cping.h"
+	<stdio.h>
+
+1463017848 d:\c\smarthome\cping.h
+	<WinSock2.h>
+	<netdb.h>
+	<string.h>
+	<sys/socket.h>
+	<fcntl.h>
+	<netinet/in.h>
+	<sys/types.h>
+	<unistd.h>
+	<arpa/inet.h>
+	<time.h>
+	<string>
+
+1462945524 source:d:\c\smarthome\getopt.c
+	<stdlib.h>
+	<stdio.h>
+	<malloc.h>
+	"getopt.h"
+
+1462945998 d:\c\smarthome\getopt.h
+	<string.h>
+	<wchar.h>
+
