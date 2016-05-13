@@ -16,14 +16,14 @@ extern "C"{
 #endif
 using namespace std;
 int checktime=60;
-string VER="v1.0-(2016/5/12)";
+string VER="v1.1-(2016/5/13)";
 int FindIP(char *mac,char *ip);
 char backhomecmd[1024]="cmd.exe";//返回家
 char gohomecmd[1024]="cmd.exe";//离开家
 char mac[30]={0};
 char ip[30]={0};
 //-config[BackHomeCmd:"",GoHomeCmd:cmd.exe,Mac:xxx,IP:""]
-int lastinfo=0;
+int lastinfo=-1;
 bool CheckMac(char *ip,char *mac);
 int main(int argc, char *argv[])
 {
@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
 
     while(true){
         int info=(int)CheckMac(ip,mac);
-        if(info!=lastinfo){
+        if(info!=lastinfo||lastinfo==-1){
             //进入wifi
             if(info==1){
                  printf("backhome\r\n");
