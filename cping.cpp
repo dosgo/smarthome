@@ -131,7 +131,7 @@ bool CPing::PingScanf(std::string strAddr)
     host = gethostbyname(strAddr.c_str());
     if( host == NULL )
     {
-        printf("gethostbyname err:%d\n",GetLastError());
+        printf("gethostbyname err:%d\n");
         return false;
     }
 
