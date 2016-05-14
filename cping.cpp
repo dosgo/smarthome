@@ -1,6 +1,6 @@
 #include "cping.h"
 #include <stdio.h>
-
+#define WIN32 1
 CPing::CPing()
 {
     #if WIN32
@@ -131,7 +131,8 @@ bool CPing::PingScanf(std::string strAddr)
     host = gethostbyname(strAddr.c_str());
     if( host == NULL )
     {
-        printf("gethostbyname err:%d\n");
+
+        printf("gethostbyname err\n");
         return false;
     }
 
@@ -160,7 +161,7 @@ bool CPing::PingCheck(std::string strAddr)
     host = gethostbyname(strAddr.c_str());
     if( host == NULL )
     {
-        //printf("gethostbyname err\n");
+        printf("gethostbyname \n");
         return false;
     }
 
@@ -189,14 +190,14 @@ bool CPing::PingCheck(std::string strAddr)
     int nHeadLen = sizeof(IPHDR) + sizeof(ICMPHDR) + DATA_SIZE;
     if( recvLen < nHeadLen )
     {
-        //printf("tool few data~\n");
+        printf("tool few data~\n");
         return false;
     }
     PICMPHDR icmpRecv = (PICMPHDR) (cBuf + sizeof(IPHDR));
 
     if( icmpRecv->icmp_type != 0 )
     {
-       // printf("Icmp Type err~\n");
+        printf("Icmp Type err~\n");
          return false;
     }
     #if WIN32
@@ -205,11 +206,84 @@ bool CPing::PingCheck(std::string strAddr)
     if( icmpRecv->icmp_id != getpid() )
     #endif
     {
-       // printf("Icmp ID err~\n");
+        printf("Icmp ID err~\n");
          return false;
     }
     return true;
 
+}
+
+bool CPing::PingCheckV2(std::string strAddr)
+{
+   hostent *host;
+    host = gethostbyname(strAddr.c_str());
+
+    if( host == NULL )
+    {
+        printf("gethostbyname err\n");
+        return false;
+    }
+
+    sockaddr_in addr;
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(0);
+    addr.sin_addr = *((struct in_addr *)(host->h_addr));
+
+    char* icmp = new char[sizeof(ICMPHDR) + DATA_SIZE];
+    #if WIN32
+    ZeroMemory(icmp,sizeof(ICMPHDR) + DATA_SIZE);
+    #else
+    memset(icmp,0,sizeof(ICMPHDR) + DATA_SIZE);
+    #endif
+
+    PICMPHDR picmp = (PICMPHDR)icmp;
+    int nSequence = 0;
+    int nCount = 4;
+    int statistic=0;
+    while ( nCount-- )
+    {
+        InitICMP(picmp, nSequence++);
+
+        picmp->icmp_checksum = CheckSum((u_short*)picmp,sizeof(ICMPHDR) + DATA_SIZE); //–£—È÷µ
+
+        SendData((char*)picmp,sizeof(ICMPHDR) + DATA_SIZE,&addr);
+
+        sockaddr_in addrRecv;
+        char cBuf[RECV_SIZE] = {0};
+
+        int recvLen = 0;
+        RecvData(cBuf,RECV_SIZE,&addrRecv,recvLen);
+        int nHeadLen = sizeof(IPHDR) + sizeof(ICMPHDR) + DATA_SIZE;
+        if( recvLen < nHeadLen )
+        {
+            printf("tool few data~\n");
+            continue;
+        }
+
+        IPHDR *ipHead = (IPHDR *)cBuf;
+        PICMPHDR icmpRecv = (PICMPHDR) (cBuf + sizeof(IPHDR));
+
+        if( icmpRecv->icmp_type != 0 )
+        {
+            printf("Icmp Type err~\n");
+            continue;
+        }
+        #if WIN32
+        if( icmpRecv->icmp_id != GetCurrentProcessId() )
+        #else
+
+        if( icmpRecv->icmp_id != getpid() )
+        #endif
+        {
+            printf("Icmp ID err~\n");
+            continue;
+        }
+
+       // printf("recv from %s\n",inet_ntoa(addrRecv.sin_addr));
+       // printf("time: %u s\n",(GetTickCount() - icmpRecv->icmp_timestamp));
+       // printf("TTL= %u\n",ipHead->ipTTL);
+    }
+    return statistic>0?true:false;
 }
 
 

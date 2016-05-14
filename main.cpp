@@ -3,7 +3,6 @@
 #include "mytime.h"
 #include <stdio.h>
 #if WIN32
-int InitSocket();
 extern "C"{
 #define STATIC_GETOPT 1
 #include "getopt.h"
@@ -17,7 +16,7 @@ extern "C"{
 #endif
 using namespace std;
 int checktime=60;
-char VER[28]="v1.2-(2016/5/15)";
+char VER[28]="v1.3-(2016/5/15)";
 int FindIP(char *mac,char *ip);
 char backhomecmd[1024]="cmd.exe";//返回家
 char gohomecmd[1024]="cmd.exe";//离开家
@@ -29,9 +28,6 @@ bool CheckMac(char *ip,char *mac);
 int main(int argc, char *argv[])
 {
     printf("smarthome %s\r\n",VER);
-    #if WIN32
-    InitSocket();
-    #endif // WIN32
     struct option long_options[] = {
     { "mac", 1, NULL, 'm'},
     { "ip", 1, NULL, 'i'},
@@ -106,7 +102,7 @@ bool CheckMac(char *ip,char *mac){
     //memset(ip,0,30);
     if(FindIP(destip,mac)==0){
         printf("find ip:%s\r\n",destip);
-        return ping.PingCheck(destip);
+        return ping.PingCheckV2(destip);
     }
     return false;
 }
@@ -175,27 +171,3 @@ int FindIP(char *DestIP,char *DestMac){
     return -1;
 }
 #endif
-
-#if WIN32
-int InitSocket(){
-    WSADATA wsaData;
-    WORD wVersion;
-    wVersion = MAKEWORD(2,2);
-
-    int nRet = WSAStartup(wVersion,&wsaData);
-    if( nRet != 0 )
-    {
-        printf("WSAStartup failed with error: %d\n", nRet);
-        return -1;
-    }
-
-    if( LOBYTE(wsaData.wVersion) != 2 || HIBYTE(wsaData.wVersion) != 2 )
-    {
-        printf("Could not find a usable version of Winsock.dll\n");
-        WSACleanup();
-        return -1;
-    }
-    return 0;
-}
-
-#endif // WIN32

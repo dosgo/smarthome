@@ -11,7 +11,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters='-mac &quot;d0:5b:a8:21:a2:6b&quot; -ip 192.168.43.1  -ghome &quot;motion -c /etc/motion.conf &quot; -bhome &quot;killall motion&quot;' />
+				<Option parameters='-mac &quot;d0:5b:a8:21:a2:6b&quot; -ip 192.168.43.1  -gcmd &quot;motion -c /etc/motion.conf &quot; -bcmd &quot;killall motion&quot;' />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>

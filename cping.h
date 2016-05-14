@@ -64,6 +64,7 @@ public:
     void Ping(std::string strAddr);
     bool PingScanf(std::string strAddr);
     bool PingCheck(std::string strAddr);
+    bool PingCheckV2(std::string strAddr);
     bool SendData(char* buf,int nBufLen,sockaddr_in* pAddr);
     bool RecvData(char* buf,int nBufLen,sockaddr_in* pRecvAddr,int &nRecvLen);
     void InitICMP(PICMPHDR icmpHDR,int nSequence);
