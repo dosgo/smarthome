@@ -1,6 +1,5 @@
 #include "cping.h"
 #include <stdio.h>
-#define WIN32 1
 CPing::CPing()
 {
     #if WIN32
