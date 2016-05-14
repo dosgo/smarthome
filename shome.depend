@@ -42,7 +42,7 @@
 	<string.h>
 	<wchar.h>
 
-1462977716 source:e:\dosgo\c\smarthome\main.cpp
+1463245664 source:e:\dosgo\c\smarthome\main.cpp
 	<iostream>
 	"cping.h"
 	"mytime.h"
@@ -72,7 +72,7 @@
 	<sys/select.h>
 	<netinet/in.h>
 
-1462977004 source:e:\dosgo\c\smarthome\cping.cpp
+1463245545 source:e:\dosgo\c\smarthome\cping.cpp
 	"cping.h"
 	<stdio.h>
 

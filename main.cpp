@@ -3,6 +3,7 @@
 #include "mytime.h"
 #include <stdio.h>
 #if WIN32
+int InitSocket();
 extern "C"{
 #define STATIC_GETOPT 1
 #include "getopt.h"
@@ -16,7 +17,7 @@ extern "C"{
 #endif
 using namespace std;
 int checktime=60;
-string VER="v1.1-(2016/5/13)";
+char VER[28]="v1.2-(2016/5/15)";
 int FindIP(char *mac,char *ip);
 char backhomecmd[1024]="cmd.exe";//返回家
 char gohomecmd[1024]="cmd.exe";//离开家
@@ -27,7 +28,10 @@ int lastinfo=-1;
 bool CheckMac(char *ip,char *mac);
 int main(int argc, char *argv[])
 {
-    printf("smarthome %s\r\n",VER.c_str());
+    printf("smarthome %s\r\n",VER);
+    #if WIN32
+    InitSocket();
+    #endif // WIN32
     struct option long_options[] = {
     { "mac", 1, NULL, 'm'},
     { "ip", 1, NULL, 'i'},
@@ -96,12 +100,13 @@ bool CheckMac(char *ip,char *mac){
      }
      for(int i=1;i<255;i++){
         sprintf(ip,"%s.%d",prefix_ip,i);
-        //printf("ip:%s ping\r\n",ip);
         ping.PingScanf(ip);
      }
-    if(FindIP(ip,mac)==0){
-        printf("find ip:%s\r\n",ip);
-        return ping.PingCheck(ip);
+    char destip[30]={0};
+    //memset(ip,0,30);
+    if(FindIP(destip,mac)==0){
+        printf("find ip:%s\r\n",destip);
+        return ping.PingCheck(destip);
     }
     return false;
 }
@@ -126,7 +131,7 @@ int FindIP(char *DestIP,char *DestMac)
 
     char ipstr[30]={0};
     char mac[30]={0};
-    for(; i < ipNetTable->dwNumEntries; i++)
+    for(i=0; i < ipNetTable->dwNumEntries; i++)
     {
         ip.S_un.S_addr = ipNetTable->table[i].dwAddr;
         memset(ipstr,0,30);
@@ -170,3 +175,27 @@ int FindIP(char *DestIP,char *DestMac){
     return -1;
 }
 #endif
+
+#if WIN32
+int InitSocket(){
+    WSADATA wsaData;
+    WORD wVersion;
+    wVersion = MAKEWORD(2,2);
+
+    int nRet = WSAStartup(wVersion,&wsaData);
+    if( nRet != 0 )
+    {
+        printf("WSAStartup failed with error: %d\n", nRet);
+        return -1;
+    }
+
+    if( LOBYTE(wsaData.wVersion) != 2 || HIBYTE(wsaData.wVersion) != 2 )
+    {
+        printf("Could not find a usable version of Winsock.dll\n");
+        WSACleanup();
+        return -1;
+    }
+    return 0;
+}
+
+#endif // WIN32

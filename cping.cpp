@@ -9,7 +9,6 @@ CPing::CPing()
     wVersion = MAKEWORD(2,2);
 
     int nRet = WSAStartup(wVersion,&wsaData);
-
     if( nRet != 0 )
     {
         printf("WSAStartup failed with error: %d\n", nRet);
@@ -22,8 +21,6 @@ CPing::CPing()
         WSACleanup();
         return;
     }
-    #else
-
     #endif
     m_socket = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
 
@@ -32,8 +29,6 @@ CPing::CPing()
 
         #if WIN32
         WSACleanup();
-        #else
-
         #endif
         return;
     }
@@ -136,7 +131,7 @@ bool CPing::PingScanf(std::string strAddr)
     host = gethostbyname(strAddr.c_str());
     if( host == NULL )
     {
-        //printf("gethostbyname err\n");
+        printf("gethostbyname err:%d\n",GetLastError());
         return false;
     }
 
