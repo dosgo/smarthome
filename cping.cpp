@@ -281,6 +281,7 @@ bool CPing::PingCheckV2(std::string strAddr)
        // printf("recv from %s\n",inet_ntoa(addrRecv.sin_addr));
        // printf("time: %u s\n",(GetTickCount() - icmpRecv->icmp_timestamp));
        // printf("TTL= %u\n",ipHead->ipTTL);
+       statistic++;
     }
     return statistic>0?true:false;
 }
