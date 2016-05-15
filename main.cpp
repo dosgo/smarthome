@@ -98,6 +98,7 @@ bool CheckMac(char *ip,char *mac){
         sprintf(ip,"%s.%d",prefix_ip,i);
         ping.PingScanf(ip);
      }
+    sleeps(1*1000);//1ms
     char destip[30]={0};
     //memset(ip,0,30);
     if(FindIP(destip,mac)==0){
