@@ -16,15 +16,17 @@ extern "C"{
 #endif
 using namespace std;
 int checktime=60;
-char VER[28]="v1.3-(2016/5/15)";
+char VER[28]="v1.4-(2016/6/1)";
 int FindIP(char *mac,char *ip);
 char backhomecmd[1024]="cmd.exe";//返回家
 char gohomecmd[1024]="cmd.exe";//离开家
 char mac[30]={0};
+char btmac[30]={0};//蓝牙mac
 char ip[30]={0};
 //-config[BackHomeCmd:"",GoHomeCmd:cmd.exe,Mac:xxx,IP:""]
 int lastinfo=-1;
 bool CheckMac(char *ip,char *mac);
+bool CheckBtMac(char *btmac);
 int main(int argc, char *argv[])
 {
     printf("smarthome %s\r\n",VER);
@@ -33,6 +35,7 @@ int main(int argc, char *argv[])
     { "ip", 1, NULL, 'i'},
     { "gcmd", 1, NULL, 'g' },
     { "bcmd", 1, NULL, 'b' },
+    { "bmac", 1, NULL, 't' },
     {0, 0, 0, 0}//必须保留，不然不存在会崩溃
     };
     int c;
@@ -56,15 +59,28 @@ int main(int argc, char *argv[])
                 memset(gohomecmd,0,1024);
                 memcpy(gohomecmd,optarg,strlen(optarg));
                 break;
+             case 't':
+                memset(btmac,0,30);
+                memcpy(btmac,optarg,strlen(optarg));
+                break;
             default:
-                printf("use  -mac  -ip -bcmd -gcmd \r\n");
+                printf("use  -mac  -ip -bcmd -gcmd  or -bmac  -bcmd -gcmd\r\n");
         }
     }
 
     // printf("argc mac:%s ip :%s bcmd:%s gcmd:%s \r\n",mac,ip,backhomecmd,gohomecmd);
 
     while(true){
-        int info=(int)CheckMac(ip,mac);
+        int info=0;
+        if(strlen(btmac)>0)
+        {
+            info=(int)CheckBtMac(btmac);
+        }
+        else
+        {
+           info=(int)CheckMac(ip,mac);
+        }
+
         if(info!=lastinfo||lastinfo==-1){
             //进入wifi
             if(info==1){
@@ -81,6 +97,27 @@ int main(int argc, char *argv[])
         sleeps(checktime*1000);//ms
     }
     return 0;
+}
+
+/*检测蓝牙是否在附近*/
+bool CheckBtMac(char *btmac){
+     char btcmd[255]={0};
+     //连接ble
+     sprintf(btcmd,"hcitool lecc %s",btmac);
+     FILE  *stream=popen(btcmd, "r");
+     char   buf[1024]={0};
+     fread( buf, sizeof(char), sizeof(buf),  stream);  //将刚刚FILE* stream的数据流读取到buf中
+     char bthandle[10]={0};
+      if(sscanf(buf," %[0-9]",bthandle)!=-1)
+      {
+          //断开ble
+          sprintf(btcmd,"hcitool ledc %s",bthandle);
+          popen(btcmd, "r");
+          pclose(stream);
+          return true;
+      }
+     pclose(stream);
+     return false;
 }
 
 /*检测mac地址是否在内存*/
