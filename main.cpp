@@ -2,6 +2,7 @@
 #include "cping.h"
 #include "mytime.h"
 #include <stdio.h>
+#include <time.h>
 #if WIN32
 extern "C"{
 #define STATIC_GETOPT 1
@@ -16,7 +17,7 @@ extern "C"{
 #endif
 using namespace std;
 int checktime=60;
-char VER[28]="v1.4-(2016/6/1)";
+char VER[28]="v1.5-(2016/6/5)";
 int FindIP(char *mac,char *ip);
 char backhomecmd[1024]="cmd.exe";//返回家
 char gohomecmd[1024]="cmd.exe";//离开家
@@ -27,6 +28,7 @@ char ip[30]={0};
 int lastinfo=-1;
 bool CheckMac(char *ip,char *mac);
 bool CheckBtMac(char *btmac);
+bool CheckMacV2(char *mac);
 int main(int argc, char *argv[])
 {
     printf("smarthome %s\r\n",VER);
@@ -99,8 +101,25 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-/*检测蓝牙是否在附近*/
+/*检测蓝牙是否在附近 手机*/
 bool CheckBtMac(char *btmac){
+     char btcmd[255]={0};
+     //读取名字
+     sprintf(btcmd,"hcitool name %s",btmac);
+     FILE  *stream=popen(btcmd, "r");
+     char   buf[1024]={0};
+     fread( buf, sizeof(char), sizeof(buf),  stream);  //将刚刚FILE* stream的数据流读取到buf中
+     pclose(stream);
+     //有返回有返回
+     if(strlen(buf)>0)
+     {
+         return true;
+     }
+     return false;
+}
+
+/*检测蓝牙是否在附近  手环*/
+bool CheckBtMacLe(char *btmac){
      char btcmd[255]={0};
      //连接ble
      sprintf(btcmd,"hcitool lecc %s",btmac);
@@ -119,9 +138,53 @@ bool CheckBtMac(char *btmac){
      pclose(stream);
      return false;
 }
+/*检测蓝牙是否在附近  手环另一种方法*/
+bool CheckBtMacLeV2(char *btmac){
+     char btcmd[255]={0};
+     //连接ble
+     sprintf(btcmd,"hcitool lescan");
+     FILE  *stream=popen(btcmd, "r");
+     char   buf[1024]={0};
+     while(1){
+        fgets(buf,1024,stream);  //将刚刚FILE* stream的数据流读取到buf中
+        if(sscanf(buf,"")!=-1)
+        {
+              pclose(stream);
+              return true;
+        }
+     }
+     pclose(stream);
+     return false;
+}
 
-/*检测mac地址是否在内存*/
+/*检测mac地址是否在内网 依赖ping响应*/
 bool CheckMac(char *ip,char *mac){
+     CPing ping;
+     char prefix_ip[30]={0};
+     char *prefix_pos=strrchr(ip,'.');
+     if(prefix_pos!=NULL){
+        memcpy(prefix_ip,ip,prefix_pos-ip);//截取强最
+     }else{
+         printf("ip error exit. \r\n");
+         exit(0);
+     }
+     for(int i=1;i<255;i++){
+        sprintf(ip,"%s.%d",prefix_ip,i);
+        ping.PingScanf(ip);
+     }
+    sleeps(1*1000);//1ms
+    char destip[30]={0};
+    //memset(ip,0,30);
+    if(FindIP(destip,mac)==0){
+        printf("find ip:%s\r\n",destip);
+        return ping.PingCheckV2(destip);
+    }
+    return false;
+}
+
+/*检测mac地址是否在内网 使用udp*/
+bool CheckMacV2(char *mac){
+
      CPing ping;
      char prefix_ip[30]={0};
      char *prefix_pos=strrchr(ip,'.');
