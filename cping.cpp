@@ -296,7 +296,6 @@ bool CPing::PingCheckV3(std::string strAddr)
     icmps = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
     //udp
     udpsock=socket(AF_INET,SOCK_DGRAM,0);
-     printf("test0\r\n");
     if (icmps < 0||udpsock<0) {
         return false;
     }
@@ -308,12 +307,10 @@ bool CPing::PingCheckV3(std::string strAddr)
     udpaddr.sin_family=AF_INET;
     udpaddr.sin_port=htons(32768 + 666);//32768 + 666
     udpaddr.sin_addr.s_addr=inet_addr(strAddr.c_str());//inet_addr("192.168.2.61");
-        printf("test1\r\n");
     ret = bind(icmps, (const struct sockaddr *)&icmpaddr, sizeof(sockaddr_in));
     if (ret != 0) {
         return false;
     }
-    printf("test2\r\n");
     #if WIN32
     DWORD nMode=1;
     ioctlsocket( icmps, FIONBIO,&nMode);
@@ -322,8 +319,6 @@ bool CPing::PingCheckV3(std::string strAddr)
     #endif
     int flag=1;
     setsockopt(icmps, IPPROTO_IP, IP_HDRINCL, (char*)&flag, sizeof(flag));
-        printf("test2\r\n");
-
     unsigned short  icmp_id;
     #if WIN32
     icmp_id= GetCurrentProcessId();
