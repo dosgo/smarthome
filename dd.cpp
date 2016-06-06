@@ -63,7 +63,7 @@ void get_local_addr(unsigned char* mac, u_int32_t &ip)
         exit(1);
     }
 
-    strcpy(ifreq1.ifr_name, "eth0");
+    strcpy(ifreq1.ifr_name, "wlan0");
     if (ioctl(sock, SIOCGIFHWADDR, &ifreq1) < 0)
     {
        perror("Unable to get the mac address");
@@ -99,7 +99,7 @@ int macfindip( char* dmacv)
     unsigned char mac[6];
     unsigned char dmac[6];
 
-    char interface[] = "eth0";
+    char interface[] = "wlan0";
 
     //if (argc != 2)
    // {
