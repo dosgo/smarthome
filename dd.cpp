@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <time.h>
+#include <arpa/inet.h>
 #include <netinet/if_ether.h>
 #include <net/if.h>
 
