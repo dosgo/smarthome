@@ -82,6 +82,7 @@ void get_local_addr(unsigned char* mac, u_int32_t &ip)
 }
 int macfindip( char* dmacv)
 {
+    printf("go1\r\n");
     int timeout = 2;
     int optval = 1;
     int s; /* socket */
