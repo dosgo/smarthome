@@ -1,4 +1,13 @@
-
+#include <stdio.h>
+#include<netdb.h>
+#include<string.h>
+#include <sys/socket.h>
+#include <fcntl.h>
+#include <netinet/in.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#include <time.h>
 
 struct arpMsg {
 struct ethhdr ethhdr; /* Ethernet header */
