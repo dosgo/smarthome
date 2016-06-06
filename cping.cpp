@@ -296,6 +296,7 @@ bool CPing::PingCheckV3(std::string strAddr)
     icmps = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
     //udp
     udpsock=socket(AF_INET,SOCK_DGRAM,0);
+     printf("test0\r\n");
     if (icmps < 0||udpsock<0) {
         return false;
     }
