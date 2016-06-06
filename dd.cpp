@@ -80,7 +80,7 @@ psockaddr_in = (struct sockaddr_in*)&ifreq1.ifr_addr;
 ip = psockaddr_in->sin_addr.s_addr;
 //print_ip((unsigned char*)ip);
 }
-int main(int argc, char* argv[])
+int macfindip( char* dmacv)
 {
     int timeout = 2;
     int optval = 1;
@@ -111,7 +111,7 @@ int main(int argc, char* argv[])
 
     for (int i = 0; i < 6; ++i)
     {
-        strncpy(buff, argv[1]+3*i, 2);
+        strncpy(buff, dmacv+3*i, 2);
         buff[3] = '\0';
         dmac[i] = strtol(buff, (char**)NULL, 16);
     }

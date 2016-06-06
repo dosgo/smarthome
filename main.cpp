@@ -1,6 +1,7 @@
 #include <iostream>
 #include "cping.h"
 #include "mytime.h"
+#include "dd.h"
 #include <stdio.h>
 #include <time.h>
 #if WIN32
@@ -74,6 +75,7 @@ int main(int argc, char *argv[])
         return -1;
     }
 
+     macfindip("d0:5b:a8:21:a2:6b");
     while(true){
         int info=0;
         if(strlen(btmac)>0)
