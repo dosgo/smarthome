@@ -17,8 +17,8 @@
 #define    FAILURE   -1
 #define    SUCCESS    0
 
-unsigned char src_ip[4] = { 192, 168, 9, 118 };    //要检测的主机IP地址
-unsigned char src_mac[6] = {0x00, 0x0c, 0x29, 0x4b, 0x6c, 0x13};    //要检测的主机的MAC地址
+unsigned char src_ip[4] = { 192, 168, 8, 241 };    //要检测的主机IP地址
+unsigned char src_mac[6] = {0xd0, 0x5b, 0xa8, 0x21, 0xa2, 0x6b};    //要检测的主机的MAC地址
 unsigned char dst_ip[4] = { 192, 168, 9, 118 };    //目标IP地址
 unsigned char dst_mac[6] = { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };    //ARP广播地址
 
@@ -38,13 +38,13 @@ int freearp(char *mac)
     struct sockaddr_ll peer_addr;
 
      char buff[2000];
-     memset(src_mac,0,6);
-    for (int i = 0; i < 6; ++i)
-    {
-        strncpy(buff, mac+3*i, 2);
-        buff[3] = '\0';
-        src_mac[i] = strtol(buff, (char**)NULL, 16);
-    }
+    // memset(src_mac,0,6);
+   // for (int i = 0; i < 6; ++i)
+   // {
+     //   strncpy(buff, mac+3*i, 2);
+     //   buff[3] = '\0';
+     //   src_mac[i] = strtol(buff, (char**)NULL, 16);
+   // }
     //创建socket
     sockfd = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ARP));
     if (sockfd < 0)
