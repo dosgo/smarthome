@@ -72,14 +72,7 @@ int main(int argc, char *argv[])
 
     // printf("argc mac:%s ip :%s bcmd:%s gcmd:%s \r\n",mac,ip,backhomecmd,gohomecmd);
 
-     CPing ping;
 
-     uid_t uid;
-uid = getuid();
-printf("User IDs: uid=%d\n", uid);
-
-    int x= ping.PingCheckV3("192.168.8.241");
-    printf("x:%d\r\n",x);
     while(true){
         int info=0;
         if(strlen(btmac)>0)
@@ -185,36 +178,22 @@ bool CheckMac(char *ip,char *mac){
     //memset(ip,0,30);
     if(FindIP(destip,mac)==0){
         printf("find ip:%s\r\n",destip);
+        #if WIN32
         return ping.PingCheckV2(destip);
+        #else
+        uid_t uid = getuid();
+        //root权限
+        if(uid==0){
+                return ping.PingCheckV3(destip);
+        }else{
+            return ping.PingCheckV2(destip);
+        }
+        #endif
     }
     return false;
 }
 
-/*检测mac地址是否在内网 使用udp*/
-bool CheckMacV2(char *mac){
 
-     CPing ping;
-     char prefix_ip[30]={0};
-     char *prefix_pos=strrchr(ip,'.');
-     if(prefix_pos!=NULL){
-        memcpy(prefix_ip,ip,prefix_pos-ip);//截取强最
-     }else{
-         printf("ip error exit. \r\n");
-         exit(0);
-     }
-     for(int i=1;i<255;i++){
-        sprintf(ip,"%s.%d",prefix_ip,i);
-        ping.PingScanf(ip);
-     }
-    sleeps(1*1000);//1ms
-    char destip[30]={0};
-    //memset(ip,0,30);
-    if(FindIP(destip,mac)==0){
-        printf("find ip:%s\r\n",destip);
-        return ping.PingCheckV2(destip);
-    }
-    return false;
-}
 /*读取mac查询IP*/
 
 
