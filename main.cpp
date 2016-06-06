@@ -172,6 +172,7 @@ bool CheckMac(char *mac){
     int i;
     char ip[32]={0};
     gethostname(hname, sizeof(hname));
+    printf("hname:%s\r\n",hname);
     if((hostinfo = gethostbyname(hname)) != NULL)
     {
         for(i = 0; hostinfo->h_addr_list[i]; i++) {
