@@ -11,7 +11,8 @@
 #include <arpa/inet.h>
 #include <netinet/if_ether.h>
 #include <net/if.h>
-
+#include <stdlib.h>
+#include <sys/ioctl.h>
 struct arpMsg {
 struct ethhdr ethhdr; /* Ethernet header */
 u_short htype; /* hardware type (must be ARPHRD_ETHER) */
