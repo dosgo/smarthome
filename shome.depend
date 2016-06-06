@@ -81,8 +81,9 @@
 	"cping.h"
 	<stdio.h>
 
-1463363023 d:\c\smarthome\cping.h
+1465200086 d:\c\smarthome\cping.h
 	<WinSock2.h>
+	<ws2tcpip.h>
 	<netdb.h>
 	<string.h>
 	<sys/socket.h>
@@ -103,4 +104,22 @@
 1462945998 d:\c\smarthome\getopt.h
 	<string.h>
 	<wchar.h>
+
+1465179253 source:d:\c\smarthome\main.cpp
+	<iostream>
+	"cping.h"
+	"mytime.h"
+	<stdio.h>
+	<time.h>
+	"getopt.h"
+	<windows.h>
+	<Iphlpapi.h>
+	<stdlib.h>
+	<getopt.h>
+
+1462755752 d:\c\smarthome\mytime.h
+	<windows.h>
+	<errno.h>
+	<sys/select.h>
+	<netinet/in.h>
 

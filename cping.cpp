@@ -288,70 +288,70 @@ bool CPing::PingCheckV2(std::string strAddr)
 
 bool CPing::PingCheckV3(std::string strAddr)
 {
-   hostent *host;
-    host = gethostbyname(strAddr.c_str());
-
-    if( host == NULL )
-    {
-        printf("gethostbyname err\n");
+    int icmps,udpsock;
+    struct sockaddr_in icmpaddr={0};
+    struct sockaddr_in udpaddr={0};
+    struct sockaddr_in from={0};
+    int ret;
+    //icmp
+    icmps = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
+    //udp
+    udpsock=socket(AF_INET,SOCK_DGRAM,0);
+    if (icmps < 0||udpsock<0) {
         return false;
     }
+    //icmp
+    icmpaddr.sin_addr.s_addr = inet_addr("0.0.0.0");
+    icmpaddr.sin_family = AF_INET;
+    icmpaddr.sin_port = htons(0);
+    //udp
+    udpaddr.sin_family=AF_INET;
+    udpaddr.sin_port=htons(32768 + 666);//32768 + 666
+    udpaddr.sin_addr.s_addr=inet_addr(strAddr.c_str());//inet_addr("192.168.2.61");
 
-    sockaddr_in addr;
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(0);
-    addr.sin_addr = *((struct in_addr *)(host->h_addr));
-
-    char* icmp = new char[sizeof(ICMPHDR) + DATA_SIZE];
-    #if WIN32
-    ZeroMemory(icmp,sizeof(ICMPHDR) + DATA_SIZE);
-    #else
-    memset(icmp,0,sizeof(ICMPHDR) + DATA_SIZE);
-    #endif
-
-    PICMPHDR picmp = (PICMPHDR)icmp;
-    int nSequence = 0;
-    int nCount = 4;
-    int statistic=0;
-    while ( nCount-- )
-    {
-
-
-        sockaddr_in addrRecv;
-        char cBuf[RECV_SIZE] = {0};
-
-        int recvLen = 0;
-        RecvData(cBuf,RECV_SIZE,&addrRecv,recvLen);
-        int nHeadLen = sizeof(IPHDR) + sizeof(ICMPHDR) + DATA_SIZE;
-        if( recvLen < nHeadLen )
-        {
-            printf("tool few data~\n");
-            continue;
-        }
-
-        IPHDR *ipHead = (IPHDR *)cBuf;
-        PICMPHDR icmpRecv = (PICMPHDR) (cBuf + sizeof(IPHDR));
-
-        if( icmpRecv->icmp_type != 0 )
-        {
-            printf("Icmp Type err~\n");
-            continue;
-        }
-        #if WIN32
-        if( icmpRecv->icmp_id != GetCurrentProcessId() )
-        #else
-
-        if( icmpRecv->icmp_id != getpid() )
-        #endif
-        {
-            printf("Icmp ID err~\n");
-            continue;
-        }
-
-
-       statistic++;
+    ret = bind(icmps, (const struct sockaddr *)&icmpaddr, sizeof(sockaddr_in));
+    if (ret != 0) {
+        return false;
     }
-    return statistic>0?true:false;
+    #if WIN32
+    DWORD nMode=1;
+    ioctlsocket( icmps, FIONBIO,&nMode);
+    #else
+    fcntl(icmps,F_SETFL,O_NONBLOCK);
+    #endif
+    int flag=1;
+    setsockopt(icmps, IPPROTO_IP, IP_HDRINCL, (char*)&flag, sizeof(flag));
+
+
+    unsigned short  icmp_id;
+    #if WIN32
+    icmp_id= GetCurrentProcessId();
+    #else
+    icmp_id= getpid();
+    #endif
+    ret=sendto(udpsock,(char *)&icmp_id,2,0,(struct sockaddr *)&udpaddr,sizeof(sockaddr));
+    if (ret < 0)  {
+        return false;
+    }
+    char packet[512]={0};
+    fd_set fds;
+	struct timeval  wait;
+	int fromlen = sizeof(sockaddr);
+	FD_ZERO(&fds);
+	FD_SET(icmps, &fds);
+	wait.tv_sec =0;
+	wait.tv_usec =100*1000;
+    if (select(icmps + 1, &fds, NULL, NULL, &wait) > 0){
+        ret = recvfrom(icmps, (char *)packet, 512, 0, (struct sockaddr *)&from, &fromlen);
+        if(ret>0){
+            short backicmp_id=0;
+            memcpy(&backicmp_id,packet+sizeof(IPHDR)+sizeof(ICMPHDR)+sizeof(IPHDR)+4,2);
+            if(icmp_id==backicmp_id){
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 bool CPing::SendData(char* buf,int nBufLen,sockaddr_in* pAddr)
