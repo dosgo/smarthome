@@ -178,7 +178,7 @@ bool CheckMac(char *mac){
             memset(ip,0,32);
             sprintf(ip,"%s", inet_ntoa(*(struct in_addr*)(hostinfo->h_addr_list[i])));
                   printf("sfsdf1\r\n");
-            if(GetIPType(ip)){
+            if(GetIPType(ip)>0){
                     printf("sfsdf\r\n");
                  char prefix_ip[30]={0};
                  char *prefix_pos=strrchr(ip,'.');
@@ -298,8 +298,8 @@ int GetIPType(char * ipAddress)
         //¾ÖÓòÍøIP
         if (ipAddressList == 10||(ipAddressList == 172 && ipAddressList1 >= 16 && ipAddressList1 <= 31)|| (ipAddressList == 192 && ipAddressList1 == 168))
         {
-            return true;
+            return 1;
         }
     }
-    return false;
+    return 0;
 }
