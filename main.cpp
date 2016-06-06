@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
     }
 
      macfindip("d0:5b:a8:21:a2:6b");
-     exit();
+     exit(0);
     while(true){
         int info=0;
         if(strlen(btmac)>0)
