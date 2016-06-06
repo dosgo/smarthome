@@ -19,7 +19,7 @@
 
 unsigned char src_ip[4] = { 192, 168, 8, 241 };    //要检测的主机IP地址
 unsigned char src_mac[6] = {0xd0, 0x5b, 0xa8, 0x21, 0xa2, 0x6b};    //要检测的主机的MAC地址
-unsigned char dst_ip[4] = { 192, 168, 9, 118 };    //目标IP地址
+unsigned char dst_ip[4] = { 192, 168, 8, 241 };    //目标IP地址
 unsigned char dst_mac[6] = { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };    //ARP广播地址
 
 int send_arp(int sockfd, struct sockaddr_ll *peer_addr);
@@ -63,8 +63,8 @@ int freearp(char *mac)
         peer_addr.sll_ifindex = req.ifr_ifindex;
         peer_addr.sll_protocol = htons(ETH_P_ARP);
     //peer_addr.sll_family = AF_PACKET;
-    while (1)
-    {
+    //while (1)
+   // {
         rtval = send_arp(sockfd, &peer_addr);
         if (FAILURE == rtval)
         {
@@ -84,7 +84,7 @@ int freearp(char *mac)
             fprintf(stderr, "Recv arp socket failed: %s\n", strerror(errno));
         }
         //sleep(1);
-    }
+   // }
     return 0;
 }
 //////////////////////////////////////////////////////////////////////////
