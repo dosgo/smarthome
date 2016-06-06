@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
     // printf("argc mac:%s ip :%s bcmd:%s gcmd:%s \r\n",mac,ip,backhomecmd,gohomecmd);
 
      CPing ping;
-    int x= ping.PingCheckV3("127.0.0.1");
+    int x= ping.PingCheckV3("192.168.8.241");
     printf("x:%d\r\n",x);
     while(true){
         int info=0;
