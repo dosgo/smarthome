@@ -117,7 +117,7 @@ void CPing::Ping(std::string strAddr)
         }
 
         printf("recv from %s\n",inet_ntoa(addrRecv.sin_addr));
-        printf("time: %u s\n",(GetTickCount() - icmpRecv->icmp_timestamp));
+        printf("time: %d s\n",(int)(GetTickCount() - icmpRecv->icmp_timestamp));
         printf("TTL= %u\n",ipHead->ipTTL);
     }
     getchar();
@@ -259,7 +259,6 @@ bool CPing::PingCheckV2(std::string strAddr)
             continue;
         }
 
-        IPHDR *ipHead = (IPHDR *)cBuf;
         PICMPHDR icmpRecv = (PICMPHDR) (cBuf + sizeof(IPHDR));
 
         if( icmpRecv->icmp_type != 0 )

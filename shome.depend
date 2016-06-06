@@ -77,7 +77,7 @@
 	"cping.h"
 	<stdio.h>
 
-1463363023 source:d:\c\smarthome\cping.cpp
+1465200547 source:d:\c\smarthome\cping.cpp
 	"cping.h"
 	<stdio.h>
 
@@ -105,7 +105,7 @@
 	<string.h>
 	<wchar.h>
 
-1465179253 source:d:\c\smarthome\main.cpp
+1465200292 source:d:\c\smarthome\main.cpp
 	<iostream>
 	"cping.h"
 	"mytime.h"
