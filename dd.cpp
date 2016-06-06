@@ -101,12 +101,12 @@ int macfindip( char* dmacv)
 
     char interface[] = "eth0";
 
-    if (argc != 2)
-    {
-        printf("Usage: get_ip_by_mac dst_mac\n");
-        printf("For example: get_ip_by_mac 00:0F:EA:40:0D:04\n");
-        return 0;
-    }
+    //if (argc != 2)
+   // {
+     //   printf("Usage: get_ip_by_mac dst_mac\n");
+        //printf("For example: get_ip_by_mac 00:0F:EA:40:0D:04\n");
+     //   return 0;
+   // }
     get_local_addr(mac, ip);
 
     for (int i = 0; i < 6; ++i)
