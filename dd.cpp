@@ -147,11 +147,11 @@ int macfindip( char* dmacv)
     memcpy(arp.tHaddr, dmac, 6);
     if (sendto(s, &arp, sizeof(arp), 0, &addr, sizeof(addr)) < 0)
     {
-        perror("Unabele to send arp request");
+        printf("Unabele to send arp request");
         return 0;
     }
     rv = 0;
-
+    printf("go\r\n");
     /* wait arp reply, and check it */
     tm.tv_usec = 0;
     time(&prevTime);
@@ -169,7 +169,7 @@ int macfindip( char* dmacv)
         {
             if (recv(s, &arp, sizeof(arp), 0) < 0 )
             {
-                perror("Unable get valid rarp response");
+                printf("Unable get valid rarp response");
                 rv = 0;
             }
             if (arp.operation == htons(4) &&bcmp(arp.tHaddr, mac, 6) == 0 )
