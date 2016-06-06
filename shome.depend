@@ -77,7 +77,7 @@
 	"cping.h"
 	<stdio.h>
 
-1465200547 source:d:\c\smarthome\cping.cpp
+1465205814 source:d:\c\smarthome\cping.cpp
 	"cping.h"
 	<stdio.h>
 
@@ -105,7 +105,7 @@
 	<string.h>
 	<wchar.h>
 
-1465200292 source:d:\c\smarthome\main.cpp
+1465206849 source:d:\c\smarthome\main.cpp
 	<iostream>
 	"cping.h"
 	"mytime.h"
@@ -114,6 +114,9 @@
 	"getopt.h"
 	<windows.h>
 	<Iphlpapi.h>
+	<lm.h>
+	<WinSock2.h>
+	<net/if.h>
 	<stdlib.h>
 	<getopt.h>
 

@@ -4,22 +4,7 @@ CPing::CPing()
 {
     #if WIN32
     WSADATA wsaData;
-    WORD wVersion;
-    wVersion = MAKEWORD(2,2);
-
-    int nRet = WSAStartup(wVersion,&wsaData);
-    if( nRet != 0 )
-    {
-        printf("WSAStartup failed with error: %d\n", nRet);
-        return;
-    }
-
-    if( LOBYTE(wsaData.wVersion) != 2 || HIBYTE(wsaData.wVersion) != 2 )
-    {
-        printf("Could not find a usable version of Winsock.dll\n");
-        WSACleanup();
-        return;
-    }
+    WSAStartup(MAKEWORD(2,2),&wsaData);
     #endif
     m_socket = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
 

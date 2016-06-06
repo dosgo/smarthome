@@ -11,7 +11,9 @@ extern "C"{
 }
 #include <windows.h>
 #include <Iphlpapi.h>
+#include <WinSock2.h>
 #else
+#include <net/if.h>
 #include <stdlib.h>
 #include <getopt.h>
 #endif
@@ -26,15 +28,16 @@ char btmac[30]={0};//蓝牙mac
 char ip[30]={0};
 //-config[BackHomeCmd:"",GoHomeCmd:cmd.exe,Mac:xxx,IP:""]
 int lastinfo=-1;
-bool CheckMac(char *ip,char *mac);
+bool CheckMac(char *mac);
 bool CheckBtMac(char *btmac);
 bool CheckMacV2(char *mac);
+int getlocalip();
+  int GetIPType(char * ipAddress);
 int main(int argc, char *argv[])
 {
     printf("smarthome %s\r\n",VER);
     struct option long_options[] = {
     { "mac", 1, NULL, 'm'},
-    { "ip", 1, NULL, 'i'},
     { "gcmd", 1, NULL, 'g' },
     { "bcmd", 1, NULL, 'b' },
     { "bmac", 1, NULL, 't' },
@@ -49,10 +52,6 @@ int main(int argc, char *argv[])
                 memset(mac,0,30);
                 memcpy(mac,optarg,strlen(optarg));
                 break;
-            case 'i':
-                memset(ip,0,30);
-                memcpy(ip,optarg,strlen(optarg));
-                break;
             case 'b':
                 memset(backhomecmd,0,1024);
                 memcpy(backhomecmd,optarg,strlen(optarg));
@@ -66,11 +65,9 @@ int main(int argc, char *argv[])
                 memcpy(btmac,optarg,strlen(optarg));
                 break;
             default:
-                printf("use  -mac  -ip -bcmd -gcmd  or -bmac  -bcmd -gcmd\r\n");
+                printf("use  -mac  -bcmd -gcmd  or -bmac  -bcmd -gcmd\r\n");
         }
     }
-
-    // printf("argc mac:%s ip :%s bcmd:%s gcmd:%s \r\n",mac,ip,backhomecmd,gohomecmd);
 
 
     while(true){
@@ -81,7 +78,7 @@ int main(int argc, char *argv[])
         }
         else
         {
-           info=(int)CheckMac(ip,mac);
+           info=(int)CheckMac(mac);
         }
 
         if(info!=lastinfo||lastinfo==-1){
@@ -159,20 +156,38 @@ bool CheckBtMacLeV2(char *btmac){
 }
 
 /*检测mac地址是否在内网 依赖ping响应*/
-bool CheckMac(char *ip,char *mac){
-     CPing ping;
-     char prefix_ip[30]={0};
-     char *prefix_pos=strrchr(ip,'.');
-     if(prefix_pos!=NULL){
-        memcpy(prefix_ip,ip,prefix_pos-ip);//截取强最
-     }else{
-         printf("ip error exit. \r\n");
-         exit(0);
-     }
-     for(int i=1;i<255;i++){
-        sprintf(ip,"%s.%d",prefix_ip,i);
-        ping.PingScanf(ip);
-     }
+bool CheckMac(char *mac){
+    CPing ping;
+    #if WIN32
+    WSADATA wsaData;
+    WSAStartup(MAKEWORD(2,2),&wsaData);
+    #endif // WIN32
+    char hname[128]={0};
+    struct hostent *hostinfo;
+    int i;
+    char ip[32]={0};
+    gethostname(hname, sizeof(hname));
+    if((hostinfo = gethostbyname(hname)) != NULL)
+    {
+        for(i = 0; hostinfo->h_addr_list[i]; i++) {
+            memset(ip,0,32);
+            sprintf(ip,"%s", inet_ntoa(*(struct in_addr*)(hostinfo->h_addr_list[i])));
+            if(GetIPType(ip)){
+                 char prefix_ip[30]={0};
+                 char *prefix_pos=strrchr(ip,'.');
+                 if(prefix_pos!=NULL){
+                    memcpy(prefix_ip,ip,prefix_pos-ip);//截取强最
+                    for(int i=1;i<255;i++){
+                        sprintf(ip,"%s.%d",prefix_ip,i);
+                        ping.PingScanf(ip);
+                    }
+                 }
+
+            }
+        }
+    }
+
+
     sleeps(1*1000);//1ms
     char destip[30]={0};
     //memset(ip,0,30);
@@ -259,3 +274,24 @@ int FindIP(char *DestIP,char *DestMac){
     return -1;
 }
 #endif
+
+
+
+
+
+
+int GetIPType(char * ipAddress)
+{
+    int ipAddressList=0;
+    int ipAddressList1=0;
+    int ipAddressList2=0;
+    int ipAddressList3=0;
+    if( sscanf(ipAddress,"%d.%d.%d.%d",&ipAddressList,&ipAddressList1,&ipAddressList2,&ipAddressList3)==4){
+        //局域网IP
+        if (ipAddressList == 10||(ipAddressList == 172 && ipAddressList1 >= 16 && ipAddressList1 <= 31)|| (ipAddressList == 192 && ipAddressList1 == 168))
+        {
+            return true;
+        }
+    }
+    return false;
+}
