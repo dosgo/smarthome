@@ -4,7 +4,7 @@ export STAGING_DIR="/home/dosgo/OpenWrt-SDK/staging_dir"
 mkdir build
 rm -rf build/cping..o
 rm -rf build/main.o
-
+rm -rf build/dd.o
 
 CC=g++
 YH="-Wall   -fexceptions -O2 -DOPENSSL=1 -DOPENSSLDL=1"
