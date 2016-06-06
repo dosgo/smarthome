@@ -14,7 +14,7 @@ $CC $YH -c  main.cpp -o build/main.o
 $CC $YH -c  dd.cpp -o build/dd.o
 $CC $YH -c  freearp.cpp -o build/freearp.o
 
-$CC  -s build/main.o build/cping.o build/dd.o uild/freearp.o  -o build/smarthome 
+$CC  -s build/main.o build/cping.o build/dd.o build/freearp.o  -o build/smarthome 
 
 
 
