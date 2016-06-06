@@ -157,6 +157,7 @@ printf("go2\r\n");
     time(&prevTime);
     while (timeout > 0)
     {
+          printf("go-1\r\n");
         FD_ZERO(&fdset);
         FD_SET(s, &fdset);
         tm.tv_sec = timeout;
