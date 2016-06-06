@@ -13,6 +13,7 @@
 #include <net/if.h>
 #include <stdlib.h>
 #include <sys/ioctl.h>
+#include <errno.h>
 struct arpMsg {
 struct ethhdr ethhdr; /* Ethernet header */
 u_short htype; /* hardware type (must be ARPHRD_ETHER) */
