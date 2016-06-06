@@ -98,7 +98,7 @@ int macfindip( char* dmacv)
 
     unsigned char mac[6];
     unsigned char dmac[6];
-
+printf("go1\r\n");
     char interface[] = "wlan0";
 
     //if (argc != 2)
@@ -108,7 +108,7 @@ int macfindip( char* dmacv)
      //   return 0;
    // }
     get_local_addr(mac, ip);
-printf("go1\r\n");
+printf("go2\r\n");
     for (int i = 0; i < 6; ++i)
     {
         strncpy(buff, dmacv+3*i, 2);
