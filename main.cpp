@@ -178,6 +178,7 @@ bool CheckMac(char *mac){
             memset(ip,0,32);
             sprintf(ip,"%s", inet_ntoa(*(struct in_addr*)(hostinfo->h_addr_list[i])));
             if(GetIPType(ip)){
+                    printf("sfsdf\r\n");
                  char prefix_ip[30]={0};
                  char *prefix_pos=strrchr(ip,'.');
                  if(prefix_pos!=NULL){
