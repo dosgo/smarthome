@@ -57,7 +57,7 @@ int freearp(char *mac)
         peer_addr.sll_family = AF_PACKET;
         struct ifreq req;
     bzero(&req, sizeof(struct ifreq));
-        strcpy(req.ifr_name, "eth0");
+        strcpy(req.ifr_name, "wlan0");
         if(ioctl(sockfd, SIOCGIFINDEX, &req) != 0)
         perror("ioctl()");
         peer_addr.sll_ifindex = req.ifr_ifindex;
