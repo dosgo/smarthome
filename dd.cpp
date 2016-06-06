@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <time.h>
+#include <netinet/if_ether.h>
 
 struct arpMsg {
 struct ethhdr ethhdr; /* Ethernet header */
