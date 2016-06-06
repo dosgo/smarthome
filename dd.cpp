@@ -43,12 +43,13 @@ void print_mac(unsigned char * mac_addr)
 }
 void print_ip(unsigned char * ip_addr)
 {
+    printf("ip:")
     for (int i =0; i < 4; ++i)
     {
     printf("%d", ip_addr[i]);
     if (i != 3) printf(".");
     }
-    printf("\n");
+    printf("\r\n");
 }
 
 void get_local_addr(unsigned char* mac, u_int32_t &ip)
@@ -179,6 +180,7 @@ int macfindip( char* dmacv)
                 rv = 0;
                 break;
             }
+
             print_ip(arp.tInaddr);
         }
         timeout -= time(NULL) - prevTime;
