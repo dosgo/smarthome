@@ -54,8 +54,9 @@
 	<stdlib.h>
 	<getopt.h>
 
-1463251241 e:\dosgo\c\smarthome\cping.h
+1465215141 e:\dosgo\c\smarthome\cping.h
 	<WinSock2.h>
+	<ws2tcpip.h>
 	<netdb.h>
 	<string.h>
 	<sys/socket.h>
@@ -73,7 +74,7 @@
 	<sys/select.h>
 	<netinet/in.h>
 
-1463251638 source:e:\dosgo\c\smarthome\cping.cpp
+1465215141 source:e:\dosgo\c\smarthome\cping.cpp
 	"cping.h"
 	<stdio.h>
 

@@ -39,6 +39,7 @@
 		</Compiler>
 		<Unit filename="cping.cpp" />
 		<Unit filename="cping.h" />
+		<Unit filename="dd.cpp" />
 		<Unit filename="getopt.c">
 			<Option compilerVar="CC" />
 		</Unit>

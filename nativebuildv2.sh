@@ -10,6 +10,7 @@ CC=g++
 YH="-Wall   -fexceptions -O2 -DOPENSSL=1 -DOPENSSLDL=1"
 $CC $YH -c  cping.cpp -o build/cping.o
 $CC $YH -c  main.cpp -o build/main.o
+$CC $YH -c  dd.cpp -o build/dd.o
 
 $CC  -s build/main.o build/cping.o   -o build/smarthome 
 
