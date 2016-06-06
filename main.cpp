@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    if(strlen(btmac)==0||strlen(mac)==0){
+    if(strlen(btmac)==0&&strlen(mac)==0){
         printf("use  -mac  -bcmd -gcmd  or -bmac  -bcmd -gcmd\r\n");
         return -1;
     }
