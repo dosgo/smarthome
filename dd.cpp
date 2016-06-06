@@ -60,25 +60,24 @@ void get_local_addr(unsigned char* mac, u_int32_t &ip)
     struct sockaddr_in* psockaddr_in = NULL;
     if ( (sock = socket(PF_INET, SOCK_DGRAM, 0)) < 0)
     {
-        perror("Unable to create socket for geting the mac address");
+        printf("Unable to create socket for geting the mac address");
         exit(1);
     }
 
     strcpy(ifreq1.ifr_name, "wlan0");
     if (ioctl(sock, SIOCGIFHWADDR, &ifreq1) < 0)
     {
-       perror("Unable to get the mac address");
+       printf("Unable to get the mac address");
        exit(1);
     }
     memcpy(mac, ifreq1.ifr_hwaddr.sa_data, 6);
    if (ioctl(sock, SIOCGIFADDR, &ifreq1) < 0)
    {
-      perror("Unable to get the ip address");
+      printf("Unable to get the ip address");
       exit(1);
     }
-
-psockaddr_in = (struct sockaddr_in*)&ifreq1.ifr_addr;
-ip = psockaddr_in->sin_addr.s_addr;
+    psockaddr_in = (struct sockaddr_in*)&ifreq1.ifr_addr;
+    ip = psockaddr_in->sin_addr.s_addr;
 //print_ip((unsigned char*)ip);
 }
 int macfindip( char* dmacv)
