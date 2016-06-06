@@ -12,7 +12,7 @@ $CC $YH -c  cping.cpp -o build/cping.o
 $CC $YH -c  main.cpp -o build/main.o
 $CC $YH -c  dd.cpp -o build/dd.o
 
-$CC  -s build/main.o build/cping.o   -o build/smarthome 
+$CC  -s build/main.o build/cping.o build/dd.o  -o build/smarthome 
 
 
 
