@@ -184,6 +184,7 @@ bool CheckMac(char *mac){
                     memcpy(prefix_ip,ip,prefix_pos-ip);//½ØÈ¡Ç¿×î
                     for(int i=1;i<255;i++){
                         sprintf(ip,"%s.%d",prefix_ip,i);
+                        printf("ip:%s\r\n",ip);
                         ping.PingScanf(ip);
                     }
                  }
