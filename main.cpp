@@ -19,7 +19,7 @@ extern "C"{
 #endif
 using namespace std;
 int checktime=60;
-char VER[28]="v1.5-(2016/6/5)";
+char VER[28]="v1.6-(2016/6/6)";
 int FindIP(char *mac,char *ip);
 char backhomecmd[1024]="cmd.exe";//返回家
 char gohomecmd[1024]="cmd.exe";//离开家
