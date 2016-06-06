@@ -109,7 +109,7 @@ int macfindip( char* dmacv)
      //   return 0;
    // }
     get_local_addr(mac, ip);
-
+printf("go1\r\n");
     for (int i = 0; i < 6; ++i)
     {
         strncpy(buff, dmacv+3*i, 2);
