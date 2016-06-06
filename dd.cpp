@@ -160,7 +160,7 @@ printf("go2\r\n");
         FD_ZERO(&fdset);
         FD_SET(s, &fdset);
         tm.tv_sec = timeout;
-        if (select(s + 1, &fdset, (fd_set *) NULL, (fd_set *) NULL, &tm) < 0)
+        if (select(s + 1, &fdset, NULL,  NULL, &tm) < 0)
         {
             printf("Error on ARPING request:");
             if (errno != EINTR) rv = 0;
