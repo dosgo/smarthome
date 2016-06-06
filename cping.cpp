@@ -335,7 +335,7 @@ bool CPing::PingCheckV3(std::string strAddr)
     char packet[512]={0};
     fd_set fds;
 	struct timeval  wait;
-	int fromlen = sizeof(sockaddr);
+	socklen_t fromlen = sizeof(sockaddr);
 	FD_ZERO(&fds);
 	FD_SET(icmps, &fds);
 	wait.tv_sec =0;

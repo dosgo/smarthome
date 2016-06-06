@@ -150,7 +150,7 @@ bool CheckBtMacLeV2(char *btmac){
      char   buf[1024]={0};
      while(1){
         fgets(buf,1024,stream);  //将刚刚FILE* stream的数据流读取到buf中
-        if(sscanf(buf,"")!=-1)
+        if(sscanf(buf,"%s")!=-1)
         {
               pclose(stream);
               return true;
