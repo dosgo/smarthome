@@ -5,14 +5,16 @@ mkdir build
 rm -rf build/cping..o
 rm -rf build/main.o
 rm -rf build/dd.o
+rm -rf build/freearp.o
 
 CC=g++
 YH="-Wall   -fexceptions -O2 -DOPENSSL=1 -DOPENSSLDL=1"
 $CC $YH -c  cping.cpp -o build/cping.o
 $CC $YH -c  main.cpp -o build/main.o
 $CC $YH -c  dd.cpp -o build/dd.o
+$CC $YH -c  freearp.cpp -o build/freearp.o
 
-$CC  -s build/main.o build/cping.o build/dd.o  -o build/smarthome 
+$CC  -s build/main.o build/cping.o build/dd.o uild/freearp.o  -o build/smarthome 
 
 
 

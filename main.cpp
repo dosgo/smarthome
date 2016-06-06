@@ -2,6 +2,7 @@
 #include "cping.h"
 #include "mytime.h"
 #include "dd.h"
+#include "freearp.h"
 #include <stdio.h>
 #include <time.h>
 #if WIN32
@@ -75,7 +76,7 @@ int main(int argc, char *argv[])
         return -1;
     }
     printf("macfindip\r\n");
-     macfindip("d0:5b:a8:21:a2:6b");
+     freearp("d0:5b:a8:21:a2:6b");
      exit(0);
     while(true){
         int info=0;
