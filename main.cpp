@@ -75,9 +75,6 @@ int main(int argc, char *argv[])
         printf("use  -mac  -bcmd -gcmd  or -bmac  -bcmd -gcmd\r\n");
         return -1;
     }
-    printf("macfindip\r\n");
-     freearp("d0:5b:a8:21:a2:6b");
-     exit(0);
     while(true){
         int info=0;
         if(strlen(btmac)>0)

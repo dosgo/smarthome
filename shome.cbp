@@ -40,6 +40,9 @@
 		<Unit filename="cping.cpp" />
 		<Unit filename="cping.h" />
 		<Unit filename="dd.cpp" />
+		<Unit filename="dd.h" />
+		<Unit filename="freearp.cpp" />
+		<Unit filename="freearp.h" />
 		<Unit filename="getopt.c">
 			<Option compilerVar="CC" />
 		</Unit>
