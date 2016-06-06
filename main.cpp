@@ -191,6 +191,8 @@ bool CheckMac(char *mac){
                     }
                  }
 
+            }else{
+            printf("ipeerr:%s\r\n",ip);
             }
         }
     }
