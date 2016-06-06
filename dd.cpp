@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include<netdb.h>
-#include<string.h>
+#include <netdb.h>
+#include <string.h>
 #include <sys/socket.h>
 #include <fcntl.h>
 #include <netinet/in.h>
