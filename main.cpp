@@ -198,18 +198,19 @@ bool CheckBtMacLeV2(char *btmac){
     int starttime;
     starttime = time(&t);
     int cutime=0;
-    printf("sfsd\r\n");
-    fd_set fds;
-	struct timeval  wait;
-	FD_ZERO(&fds);
-	FD_SET(stream, &fds);
-	wait.tv_sec =0;
-	wait.tv_usec =100*1000;
-	int flags = fcntl(stream, F_GETFL, 0);
-    fcntl(stream, F_SETFL, flags | O_NONBLOCK);
+
 
     while(1){
-            if (select(stream + 1, &fds, NULL, NULL, &wait) > 0){
+            sleep(20);
+
+             #if WIN32
+
+                #else
+                int pid=getPidByName((char*)"hcitool");
+                kill(pid,SIGKILL );
+                #endif
+
+
                 printf("sfsd-1\r\n");
                 fgets(buf,1024,stream);  //将刚刚FILE* stream的数据流读取到buf中
                 printf("sfsd-2\r\n");
@@ -225,7 +226,7 @@ bool CheckBtMacLeV2(char *btmac){
                         return true;
                     }
                 }
-            }
+
             cutime= time(&t);
             //ms已过结束进程
             if(starttime+10<cutime)
