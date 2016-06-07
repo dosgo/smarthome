@@ -495,11 +495,10 @@ int getPidByName(char* task_name)
                      if( fgets(buf, 512-1, fp)== NULL ){
                         fclose(fp);
                         continue;
-             　　　　 }
-             　　　　sscanf(buf, "%*s %s", cur_task_name);
-
-                     //如果文件内容满足要求则打印路径的名字（即进程的PID）
-                     if (!strcmp(task_name, cur_task_name))
+                    }
+                    sscanf(buf, "%*s %s", cur_task_name);
+                    //如果文件内容满足要求则打印路径的名字（即进程的PID）
+                    if (!strcmp(task_name, cur_task_name))
                 　　 {
                         printf("PID:  %s\n", ptr->d_name);
                         break;
