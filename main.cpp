@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
     {0, 0, 0, 0}//必须保留，不然不存在会崩溃
     };
     int c;
-    while((c = getopt_long_only(argc, argv, "m:i:b:g:", long_options, NULL)) != -1)
+    while((c = getopt_long_only(argc, argv, "m:b:g:t:l:r:", long_options, NULL)) != -1)
     {
         switch (c)
         {
