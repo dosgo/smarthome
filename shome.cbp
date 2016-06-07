@@ -16,8 +16,8 @@
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
-					<Add library="D:\TDM-GCC-32\lib\libws2_32.a" />
-					<Add library="D:\TDM-GCC-32\lib\libiphlpapi.a" />
+					<Add library="D:/TDM-GCC-32/lib/libws2_32.a" />
+					<Add library="D:/TDM-GCC-32/lib/libiphlpapi.a" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -39,10 +39,6 @@
 		</Compiler>
 		<Unit filename="cping.cpp" />
 		<Unit filename="cping.h" />
-		<Unit filename="dd.cpp" />
-		<Unit filename="dd.h" />
-		<Unit filename="freearp.cpp" />
-		<Unit filename="freearp.h" />
 		<Unit filename="getopt.c">
 			<Option compilerVar="CC" />
 		</Unit>
