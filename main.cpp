@@ -176,7 +176,7 @@ bool CheckBtMacLeV2(char *btmac){
 bool CheckMac(char *mac){
     CPing ping;
     char destip[30]={0};
-    if(FindIP(destip,mac)!=0){
+    if(FindIP(destip,mac)!=0||reloadarp==1){
         list<string>iplist;
         getlocalip(&iplist);
         list<string>::iterator it;
