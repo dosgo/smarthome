@@ -87,8 +87,10 @@ int main(int argc, char *argv[])
                 break;
              case 'r':
                 sscanf(optarg,"%d",&reloadarp);
+                break;
              case 'l':
                 sscanf(optarg,"%d",&ble);
+                break;
             default:
                 printf("use  -mac  -bcmd -gcmd [-reloadarp]  or -bmac  -bcmd -gcmd \r\n");
         }
