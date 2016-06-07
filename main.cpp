@@ -200,7 +200,9 @@ bool CheckBtMacLeV2(char *btmac){
     int cutime=0;
     printf("sfsd\r\n");
      while(1){
+            printf("sfsd-1\r\n");
         fgets(buf,1024,stream);  //将刚刚FILE* stream的数据流读取到buf中
+       printf("sfsd-2\r\n");
         memset(mac,0,30);
         memset(btname,0,30);
         printf("buf:%s\r\n",buf);
