@@ -112,6 +112,7 @@ int main(int argc, char *argv[])
             }
             else
             {
+                  printf("noble\r\n");
                 info=(int)CheckBtMac(btmac);
             }
         }
