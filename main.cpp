@@ -148,6 +148,7 @@ bool CheckBtMac(char *btmac){
      tolower(btmac);
      //读取名字
      sprintf(btcmd,"hcitool name %s",btmac);
+      printf("btcmd:%s\r\n",btcmd);
      FILE  *stream=popen(btcmd, "r");
      char   buf[1024]={0};
      fgets( buf, 1024,   stream);  //将刚刚FILE* stream的数据流读取到buf中
