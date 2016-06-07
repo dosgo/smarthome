@@ -301,7 +301,7 @@ int FindIP(char *DestIP,char *DestMac){
     char Flags[30]={0};
     char Mask[30]={0};
     char Device[30]={0};
-
+    int i=0;
     while(fgets(buf,sizeof(buf),fp)!=NULL){
         memset(mac,30,0);
         memset(ip,30,0);
@@ -312,6 +312,7 @@ int FindIP(char *DestIP,char *DestMac){
                 return 0;
             }
         }
+        i++;
     }
     return -1;
 }
@@ -328,7 +329,7 @@ int CheckArpIp(char *DestIP){
     char Flags[30]={0};
     char Mask[30]={0};
     char Device[30]={0};
-
+    int i=0;
     while(fgets(buf,sizeof(buf),fp)!=NULL){
         memset(ip,30,0);
         memset(mac,30,0);
@@ -338,6 +339,7 @@ int CheckArpIp(char *DestIP){
                 return 0;
             }
         }
+        i++;
     }
     return -1;
 }
