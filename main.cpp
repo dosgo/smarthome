@@ -111,6 +111,7 @@ int main(int argc, char *argv[])
             else if(ble==2){
                 printf("ble2\r\n");
                 info=(int)CheckBtMacLeV2(btmac);
+                 printf("ble22\r\n");
             }
             else
             {
