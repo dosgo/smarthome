@@ -56,39 +56,39 @@ int main(int argc, char *argv[])
 {
     printf("smarthome %s\r\n",VER);
     struct option long_options[] = {
-    { "mac", 1, NULL, 'm'},
-    { "gcmd", 1, NULL, 'g' },
-    { "bcmd", 1, NULL, 'b' },
-    { "bmac", 1, NULL, 't' },
-    { "ble", 1, NULL, 'l' },
-    { "reloadarp", 1, NULL, 'r' },
+    { "mac", 1, NULL, 0},
+    { "gcmd", 1, NULL, 0},
+    { "bcmd", 1, NULL, 0},
+    { "bmac", 1, NULL, 0 },
+    { "ble", 1, NULL,  0},
+    { "reloadarp", 1, NULL, 0 },
     {0, 0, 0, 0}//必须保留，不然不存在会崩溃
     };
-    int c;
-    while((c = getopt_long_only(argc, argv, "m:b:g:t:l:r:", long_options, NULL)) != -1)
+    int c,index;
+    while((c = getopt_long_only(argc, argv, "m:b:g:t:l:r:", long_options, &index)) != -1)
     {
-        switch (c)
+        switch (index)
         {
-            case 'm':
+            case 0:
                 memset(mac,0,30);
                 memcpy(mac,optarg,strlen(optarg));
                 break;
-            case 'b':
+            case 2:
                 memset(backhomecmd,0,1024);
                 memcpy(backhomecmd,optarg,strlen(optarg));
                 break;
-            case 'g':
+            case 1:
                 memset(gohomecmd,0,1024);
                 memcpy(gohomecmd,optarg,strlen(optarg));
                 break;
-             case 't':
+            case 3:
                 memset(btmac,0,30);
                 memcpy(btmac,optarg,strlen(optarg));
                 break;
-             case 'r':
+             case 5:
                 sscanf(optarg,"%d",&reloadarp);
                 break;
-             case 'l':
+             case 4:
                 printf("sdfsd");
                 sscanf(optarg,"%d",&ble);
                 break;
