@@ -26,6 +26,7 @@ extern "C"{
 #include <linux/sockios.h>
 #include <sys/ioctl.h>
 #include <arpa/inet.h>
+#include <dirent.h>
 int getPidByName(char* task_name);
 #endif
 using namespace std;
@@ -475,7 +476,7 @@ int getPidByName(char* task_name)
      FILE *fp;
      char filepath[50];//大小随意，能装下cmdline文件的路径即可
      char cur_task_name[50];//大小随意，能装下要识别的命令行文本即可
-     char buf[BUF_SIZE];
+     char buf[512];
      dir = opendir("/proc"); //打开路径
      int pid=0;
      if (NULL != dir)
@@ -491,7 +492,7 @@ int getPidByName(char* task_name)
                  fp = fopen(filepath, "r");//打开文件
                  if (NULL != fp)
                  {
-                     if( fgets(buf, BUF_SIZE-1, fp)== NULL ){
+                     if( fgets(buf, 512-1, fp)== NULL ){
                  　　　　fclose(fp);
                  　　　　continue;
              　　　　 }
