@@ -27,6 +27,7 @@ extern "C"{
 #include <sys/ioctl.h>
 #include <arpa/inet.h>
 #include <dirent.h>
+#include <signal.h>
 int getPidByName(char* task_name);
 #endif
 using namespace std;
@@ -85,9 +86,9 @@ int main(int argc, char *argv[])
                 memcpy(btmac,optarg,strlen(optarg));
                 break;
              case 'r':
-                sscanf(optarg,"%d",reloadarp);
+                sscanf(optarg,"%d",&reloadarp);
              case 'l':
-                sscanf(optarg,"%d",ble);
+                sscanf(optarg,"%d",&ble);
             default:
                 printf("use  -mac  -bcmd -gcmd [-reloadarp]  or -bmac  -bcmd -gcmd \r\n");
         }
