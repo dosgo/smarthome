@@ -485,8 +485,7 @@ int getPidByName(char* task_name)
          while ((ptr = readdir(dir)) != NULL) //循环读取路径下的每一个文件/文件夹
          {
              if (DT_DIR != ptr->d_type)
-         　　　　　 continue;
-
+                continue;
              if(sscanf(ptr->d_name,"%d",pid)>0)
              {
                  sprintf(filepath, "/proc/%s/status", ptr->d_name);//生成要读取的文件的路径
@@ -494,14 +493,14 @@ int getPidByName(char* task_name)
                  if (NULL != fp)
                  {
                      if( fgets(buf, 512-1, fp)== NULL ){
-                 　　　　fclose(fp);
-                 　　　　continue;
+                        fclose(fp);
+                        continue;
              　　　　 }
              　　　　sscanf(buf, "%*s %s", cur_task_name);
 
                      //如果文件内容满足要求则打印路径的名字（即进程的PID）
                      if (!strcmp(task_name, cur_task_name))
-                　　 {　
+                　　 {
                         printf("PID:  %s\n", ptr->d_name);
                         break;
                      }
