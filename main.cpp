@@ -89,7 +89,6 @@ int main(int argc, char *argv[])
                 sscanf(optarg,"%d",&reloadarp);
                 break;
              case 4:
-                printf("sdfsd");
                 sscanf(optarg,"%d",&ble);
                 break;
             default:
@@ -202,6 +201,7 @@ bool CheckBtMacLeV2(char *btmac){
         memset(btname,0,30);
         if(sscanf(buf,"%s %s",mac,btname)!=-1)
         {
+            printf("scanbtmac:%s\r\n",mac);
             tolower(mac);
             if(strncmp(btmac,mac,strlen(btmac))==0){
                 pclose(stream);
@@ -219,6 +219,7 @@ bool CheckBtMacLeV2(char *btmac){
             int pid=getPidByName((char*)"hcitool");
             kill(pid,SIGKILL );
             #endif
+            break;
         }
      }
      pclose(stream);
