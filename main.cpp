@@ -152,6 +152,7 @@ bool CheckBtMac(char *btmac){
      char   buf[1024]={0};
      fread( buf, sizeof(char), sizeof(buf),  stream);  //将刚刚FILE* stream的数据流读取到buf中
      pclose(stream);
+     printf("buf:%s\r\n",buf);
      //有返回有返回
      if(strlen(buf)>0)
      {
