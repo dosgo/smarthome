@@ -26,6 +26,7 @@ extern "C"{
 #include <linux/sockios.h>
 #include <sys/ioctl.h>
 #include <arpa/inet.h>
+int getPidByName(char* task_name);
 #endif
 using namespace std;
 int checktime=60;
@@ -39,12 +40,14 @@ char btmac[30]={0};//蓝牙mac
 //-config[BackHomeCmd:"",GoHomeCmd:cmd.exe,Mac:xxx,IP:""]
 int lastinfo=-1;
 int reloadarp=0;//是否强制刷新arp表
+int ble=0;//蓝牙设备类型，默认0普通设备，1le设备
 bool CheckMac(char *mac);
 bool CheckBtMac(char *btmac);
 bool CheckMacV2(char *mac);
 int getlocalip(list<string>*iplist);
 int CheckArpIp(char *DestIP);
 int GetIPType(const char * ipAddress);
+void tolower(char *str);
 int main(int argc, char *argv[])
 {
     printf("smarthome %s\r\n",VER);
@@ -53,6 +56,7 @@ int main(int argc, char *argv[])
     { "gcmd", 1, NULL, 'g' },
     { "bcmd", 1, NULL, 'b' },
     { "bmac", 1, NULL, 't' },
+    { "ble", 1, NULL, 'l' },
     { "reloadarp", 1, NULL, 'r' },
     {0, 0, 0, 0}//必须保留，不然不存在会崩溃
     };
@@ -79,6 +83,8 @@ int main(int argc, char *argv[])
                 break;
              case 'r':
                 sscanf(optarg,"%d",reloadarp);
+             case 'l':
+                sscanf(optarg,"%d",ble);
             default:
                 printf("use  -mac  -bcmd -gcmd [-reloadarp]  or -bmac  -bcmd -gcmd \r\n");
         }
@@ -92,7 +98,16 @@ int main(int argc, char *argv[])
         int info=0;
         if(strlen(btmac)>0)
         {
-            info=(int)CheckBtMac(btmac);
+            if(ble==1){
+                 info=(int)CheckBtMacLe(btmac);
+            }
+            else if(ble==2){
+                info=(int)CheckBtMacLeV2(btmac);
+            }
+            else
+            {
+                info=(int)CheckBtMac(btmac);
+            }
         }
         else
         {
@@ -157,16 +172,40 @@ bool CheckBtMacLe(char *btmac){
 /*检测蓝牙是否在附近  手环另一种方法*/
 bool CheckBtMacLeV2(char *btmac){
      char btcmd[255]={0};
+     char mac[30]={0};
+     char btname[30]={0};
      //连接ble
      sprintf(btcmd,"hcitool lescan");
      FILE  *stream=popen(btcmd, "r");
      char   buf[1024]={0};
+
+       time_t t;
+    int starttime;
+    starttime = time(&t);
+    int cutime=0;
      while(1){
         fgets(buf,1024,stream);  //将刚刚FILE* stream的数据流读取到buf中
-        if(sscanf(buf,"%s")!=-1)
+        memset(mac,0,30);
+        memset(btname,0,30);
+        if(sscanf(buf,"%s %s",mac,btname)!=-1)
         {
-              pclose(stream);
-              return true;
+            tolower(mac);
+            if(strncmp(btmac,mac,strlen(btmac))==0){
+                pclose(stream);
+                return true;
+                return 0;
+            }
+        }
+        cutime= time(&t);
+        //ms已过结束进程
+        if(starttime+10<cutime)
+        {
+            #if WIN32
+
+            #else
+            int pid=getPidByName("hcitool");
+            kill(pid,SIGKILL );
+            #endif
         }
      }
      pclose(stream);
@@ -420,4 +459,60 @@ int getlocalip(list<string>*iplist)
        }
        return 0;
 }
+
+int getPidByName(char* task_name)
+ {
+     DIR *dir;
+     struct dirent *ptr;
+     FILE *fp;
+     char filepath[50];//大小随意，能装下cmdline文件的路径即可
+     char cur_task_name[50];//大小随意，能装下要识别的命令行文本即可
+     char buf[BUF_SIZE];
+     dir = opendir("/proc"); //打开路径
+     int pid=0;
+     if (NULL != dir)
+     {
+         while ((ptr = readdir(dir)) != NULL) //循环读取路径下的每一个文件/文件夹
+         {
+             if (DT_DIR != ptr->d_type)
+         　　　　　 continue;
+
+             if(sscanf(ptr->d_name,"%d",pid)>0)
+             {
+                 sprintf(filepath, "/proc/%s/status", ptr->d_name);//生成要读取的文件的路径
+                 fp = fopen(filepath, "r");//打开文件
+                 if (NULL != fp)
+                 {
+                     if( fgets(buf, BUF_SIZE-1, fp)== NULL ){
+                 　　　　fclose(fp);
+                 　　　　continue;
+             　　　　 }
+             　　　　sscanf(buf, "%*s %s", cur_task_name);
+
+                     //如果文件内容满足要求则打印路径的名字（即进程的PID）
+                     if (!strcmp(task_name, cur_task_name))
+                　　 {　
+                        printf("PID:  %s\n", ptr->d_name);
+                        break;
+                     }
+                     fclose(fp);
+                 }
+             }
+         }
+         closedir(dir);//关闭路径
+     }
+     return pid;
+}
+
 #endif // WIN32
+void tolower(char *str)
+{
+    int i=0;
+    for(i = 0; i < sizeof(str); i++)
+    {
+           str[i] = tolower(str[i]);
+    }
+}
+
+
+
