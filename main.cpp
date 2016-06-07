@@ -38,6 +38,7 @@ char btmac[30]={0};//蓝牙mac
 //char ip[30]={0};
 //-config[BackHomeCmd:"",GoHomeCmd:cmd.exe,Mac:xxx,IP:""]
 int lastinfo=-1;
+int reloadarp=0;//是否强制刷新arp表
 bool CheckMac(char *mac);
 bool CheckBtMac(char *btmac);
 bool CheckMacV2(char *mac);
@@ -51,6 +52,7 @@ int main(int argc, char *argv[])
     { "gcmd", 1, NULL, 'g' },
     { "bcmd", 1, NULL, 'b' },
     { "bmac", 1, NULL, 't' },
+    { "reloadarp", 1, NULL, 'r' },
     {0, 0, 0, 0}//必须保留，不然不存在会崩溃
     };
     int c;
@@ -74,13 +76,15 @@ int main(int argc, char *argv[])
                 memset(btmac,0,30);
                 memcpy(btmac,optarg,strlen(optarg));
                 break;
+             case 'r':
+                sscanf(optarg,"%d",reloadarp);
             default:
-                printf("use  -mac  -bcmd -gcmd  or -bmac  -bcmd -gcmd\r\n");
+                printf("use  -mac  -bcmd -gcmd [-reloadarp]  or -bmac  -bcmd -gcmd \r\n");
         }
     }
 
     if(strlen(btmac)==0&&strlen(mac)==0){
-        printf("use  -mac  -bcmd -gcmd  or -bmac  -bcmd -gcmd\r\n");
+        printf("use  -mac  -bcmd -gcmd  [-reloadarp] or -bmac  -bcmd -gcmd\r\n");
         return -1;
     }
     while(true){
@@ -171,37 +175,36 @@ bool CheckBtMacLeV2(char *btmac){
 /*检测mac地址是否在内网 依赖ping响应*/
 bool CheckMac(char *mac){
     CPing ping;
-    list<string>iplist;
-    getlocalip(&iplist);
-    list<string>::iterator it;
-    char ip[32]={0};
-    for(it = iplist.begin();it!=iplist.end();it++){
-        memset(ip,0,32);
-        memcpy(ip,(*it).c_str(),strlen((*it).c_str()));
-       if(GetIPType(ip)>0){
-          char prefix_ip[30]={0};
-          char *prefix_pos=strrchr(ip,'.');
-          if(prefix_pos!=NULL){
-            memcpy(prefix_ip,ip,prefix_pos-ip);//截取强最
-            for(int i=1;i<255;i++){
-                sprintf(ip,"%s.%d",prefix_ip,i);
-                ping.PingScanf(ip);
-            }
-          }
+    char destip[30]={0};
+    if(FindIP(destip,mac)!=0){
+        list<string>iplist;
+        getlocalip(&iplist);
+        list<string>::iterator it;
+        char ip[32]={0};
+        for(it = iplist.begin();it!=iplist.end();it++){
+            memset(ip,0,32);
+            memcpy(ip,(*it).c_str(),strlen((*it).c_str()));
+           if(GetIPType(ip)>0){
+              char prefix_ip[30]={0};
+              char *prefix_pos=strrchr(ip,'.');
+              if(prefix_pos!=NULL){
+                memcpy(prefix_ip,ip,prefix_pos-ip);//截取强最
+                for(int i=1;i<255;i++){
+                    sprintf(ip,"%s.%d",prefix_ip,i);
+                    ping.PingScanf(ip);
+                }
+              }
 
-       }else{
-           printf("ipeerr:%s\r\n",ip);
-       }
+           }else{
+               printf("ipeerr:%s\r\n",ip);
+           }
 
-    }
-    //清空
-    iplist.clear();
-
-
-
+        }
+        //清空
+        iplist.clear();
+     }
 
     sleeps(1*1000);//1ms
-    char destip[30]={0};
     //memset(ip,0,30);
     if(FindIP(destip,mac)==0){
         printf("find ip:%s\r\n",destip);
