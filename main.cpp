@@ -191,10 +191,11 @@ bool CheckBtMacLeV2(char *btmac){
      FILE  *stream=popen(btcmd, "r");
      char   buf[1024]={0};
 
-       time_t t;
+    time_t t;
     int starttime;
     starttime = time(&t);
     int cutime=0;
+    printf("sfsd");
      while(1){
         fgets(buf,1024,stream);  //将刚刚FILE* stream的数据流读取到buf中
         memset(mac,0,30);
@@ -207,7 +208,6 @@ bool CheckBtMacLeV2(char *btmac){
             if(strncmp(btmac,mac,strlen(btmac))==0){
                 pclose(stream);
                 return true;
-                return 0;
             }
         }
         cutime= time(&t);
