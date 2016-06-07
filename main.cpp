@@ -303,8 +303,8 @@ int FindIP(char *DestIP,char *DestMac){
     char Device[30]={0};
     int i=0;
     while(fgets(buf,sizeof(buf),fp)!=NULL){
-        memset(mac,30,0);
-        memset(ip,30,0);
+        memset(mac,0,30);
+        memset(ip,0,30);
         if(i>0){
             sscanf(buf,"%s %s %s %s %s %s",ip,hwtype,Flags,mac,Mask,Device);
             if(strncmp(mac,DestMac,17)==0){
@@ -331,8 +331,8 @@ int CheckArpIp(char *DestIP){
     char Device[30]={0};
     int i=0;
     while(fgets(buf,sizeof(buf),fp)!=NULL){
-        memset(ip,30,0);
-        memset(mac,30,0);
+        memset(ip,0,30);
+        memset(mac,0,30);
         if(i>0){
             sscanf(buf,"%s %s %s %s %s %s",ip,hwtype,Flags,mac,Mask,Device);
             if(strncmp(ip,DestIP,strlen(ip))==0){
