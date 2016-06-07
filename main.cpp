@@ -29,13 +29,13 @@ extern "C"{
 #endif
 using namespace std;
 int checktime=60;
-char VER[28]="v1.6-(2016/6/6)";
+char VER[28]="v1.7-(2016/6/7)";
 int FindIP(char *mac,char *ip);
 char backhomecmd[1024]="cmd.exe";//返回家
 char gohomecmd[1024]="cmd.exe";//离开家
 char mac[30]={0};
 char btmac[30]={0};//蓝牙mac
-char ip[30]={0};
+//char ip[30]={0};
 //-config[BackHomeCmd:"",GoHomeCmd:cmd.exe,Mac:xxx,IP:""]
 int lastinfo=-1;
 bool CheckMac(char *mac);
