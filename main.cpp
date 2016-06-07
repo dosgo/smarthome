@@ -175,7 +175,6 @@ bool CheckMac(char *mac){
     getlocalip(&iplist);
     list<string>::iterator it;
     char ip[32]={0};
-    printf("dd");
     for(it = iplist.begin();it!=iplist.end();it++){
         memset(ip,0,32);
         memcpy(ip,(*it).c_str(),strlen((*it).c_str()));
