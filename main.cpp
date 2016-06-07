@@ -32,7 +32,7 @@ int getPidByName(char* task_name);
 #endif
 using namespace std;
 int checktime=60;
-char VER[28]="v1.7-(2016/6/7)";
+char VER[28]="v1.8-(2016/6/7)";
 int FindIP(char *mac,char *ip);
 char backhomecmd[1024]="cmd.exe";//返回家
 char gohomecmd[1024]="cmd.exe";//离开家
@@ -150,7 +150,7 @@ bool CheckBtMac(char *btmac){
      sprintf(btcmd,"hcitool name %s",btmac);
      FILE  *stream=popen(btcmd, "r");
      char   buf[1024]={0};
-     fread( buf, 1024, 1,  stream);  //将刚刚FILE* stream的数据流读取到buf中
+     fgets( buf, 1024,   stream);  //将刚刚FILE* stream的数据流读取到buf中
      pclose(stream);
      printf("buf:%s\r\n",buf);
      //有返回有返回
