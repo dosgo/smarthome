@@ -150,7 +150,7 @@ bool CheckBtMac(char *btmac){
      sprintf(btcmd,"hcitool name %s",btmac);
      FILE  *stream=popen(btcmd, "r");
      char   buf[1024]={0};
-     fread( buf, sizeof(char), sizeof(buf),  stream);  //将刚刚FILE* stream的数据流读取到buf中
+     fread( buf, 1024, 1,  stream);  //将刚刚FILE* stream的数据流读取到buf中
      pclose(stream);
      printf("buf:%s\r\n",buf);
      //有返回有返回
