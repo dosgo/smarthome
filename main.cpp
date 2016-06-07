@@ -210,7 +210,7 @@ bool CheckBtMacLeV2(char *btmac){
             #if WIN32
 
             #else
-            int pid=getPidByName("hcitool");
+            int pid=getPidByName((char*)"hcitool");
             kill(pid,SIGKILL );
             #endif
         }
@@ -486,7 +486,7 @@ int getPidByName(char* task_name)
          {
              if (DT_DIR != ptr->d_type)
                 continue;
-             if(sscanf(ptr->d_name,"%d",pid)>0)
+             if(sscanf(ptr->d_name,"%d",&pid)>0)
              {
                  sprintf(filepath, "/proc/%s/status", ptr->d_name);//生成要读取的文件的路径
                  fp = fopen(filepath, "r");//打开文件
