@@ -43,6 +43,8 @@ int reloadarp=0;//是否强制刷新arp表
 int ble=0;//蓝牙设备类型，默认0普通设备，1le设备
 bool CheckMac(char *mac);
 bool CheckBtMac(char *btmac);
+bool CheckBtMacLe(char *btmac);
+bool CheckBtMacLeV2(char *btmac);
 bool CheckMacV2(char *mac);
 int getlocalip(list<string>*iplist);
 int CheckArpIp(char *DestIP);
@@ -135,6 +137,7 @@ int main(int argc, char *argv[])
 /*检测蓝牙是否在附近 手机*/
 bool CheckBtMac(char *btmac){
      char btcmd[255]={0};
+     tolower(btmac);
      //读取名字
      sprintf(btcmd,"hcitool name %s",btmac);
      FILE  *stream=popen(btcmd, "r");
@@ -152,6 +155,7 @@ bool CheckBtMac(char *btmac){
 /*检测蓝牙是否在附近  手环*/
 bool CheckBtMacLe(char *btmac){
      char btcmd[255]={0};
+     tolower(btmac);
      //连接ble
      sprintf(btcmd,"hcitool lecc %s",btmac);
      FILE  *stream=popen(btcmd, "r");
@@ -174,6 +178,7 @@ bool CheckBtMacLeV2(char *btmac){
      char btcmd[255]={0};
      char mac[30]={0};
      char btname[30]={0};
+     tolower(btmac);
      //连接ble
      sprintf(btcmd,"hcitool lescan");
      FILE  *stream=popen(btcmd, "r");
@@ -216,6 +221,7 @@ bool CheckBtMacLeV2(char *btmac){
 bool CheckMac(char *mac){
     CPing ping;
     char destip[30]={0};
+    tolower(mac);
     if(FindIP(destip,mac)!=0||reloadarp==1){
         list<string>iplist;
         getlocalip(&iplist);
@@ -277,6 +283,7 @@ int FindIP(char *DestIP,char *DestMac)
     result = GetIpNetTable(ipNetTable, &size, TRUE);
     ipNetTable = (MIB_IPNETTABLE *)malloc(size);
     result = GetIpNetTable(ipNetTable, &size, TRUE);
+    tolower(DestMac);
     if(result)
     {
         return -1;
@@ -340,6 +347,7 @@ int FindIP(char *DestIP,char *DestMac){
     char Flags[30]={0};
     char Mask[30]={0};
     char Device[30]={0};
+    tolower(DestMac);
     int i=0;
     while(fgets(buf,sizeof(buf),fp)!=NULL){
         memset(mac,0,30);
