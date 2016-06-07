@@ -43,6 +43,7 @@ bool CheckMac(char *mac);
 bool CheckBtMac(char *btmac);
 bool CheckMacV2(char *mac);
 int getlocalip(list<string>*iplist);
+int CheckArpIp(char *DestIP);
 int GetIPType(const char * ipAddress);
 int main(int argc, char *argv[])
 {
@@ -191,7 +192,10 @@ bool CheckMac(char *mac){
                 memcpy(prefix_ip,ip,prefix_pos-ip);//截取强最
                 for(int i=1;i<255;i++){
                     sprintf(ip,"%s.%d",prefix_ip,i);
-                    ping.PingScanf(ip);
+                    //检测是否在arp表
+                    if(CheckArpIp(ip)!=0){
+                        ping.PingScanf(ip);
+                    }
                 }
               }
 
@@ -257,11 +261,35 @@ int FindIP(char *DestIP,char *DestMac)
     }
     return -1;
 }
+int CheckArpIp(char *DestIP){
+    MIB_IPNETTABLE *ipNetTable = NULL;
+    ULONG size = 0;
+    DWORD result = 0;
+    result = GetIpNetTable(ipNetTable, &size, TRUE);
+    ipNetTable = (MIB_IPNETTABLE *)malloc(size);
+    result = GetIpNetTable(ipNetTable, &size, TRUE);
+    if(result)
+    {
+        return -1;
+    }
+    int i = 0;
+    IN_ADDR ip;
+    char ipstr[30]={0};
+    for(i=0; i < ipNetTable->dwNumEntries; i++)
+    {
+        ip.S_un.S_addr = ipNetTable->table[i].dwAddr;
+        memset(ipstr,0,30);
+        sprintf(ipstr,"%s",inet_ntoa(ip));
+        if(strncmp(DestIP,ipstr,strlen(ipstr))==0){
+            return 0;
+        }
+    }
+    return -1;
+}
+
 #else
 int FindIP(char *DestIP,char *DestMac){
     FILE *fp = fopen("/proc/net/arp","r");
-    //FILE *fp = fopen("D:\\c\\shome\\xx.txt","r");
-    int i=0;
     if(fp==NULL)
     {
        return -1;
@@ -275,6 +303,8 @@ int FindIP(char *DestIP,char *DestMac){
     char Device[30]={0};
 
     while(fgets(buf,sizeof(buf),fp)!=NULL){
+        memset(mac,30,0);
+        memset(ip,30,0);
         if(i>0){
             sscanf(buf,"%s %s %s %s %s %s",ip,hwtype,Flags,mac,Mask,Device);
             if(strncmp(mac,DestMac,17)==0){
@@ -282,7 +312,32 @@ int FindIP(char *DestIP,char *DestMac){
                 return 0;
             }
         }
-        i++;
+    }
+    return -1;
+}
+int CheckArpIp(char *DestIP){
+    FILE *fp = fopen("/proc/net/arp","r");
+    if(fp==NULL)
+    {
+       return -1;
+    }
+    char buf[1024]={0};
+    char ip[30]={0};
+    char mac[30]={0};
+    char hwtype[30]={0};
+    char Flags[30]={0};
+    char Mask[30]={0};
+    char Device[30]={0};
+
+    while(fgets(buf,sizeof(buf),fp)!=NULL){
+        memset(ip,30,0);
+        memset(mac,30,0);
+        if(i>0){
+            sscanf(buf,"%s %s %s %s %s %s",ip,hwtype,Flags,mac,Mask,Device);
+            if(strncmp(ip,DestIP,strlen(ip))==0){
+                return 0;
+            }
+        }
     }
     return -1;
 }
