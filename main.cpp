@@ -177,18 +177,15 @@ bool CheckMac(char *mac){
     char ip[32]={0};
     printf("dd");
     for(it = iplist.begin();it!=iplist.end();it++){
-            printf("sfsdxxxxxxxxxxxx\r\n");
         memset(ip,0,32);
         memcpy(ip,(*it).c_str(),strlen((*it).c_str()));
        if(GetIPType(ip)>0){
-          printf("sfsdf\r\n");
           char prefix_ip[30]={0};
           char *prefix_pos=strrchr(ip,'.');
           if(prefix_pos!=NULL){
             memcpy(prefix_ip,ip,prefix_pos-ip);//½ØÈ¡Ç¿×î
             for(int i=1;i<255;i++){
                 sprintf(ip,"%s.%d",prefix_ip,i);
-                printf("ip:%s\r\n",ip);
                 ping.PingScanf(ip);
             }
           }
@@ -321,13 +318,11 @@ int getlocalip(list<string>*iplist){
     int i;
     char ip[32]={0};
     gethostname(hname, sizeof(hname));
-    printf("hname:%s\r\n",hname);
     if((hostinfo = gethostbyname(hname)) != NULL)
     {
         for(i = 0; hostinfo->h_addr_list[i]; i++) {
             memset(ip,0,32);
             sprintf(ip,"%s", inet_ntoa(*(struct in_addr*)(hostinfo->h_addr_list[i])));
-                  printf("sfsdf1\r\n");
             (*iplist).insert((*iplist).begin(),string(ip));
         }
     }
@@ -359,9 +354,6 @@ int getlocalip(list<string>*iplist)
                ioctl(s, SIOCGIFFLAGS, ifr);
                if(((ifr->ifr_flags & IFF_LOOPBACK) == 0) && (ifr->ifr_flags & IFF_UP))
                {
-                       printf("%s (%s)\n",
-                               ifr->ifr_name,
-                               inet_ntoa(sin->sin_addr));
                        sprintf(ip,"%s",inet_ntoa(sin->sin_addr));
                        (*iplist).insert((*iplist).begin(),string(ip));
                }
