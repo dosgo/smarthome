@@ -188,32 +188,20 @@ bool CheckBtMacLeV2(char *btmac){
      char mac[30]={0};
      char btname[30]={0};
      tolower(btmac);
-      printf("sfsd2\r\n");
      //连接ble
      sprintf(btcmd,"hcitool lescan");
      FILE  *stream=popen(btcmd, "r");
      char   buf[1024]={0};
-     printf("sfsd1\r\n");
-    time_t t;
-    int starttime;
-    starttime = time(&t);
-    int cutime=0;
+     while(1){
+            sleep(10);
 
-
-    while(1){
-            sleep(20);
-
-             #if WIN32
+                #if WIN32
 
                 #else
                 int pid=getPidByName((char*)"hcitool");
                 kill(pid,SIGKILL );
                 #endif
-
-
-                printf("sfsd-1\r\n");
                 fgets(buf,1024,stream);  //将刚刚FILE* stream的数据流读取到buf中
-                printf("sfsd-2\r\n");
                 memset(mac,0,30);
                 memset(btname,0,30);
                 printf("buf:%s\r\n",buf);
@@ -226,19 +214,6 @@ bool CheckBtMacLeV2(char *btmac){
                         return true;
                     }
                 }
-
-            cutime= time(&t);
-            //ms已过结束进程
-            if(starttime+10<cutime)
-            {
-                #if WIN32
-
-                #else
-                int pid=getPidByName((char*)"hcitool");
-                kill(pid,SIGKILL );
-                #endif
-                break;
-            }
      }
      pclose(stream);
      return false;
