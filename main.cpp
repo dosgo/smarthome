@@ -199,6 +199,7 @@ bool CheckBtMacLeV2(char *btmac){
         fgets(buf,1024,stream);  //将刚刚FILE* stream的数据流读取到buf中
         memset(mac,0,30);
         memset(btname,0,30);
+        printf("buf:%s\r\n",buf);
         if(sscanf(buf,"%s %s",mac,btname)!=-1)
         {
             printf("scanbtmac:%s\r\n",mac);
