@@ -182,6 +182,7 @@ bool CheckBtMacLe(char *btmac){
 }
 /*检测蓝牙是否在附近  手环另一种方法*/
 bool CheckBtMacLeV2(char *btmac){
+      printf("CheckBtMacLeV2");
      char btcmd[255]={0};
      char mac[30]={0};
      char btname[30]={0};
