@@ -5,6 +5,7 @@
 #include "freearp.h"
 #include <stdio.h>
 #include <time.h>
+#include <list>
 #if WIN32
 extern "C"{
 #define STATIC_GETOPT 1
@@ -18,6 +19,13 @@ extern "C"{
 #include <net/if.h>
 #include <stdlib.h>
 #include <getopt.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
+#include <linux/sockios.h>
+#include <sys/ioctl.h>
+#include <arpa/inet.h>
 #endif
 using namespace std;
 int checktime=60;
@@ -33,8 +41,8 @@ int lastinfo=-1;
 bool CheckMac(char *mac);
 bool CheckBtMac(char *btmac);
 bool CheckMacV2(char *mac);
-int getlocalip();
-  int GetIPType(char * ipAddress);
+int getlocalip(list<string>*iplist);
+int GetIPType(const char * ipAddress);
 int main(int argc, char *argv[])
 {
     printf("smarthome %s\r\n",VER);
@@ -163,40 +171,37 @@ bool CheckBtMacLeV2(char *btmac){
 /*检测mac地址是否在内网 依赖ping响应*/
 bool CheckMac(char *mac){
     CPing ping;
-    #if WIN32
-    WSADATA wsaData;
-    WSAStartup(MAKEWORD(2,2),&wsaData);
-    #endif // WIN32
-    char hname[128]={0};
-    struct hostent *hostinfo;
-    int i;
+    list<string>iplist;
+    getlocalip(&iplist);
+    list<string>::iterator it;
     char ip[32]={0};
-    gethostname(hname, sizeof(hname));
-    printf("hname:%s\r\n",hname);
-    if((hostinfo = gethostbyname(hname)) != NULL)
-    {
-        for(i = 0; hostinfo->h_addr_list[i]; i++) {
-            memset(ip,0,32);
-            sprintf(ip,"%s", inet_ntoa(*(struct in_addr*)(hostinfo->h_addr_list[i])));
-                  printf("sfsdf1\r\n");
-            if(GetIPType(ip)>0){
-                    printf("sfsdf\r\n");
-                 char prefix_ip[30]={0};
-                 char *prefix_pos=strrchr(ip,'.');
-                 if(prefix_pos!=NULL){
-                    memcpy(prefix_ip,ip,prefix_pos-ip);//截取强最
-                    for(int i=1;i<255;i++){
-                        sprintf(ip,"%s.%d",prefix_ip,i);
-                        printf("ip:%s\r\n",ip);
-                        ping.PingScanf(ip);
-                    }
-                 }
-
-            }else{
-            printf("ipeerr:%s\r\n",ip);
+    printf("dd");
+    for(it = iplist.begin();it!=iplist.end();it++){
+            printf("sfsdxxxxxxxxxxxx\r\n");
+        memset(ip,0,32);
+        memcpy(ip,(*it).c_str(),strlen((*it).c_str()));
+       if(GetIPType(ip)>0){
+          printf("sfsdf\r\n");
+          char prefix_ip[30]={0};
+          char *prefix_pos=strrchr(ip,'.');
+          if(prefix_pos!=NULL){
+            memcpy(prefix_ip,ip,prefix_pos-ip);//截取强最
+            for(int i=1;i<255;i++){
+                sprintf(ip,"%s.%d",prefix_ip,i);
+                printf("ip:%s\r\n",ip);
+                ping.PingScanf(ip);
             }
-        }
+          }
+
+       }else{
+           printf("ipeerr:%s\r\n",ip);
+       }
+
     }
+    //清空
+    iplist.clear();
+
+
 
 
     sleeps(1*1000);//1ms
@@ -221,8 +226,6 @@ bool CheckMac(char *mac){
 
 
 /*读取mac查询IP*/
-
-
 #if WIN32
 int FindIP(char *DestIP,char *DestMac)
 {
@@ -291,7 +294,7 @@ int FindIP(char *DestIP,char *DestMac){
 
 
 
-int GetIPType(char * ipAddress)
+int GetIPType(const char * ipAddress)
 {
     int ipAddressList=0;
     int ipAddressList1=0;
@@ -306,3 +309,64 @@ int GetIPType(char * ipAddress)
     }
     return 0;
 }
+
+
+
+#if WIN32
+int getlocalip(list<string>*iplist){
+    WSADATA wsaData;
+    WSAStartup(MAKEWORD(2,2),&wsaData);
+    char hname[128]={0};
+    struct hostent *hostinfo;
+    int i;
+    char ip[32]={0};
+    gethostname(hname, sizeof(hname));
+    printf("hname:%s\r\n",hname);
+    if((hostinfo = gethostbyname(hname)) != NULL)
+    {
+        for(i = 0; hostinfo->h_addr_list[i]; i++) {
+            memset(ip,0,32);
+            sprintf(ip,"%s", inet_ntoa(*(struct in_addr*)(hostinfo->h_addr_list[i])));
+                  printf("sfsdf1\r\n");
+            (*iplist).insert((*iplist).begin(),string(ip));
+        }
+    }
+    return 0;
+}
+#else
+int getlocalip(list<string>*iplist)
+{
+       int s;
+       struct ifconf conf;
+       struct ifreq *ifr;
+       char buff[BUFSIZ];
+       int num;
+       int i;
+
+       s = socket(PF_INET, SOCK_DGRAM, 0);
+       conf.ifc_len = BUFSIZ;
+       conf.ifc_buf = buff;
+
+       ioctl(s, SIOCGIFCONF, &conf);
+       num = conf.ifc_len / sizeof(struct ifreq);
+       ifr = conf.ifc_req;
+       char ip[32]={0};
+       for(i=0;i < num;i++)
+       {
+               memset(ip,0,32);
+               struct sockaddr_in *sin = (struct sockaddr_in *)(&ifr->ifr_addr);
+
+               ioctl(s, SIOCGIFFLAGS, ifr);
+               if(((ifr->ifr_flags & IFF_LOOPBACK) == 0) && (ifr->ifr_flags & IFF_UP))
+               {
+                       printf("%s (%s)\n",
+                               ifr->ifr_name,
+                               inet_ntoa(sin->sin_addr));
+                       sprintf(ip,"%s",inet_ntoa(sin->sin_addr));
+                       (*iplist).insert((*iplist).begin(),string(ip));
+               }
+               ifr++;
+       }
+       return 0;
+}
+#endif // WIN32
