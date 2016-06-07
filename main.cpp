@@ -192,7 +192,7 @@ bool CheckBtMacLeV2(char *btmac){
      sprintf(btcmd,"hcitool lescan");
      FILE  *stream=popen(btcmd, "r");
      char   buf[1024]={0};
-     while(1){
+
             sleep(10);
 
                 #if WIN32
@@ -214,7 +214,7 @@ bool CheckBtMacLeV2(char *btmac){
                         return true;
                     }
                 }
-     }
+
      pclose(stream);
      return false;
 }
