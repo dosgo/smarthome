@@ -199,34 +199,45 @@ bool CheckBtMacLeV2(char *btmac){
     starttime = time(&t);
     int cutime=0;
     printf("sfsd\r\n");
-     while(1){
-            printf("sfsd-1\r\n");
-        fgets(buf,1024,stream);  //将刚刚FILE* stream的数据流读取到buf中
-       printf("sfsd-2\r\n");
-        memset(mac,0,30);
-        memset(btname,0,30);
-        printf("buf:%s\r\n",buf);
-        if(sscanf(buf,"%s %s",mac,btname)!=-1)
-        {
-            printf("scanbtmac:%s\r\n",mac);
-            tolower(mac);
-            if(strncmp(btmac,mac,strlen(btmac))==0){
-                pclose(stream);
-                return true;
-            }
-        }
-        cutime= time(&t);
-        //ms已过结束进程
-        if(starttime+10<cutime)
-        {
-            #if WIN32
+    fd_set fds;
+	struct timeval  wait;
+	FD_ZERO(&fds);
+	FD_SET(stream, &fds);
+	wait.tv_sec =0;
+	wait.tv_usec =100*1000;
+	int flags = fcntl(stream, F_GETFL, 0);
+    fcntl(stream, F_SETFL, flags | O_NONBLOCK);
 
-            #else
-            int pid=getPidByName((char*)"hcitool");
-            kill(pid,SIGKILL );
-            #endif
-            break;
-        }
+    while(1){
+            if (select(stream + 1, &fds, NULL, NULL, &wait) > 0){
+                printf("sfsd-1\r\n");
+                fgets(buf,1024,stream);  //将刚刚FILE* stream的数据流读取到buf中
+                printf("sfsd-2\r\n");
+                memset(mac,0,30);
+                memset(btname,0,30);
+                printf("buf:%s\r\n",buf);
+                if(sscanf(buf,"%s %s",mac,btname)!=-1)
+                {
+                    printf("scanbtmac:%s\r\n",mac);
+                    tolower(mac);
+                    if(strncmp(btmac,mac,strlen(btmac))==0){
+                        pclose(stream);
+                        return true;
+                    }
+                }
+            }
+            cutime= time(&t);
+            //ms已过结束进程
+            if(starttime+10<cutime)
+            {
+                #if WIN32
+
+                #else
+                int pid=getPidByName((char*)"hcitool");
+                kill(pid,SIGKILL );
+                #endif
+                break;
+            }
      }
      pclose(stream);
      return false;
