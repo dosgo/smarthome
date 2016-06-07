@@ -186,11 +186,12 @@ bool CheckBtMacLeV2(char *btmac){
      char mac[30]={0};
      char btname[30]={0};
      tolower(btmac);
+      printf("sfsd2");
      //Á¬½Óble
      sprintf(btcmd,"hcitool lescan");
      FILE  *stream=popen(btcmd, "r");
      char   buf[1024]={0};
-
+     printf("sfsd1");
     time_t t;
     int starttime;
     starttime = time(&t);
