@@ -89,6 +89,7 @@ int main(int argc, char *argv[])
                 sscanf(optarg,"%d",&reloadarp);
                 break;
              case 'l':
+                 printf("sdfsd\r\n");
                 sscanf(optarg,"%d",&ble);
                 break;
             default:
