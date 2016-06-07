@@ -103,9 +103,11 @@ int main(int argc, char *argv[])
         if(strlen(btmac)>0)
         {
             if(ble==1){
+                    printf("ble1\r\n");
                  info=(int)CheckBtMacLe(btmac);
             }
             else if(ble==2){
+                printf("ble2\r\n");
                 info=(int)CheckBtMacLeV2(btmac);
             }
             else
