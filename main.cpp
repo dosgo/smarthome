@@ -199,7 +199,7 @@ bool CheckBtMacLeV2(char *btmac){
 
                 #else
                 int pid=getPidByName((char*)"hcitool");
-                kill(pid,SIGKILL );
+                kill(pid,SIGTERM);//SIGTERM SIGKILL
                 #endif
                 fgets(buf,1024,stream);  //将刚刚FILE* stream的数据流读取到buf中
                 memset(mac,0,30);
