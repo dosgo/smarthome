@@ -188,17 +188,17 @@ bool CheckBtMacLeV2(char *btmac){
      char mac[30]={0};
      char btname[30]={0};
      tolower(btmac);
-      printf("sfsd2");
+      printf("sfsd2\r\n");
      //连接ble
      sprintf(btcmd,"hcitool lescan");
      FILE  *stream=popen(btcmd, "r");
      char   buf[1024]={0};
-     printf("sfsd1");
+     printf("sfsd1\r\n");
     time_t t;
     int starttime;
     starttime = time(&t);
     int cutime=0;
-    printf("sfsd");
+    printf("sfsd\r\n");
      while(1){
         fgets(buf,1024,stream);  //将刚刚FILE* stream的数据流读取到buf中
         memset(mac,0,30);
