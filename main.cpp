@@ -150,6 +150,7 @@ bool CheckBtMacLe(char *btmac){
      tolower(btmac);
      //连接ble
      sprintf(btcmd,"hcitool lecc %s",btmac);
+     printf("btcmd:%s\r\n",btcmd);
      FILE  *stream=popen(btcmd, "r");
      char   buf[1024]={0};
      fread( buf, sizeof(char),1024,  stream);  //将刚刚FILE* stream的数据流读取到buf中
