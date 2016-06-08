@@ -43,10 +43,6 @@
 		<Unit filename="args.h" />
 		<Unit filename="cping.cpp" />
 		<Unit filename="cping.h" />
-		<Unit filename="getopt.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="getopt.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="mytime.h" />
 		<Extensions>

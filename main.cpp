@@ -10,11 +10,6 @@ extern "C"{
 #include <time.h>
 #include <list>
 #if WIN32
-extern "C"{
-#define STATIC_GETOPT 1
-#include "getopt.h"
-
-}
 #include <windows.h>
 #include <Iphlpapi.h>
 #include <WinSock2.h>
