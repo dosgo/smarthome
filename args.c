@@ -48,19 +48,49 @@ char *getArg(int argc, char** argv, char* key) {
 
   int i = 0;
   for(; i < argc; i++) {
-    int index = indexOf(argv[i], '=');
-    char *strToComp = (index == -1) ? argv[i] : substrUntil(argv[i], index);
-    if(strcmp(strToComp, key) == 0) {
-      if(index != -1) {
-	return substrFromIndex(argv[i], index+1);
-      } else {
-	if(argv[i+1] && indexOf(argv[i+1], '-') != 0) {
-	  return argv[i+1];
-	} else {
-	  return "true";
-	}
-      }
-    }
+        int index = indexOf(argv[i], '=');
+        char *strToComp = (index == -1) ? argv[i] : substrUntil(argv[i], index);
+        if(strcmp(strToComp, key) == 0) {
+            if(index != -1) {
+                return substrFromIndex(argv[i], index+1);
+            }
+            else
+            {
+                if(argv[i+1] && indexOf(argv[i+1], '-') != 0) {
+                    return argv[i+1];
+                }else {
+                    return "true";
+                }
+            }
+       }
   }
   return "false";
+}
+
+int getArgValue(int argc, char** argv, char* key,char *value) {
+  memset(value,0,sizeof(value));
+  int i = 0;
+  for(; i < argc; i++) {
+        int index = indexOf(argv[i], '=');
+        char *strToComp = (index == -1) ? argv[i] : substrUntil(argv[i], index);
+        if(strcmp(strToComp, key) == 0) {
+            if(index != -1) {
+                char *temp= substrFromIndex(argv[i], index+1);
+               // memcpy(value,temp,strlen(temp));
+                sprintf(value,"%s",temp);
+                return 0;
+            }
+            else
+            {
+                if(argv[i+1] && indexOf(argv[i+1], '-') != 0) {
+                   // memcpy(value,argv[i+1],strlen(argv[i+1]));
+                    sprintf(value,"%s",argv[i+1]);
+                    return 0;
+                }else {
+                    return -1;
+                }
+            }
+       }
+  }
+  return -1;
 }

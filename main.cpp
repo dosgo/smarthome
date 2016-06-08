@@ -56,15 +56,25 @@ int main(int argc, char *argv[])
 {
     printf("smarthome %s\r\n",VER);
 
-
-     sprintf(mac,"%s", getArg(argc, argv,(char*) "-mac")); // "mac"
-     sprintf(gohomecmd,"%s", getArg(argc, argv,(char*)  "-gcmd")); // "gohomecmd"
-     sprintf(backhomecmd,"%s", getArg(argc, argv,(char*)  "-bcmd")); // "backhomecmd"
-     sprintf(btmac,"%s", getArg(argc, argv,(char*)  "-bmac")); // "btmac"
-     sscanf(getArg(argc, argv,(char*)  "-ble"),"%d",&ble); // "ble"
-     sscanf(getArg(argc, argv, (char*) "-reloadarp"),"%d",&reloadarp); // "ble"
-
-
+     char arg[255]={0};
+     if(getArgValue(argc, argv,(char*) "-mac",arg)==0){
+        sprintf(mac,"%s",arg); // "mac"
+     }
+     if(getArgValue(argc, argv,(char*) "-gcmd",arg)==0){
+        sprintf(gohomecmd,"%s",arg); // "gohomecmd"
+     }
+     if(getArgValue(argc, argv,(char*) "-bcmd",arg)==0){
+        sprintf(backhomecmd,"%s",arg); // "backhomecmd"
+     }
+     if(getArgValue(argc, argv,(char*) "-ble",arg)==0){
+         sscanf(arg,"%d",&ble); // "ble"
+     }
+     if(getArgValue(argc, argv,(char*) "-reloadarp",arg)==0){
+        sscanf(arg,"%d",&reloadarp); // "reloadarp"
+     }
+     if(getArgValue(argc, argv,(char*) "-bmac",arg)==0){
+        sprintf(btmac,"%s",arg); // "btmac"
+     }
 
 
 
