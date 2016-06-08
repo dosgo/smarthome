@@ -57,12 +57,12 @@ int main(int argc, char *argv[])
     printf("smarthome %s\r\n",VER);
 
 
-     sprintf(mac,"%s", getArg(argc, argv, "-mac")); // "mac"
-     sprintf(gohomecmd,"%s", getArg(argc, argv, "-gcmd")); // "gohomecmd"
-     sprintf(backhomecmd,"%s", getArg(argc, argv, "-bcmd")); // "backhomecmd"
-     sprintf(btmac,"%s", getArg(argc, argv, "-bmac")); // "btmac"
-     sscanf(getArg(argc, argv, "-ble"),"%d",&ble); // "ble"
-     sscanf(getArg(argc, argv, "-reloadarp"),"%d",&reloadarp); // "ble"
+     sprintf(mac,"%s", getArg(argc, argv,(char*) "-mac")); // "mac"
+     sprintf(gohomecmd,"%s", getArg(argc, argv,(char*)  "-gcmd")); // "gohomecmd"
+     sprintf(backhomecmd,"%s", getArg(argc, argv,(char*)  "-bcmd")); // "backhomecmd"
+     sprintf(btmac,"%s", getArg(argc, argv,(char*)  "-bmac")); // "btmac"
+     sscanf(getArg(argc, argv,(char*)  "-ble"),"%d",&ble); // "ble"
+     sscanf(getArg(argc, argv, (char*) "-reloadarp"),"%d",&reloadarp); // "ble"
 
 
 
