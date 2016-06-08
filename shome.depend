@@ -106,17 +106,16 @@
 	<string.h>
 	<wchar.h>
 
-1465370116 source:d:\c\smarthome\main.cpp
+1465371862 source:d:\c\smarthome\main.cpp
 	<iostream>
 	"cping.h"
 	"mytime.h"
 	"dd.h"
 	"freearp.h"
-	"ccargs.h"
+	"args.h"
 	<stdio.h>
 	<time.h>
 	<list>
-	"getopt.h"
 	<windows.h>
 	<Iphlpapi.h>
 	<WinSock2.h>

@@ -1,9 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#if WIN32
+
+    #include "args.h"
+
+#else
 extern "C"{
-#include "args.h"
+    #include "args.h"
 }
+#endif
 int indexOf(char* src, char key) {
   int i = 0;
   for(; src[i] != '\0'; i++) {
