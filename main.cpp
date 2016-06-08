@@ -147,29 +147,30 @@ bool CheckBtMac(char *btmac){
 /*检测蓝牙是否在附近  手环*/
 bool CheckBtMacLe(char *btmac){
      char btcmd[255]={0};
+     char   buf[1024]={0};
      tolower(btmac);
+
+     FILE  *stream1=popen("hciconfig hci0 down", "r");
+     fgets( buf, 1024,   stream1);
+     FILE  *stream2=popen("hciconfig hci0 up", "r");
+     fgets( buf, 1024,   stream2);
+     sleeps(2);
      //连接ble
      sprintf(btcmd,"hcitool lecc %s",btmac);
      printf("btcmd:%s\r\n",btcmd);
      FILE  *stream=popen(btcmd, "r");
-     char   buf[1024]={0};
+     memset(buf,0,1024);
    //  fread( buf, sizeof(char),1024,  stream);  //将刚刚FILE* stream的数据流读取到buf中
-       fgets( buf, 1024,   stream);
-     printf("buf:%s\r\n",buf);
-     char bthandle[10]={0};
+      fgets( buf, 1024,   stream);
+      printf("buf:%s\r\n",buf);
+      char bthandle[10]={0};
       if(sscanf(buf," %[0-9]",bthandle)!=-1)
       {
           //断开ble
-          popen("hciconfig hci0 down", "r");
-          sleeps(5);
-          popen("hciconfig hci0 up", "r");
           pclose(stream);
           return true;
       }
      //重启否则会卡死
-     popen("hciconfig hci0 down", "r");
-     sleeps(5);
-     popen("hciconfig hci0 up", "r");
      pclose(stream);
      return false;
 }
