@@ -153,7 +153,8 @@ bool CheckBtMacLe(char *btmac){
      printf("btcmd:%s\r\n",btcmd);
      FILE  *stream=popen(btcmd, "r");
      char   buf[1024]={0};
-     fread( buf, sizeof(char),1024,  stream);  //将刚刚FILE* stream的数据流读取到buf中
+   //  fread( buf, sizeof(char),1024,  stream);  //将刚刚FILE* stream的数据流读取到buf中
+       fgets( buf, 1024,   stream);
      printf("buf:%s\r\n",buf);
      char bthandle[10]={0};
       if(sscanf(buf," %[0-9]",bthandle)!=-1)
