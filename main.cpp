@@ -163,6 +163,9 @@ bool CheckBtMacLe(char *btmac){
           pclose(stream);
           return true;
       }
+     //÷ÿ∆Ù∑Ò‘Úª·ø®À¿
+     popen("hciconfig hci0 down", "r");
+     popen("hciconfig hci0 up", "r");
      pclose(stream);
      return false;
 }
