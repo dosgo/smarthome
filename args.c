@@ -56,23 +56,3 @@ char *getArg(int argc, char** argv, char* key) {
   }
   return "false";
 }
-
-// --------------------------------------------------------------------
-//
-// ./a.out --test=my_arg -value
-//              ||         ||
-//              \/         \/
-//             my_arg     true
-//
-// I choose to return "true" and "false" rather than void pointers that would
-// need a cast.
-// It's better to deal with string only, I think.
-// -------------------------------------------------------------------
-int maintest(int argc, char** argv) {
-
-  printf("%s\n", getArg(argc, argv, "--test")); // "my_arg"
-  printf("%s\n", getArg(argc, argv, "-value")); // "true"
-  printf("%s\n", getArg(argc, argv, "-opt"));   // "false"
-
-  return 42; // The answer of everything
-}
