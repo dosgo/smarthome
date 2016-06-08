@@ -3,6 +3,9 @@
 #include "mytime.h"
 #include "dd.h"
 #include "freearp.h"
+extern "C"{
+#include "args.h"
+}
 #include <stdio.h>
 #include <time.h>
 #include <list>
@@ -28,8 +31,10 @@ extern "C"{
 #include <arpa/inet.h>
 #include <dirent.h>
 #include <signal.h>
+
 int getPidByName(char* task_name);
 #endif
+#define __C_PROMPT__ "> "
 using namespace std;
 int checktime=60;
 char VER[28]="v1.8-(2016/6/7)";
@@ -55,46 +60,18 @@ void tolower(char *str);
 int main(int argc, char *argv[])
 {
     printf("smarthome %s\r\n",VER);
-    struct option long_options[] = {
-    { "mac", 1, NULL, 0},
-    { "gcmd", 1, NULL, 0},
-    { "bcmd", 1, NULL, 0},
-    { "bmac", 1, NULL, 0 },
-    { "ble", 1, NULL,  0},
-    { "reloadarp", 1, NULL, 0 },
-    {0, 0, 0, 0}//必须保留，不然不存在会崩溃
-    };
-    int c,index;
-    while((c = getopt_long_only(argc, argv, NULL, long_options, &index)) != -1)
-    {
-        switch (index)
-        {
-            case 0:
-                memset(mac,0,30);
-                memcpy(mac,optarg,strlen(optarg));
-                break;
-            case 2:
-                memset(backhomecmd,0,1024);
-                memcpy(backhomecmd,optarg,strlen(optarg));
-                break;
-            case 1:
-                memset(gohomecmd,0,1024);
-                memcpy(gohomecmd,optarg,strlen(optarg));
-                break;
-            case 3:
-                memset(btmac,0,30);
-                memcpy(btmac,optarg,strlen(optarg));
-                break;
-             case 5:
-                sscanf(optarg,"%d",&reloadarp);
-                break;
-             case 4:
-                sscanf(optarg,"%d",&ble);
-                break;
-            default:
-                printf("use  -mac  -bcmd -gcmd [-reloadarp]  or -bmac  -bcmd -gcmd \r\n");
-        }
-    }
+
+
+     sprintf(mac,"%s", getArg(argc, argv, "-mac")); // "mac"
+     sprintf(gohomecmd,"%s", getArg(argc, argv, "-gcmd")); // "gohomecmd"
+     sprintf(backhomecmd,"%s", getArg(argc, argv, "-bcmd")); // "backhomecmd"
+     sprintf(btmac,"%s", getArg(argc, argv, "-bmac")); // "btmac"
+     sscanf(getArg(argc, argv, "-ble"),"%d",&ble); // "ble"
+     sscanf(getArg(argc, argv, "-reloadarp"),"%d",&reloadarp); // "ble"
+
+
+
+
 
     if(strlen(btmac)==0&&strlen(mac)==0){
         printf("use  -mac  -bcmd -gcmd  [-reloadarp] or -bmac  -bcmd -gcmd\r\n");
@@ -196,7 +173,7 @@ bool CheckBtMacLeV2(char *btmac){
      FILE  *stream=popen(btcmd, "r");
      char   buf[1024]={0};
 
-            sleep(10);
+           // sleep(10);
 
                 #if WIN32
 
@@ -524,6 +501,7 @@ void tolower(char *str)
            str[i] = tolower(str[i]);
     }
 }
+
 
 
 

@@ -106,24 +106,60 @@
 	<string.h>
 	<wchar.h>
 
-1465206849 source:d:\c\smarthome\main.cpp
+1465370116 source:d:\c\smarthome\main.cpp
 	<iostream>
 	"cping.h"
 	"mytime.h"
+	"dd.h"
+	"freearp.h"
+	"ccargs.h"
 	<stdio.h>
 	<time.h>
+	<list>
 	"getopt.h"
 	<windows.h>
 	<Iphlpapi.h>
-	<lm.h>
 	<WinSock2.h>
 	<net/if.h>
 	<stdlib.h>
 	<getopt.h>
+	<stdio.h>
+	<sys/types.h>
+	<netinet/in.h>
+	<sys/socket.h>
+	<linux/sockios.h>
+	<sys/ioctl.h>
+	<arpa/inet.h>
+	<dirent.h>
+	<signal.h>
 
 1462755752 d:\c\smarthome\mytime.h
 	<windows.h>
 	<errno.h>
 	<sys/select.h>
 	<netinet/in.h>
+
+1465262050 d:\c\smarthome\dd.h
+
+1465262050 d:\c\smarthome\freearp.h
+
+1228392398 source:d:\c\smarthome\longopt.c
+	<stdio.h>
+	<assert.h>
+	<string.h>
+	"longopt.h"
+
+1228389316 d:\c\smarthome\longopt.h
+	<stdio.h>
+
+1465369998 source:d:\c\smarthome\ccargs.c
+	"ccargs.h"
+
+1453431126 d:\c\smarthome\ccargs.h
+	<stdio.h>
+
+1465370594 source:d:\c\smarthome\args.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
 

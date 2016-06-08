@@ -11,7 +11,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters='-mac &quot;d0:5b:a8:21:a2:6b&quot; -ip 192.168.43.1  -gcmd &quot;motion -c /etc/motion.conf &quot; -bcmd &quot;killall motion&quot;' />
+				<Option parameters='-bmac &quot;d0:5b:a8:21:a2:6b&quot;   -gcmd &quot;motion -c /etc/motion.conf &quot; -bcmd &quot;killall motion&quot;' />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -37,6 +37,10 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="args.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="args.h" />
 		<Unit filename="cping.cpp" />
 		<Unit filename="cping.h" />
 		<Unit filename="getopt.c">
