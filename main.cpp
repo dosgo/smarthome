@@ -148,6 +148,8 @@ bool CheckBtMac(char *btmac){
 bool CheckBtMacLe(char *btmac){
      char btcmd[255]={0};
      tolower(btmac);
+     popen("hciconfig hci0 down", "r");
+     popen("hciconfig hci0 up", "r");
      //Á¬½Óble
      sprintf(btcmd,"hcitool lecc %s",btmac);
      printf("btcmd:%s\r\n",btcmd);
@@ -160,8 +162,8 @@ bool CheckBtMacLe(char *btmac){
       if(sscanf(buf," %[0-9]",bthandle)!=-1)
       {
           //¶Ï¿ªble
-          sprintf(btcmd,"hcitool ledc %s",bthandle);
-          popen(btcmd, "r");
+          popen("hciconfig hci0 down", "r");
+          popen("hciconfig hci0 up", "r");
           pclose(stream);
           return true;
       }
