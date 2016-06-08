@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+extern "C"{
 #include "args.h"
+}
 int indexOf(char* src, char key) {
   int i = 0;
   for(; src[i] != '\0'; i++) {
