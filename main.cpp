@@ -32,7 +32,7 @@ int getPidByName(char* task_name);
 #define __C_PROMPT__ "> "
 using namespace std;
 int checktime=60;
-char VER[28]="v1.8-(2016/6/7)";
+char VER[28]="v1.81-(2016/6/8)";
 int FindIP(char *mac,char *ip);
 char backhomecmd[1024]="cmd.exe";//返回家
 char gohomecmd[1024]="cmd.exe";//离开家
