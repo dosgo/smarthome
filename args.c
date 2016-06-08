@@ -68,7 +68,7 @@ char *getArg(int argc, char** argv, char* key) {
 }
 
 int getArgValue(int argc, char** argv, char* key,char *value) {
-  memset(value,0,sizeof(value));
+  memset(value,0,strlen(value));
   int i = 0;
   for(; i < argc; i++) {
         int index = indexOf(argv[i], '=');
