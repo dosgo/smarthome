@@ -31,7 +31,7 @@ int getPidByName(char* task_name);
 #endif
 #define __C_PROMPT__ "> "
 using namespace std;
-int checktime=60;
+int checktime=20;
 char VER[28]="v1.81-(2016/6/8)";
 int FindIP(char *mac,char *ip);
 char backhomecmd[1024]="cmd.exe";//·µ»Ø¼Ò
