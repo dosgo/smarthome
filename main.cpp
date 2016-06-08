@@ -161,14 +161,14 @@ bool CheckBtMacLe(char *btmac){
       {
           //断开ble
           popen("hciconfig hci0 down", "r");
-          sleeps(1);
+          sleeps(5);
           popen("hciconfig hci0 up", "r");
           pclose(stream);
           return true;
       }
      //重启否则会卡死
      popen("hciconfig hci0 down", "r");
-     sleeps(1);
+     sleeps(5);
      popen("hciconfig hci0 up", "r");
      pclose(stream);
      return false;
