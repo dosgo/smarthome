@@ -152,11 +152,11 @@ bool CheckBtMacLe(char *btmac){
      FILE  *stream1=popen("hciconfig hci0 down", "r");
      fgets( buf, 1024,stream1);
      pclose(stream1);
-     sleeps(1000*2);
+     //sleeps(1000*2);
      FILE  *stream2=popen("hciconfig hci0 up", "r");
      fgets( buf, 1024,   stream2);
      pclose(stream2);
-     sleeps(1000*3);
+     //sleeps(1000*3);
      //Á¬½Óble
      sprintf(btcmd,"hcitool lecc %s",btmac);
      printf("btcmd:%s\r\n",btcmd);
@@ -540,7 +540,7 @@ void strtolower(char *str)
     int i=0;
     for(i = 0; i <strlen(str); i++)
     {
-        str[i] = toupper(str[i]);
+        str[i] = toupper(str[i]);//´óÐ´//tolower
     }
 }
 
