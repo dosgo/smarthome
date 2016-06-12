@@ -152,7 +152,7 @@ bool CheckBtMacLe(char *btmac){
      FILE  *stream1=popen("hciconfig hci0 down", "r");
      fgets( buf, 1024,stream1);
      pclose(stream1);
-     //sleeps(1000*2);
+     sleeps(1000*2);
      FILE  *stream2=popen("hciconfig hci0 up", "r");
      fgets( buf, 1024,   stream2);
      pclose(stream2);
