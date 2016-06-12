@@ -50,7 +50,7 @@ bool CheckMacV2(char *mac);
 int getlocalip(list<string>*iplist);
 int CheckArpIp(char *DestIP);
 int GetIPType(const char * ipAddress);
-void tolower(char *str);
+void strtolower(char *str);
 int main(int argc, char *argv[])
 {
     printf("smarthome %s\r\n",VER);
@@ -127,7 +127,7 @@ int main(int argc, char *argv[])
 /*检测蓝牙是否在附近 手机*/
 bool CheckBtMac(char *btmac){
      char btcmd[255]={0};
-     tolower(btmac);
+     strtolower(btmac);
      //读取名字
      sprintf(btcmd,"hcitool name %s",btmac);
       printf("btcmd:%s\r\n",btcmd);
@@ -148,7 +148,7 @@ bool CheckBtMac(char *btmac){
 bool CheckBtMacLe(char *btmac){
      char btcmd[255]={0};
      char   buf[1024]={0};
-     tolower(btmac);
+     strtolower(btmac);
      FILE  *stream1=popen("hciconfig hci0 down", "r");
      fgets( buf, 1024,stream1);
      pclose(stream1);
@@ -180,7 +180,7 @@ bool CheckBtMacLeV2(char *btmac){
       printf("CheckBtMacLeV2\r\n");
      char btcmd[255]={0};
      char btname[30]={0};
-     tolower(btmac);
+     strtolower(btmac);
      //连接ble
      sprintf(btcmd,"hcitool leinfo %s",btmac);
      FILE  *stream=popen(btcmd, "r");
@@ -202,7 +202,7 @@ bool CheckBtMacLeV2(char *btmac){
 bool CheckMac(char *mac){
     CPing ping;
     char destip[30]={0};
-    tolower(mac);
+    strtolower(mac);
     if(FindIP(destip,mac)!=0||reloadarp==1){
         list<string>iplist;
         getlocalip(&iplist);
@@ -264,7 +264,7 @@ int FindIP(char *DestIP,char *DestMac)
     result = GetIpNetTable(ipNetTable, &size, TRUE);
     ipNetTable = (MIB_IPNETTABLE *)malloc(size);
     result = GetIpNetTable(ipNetTable, &size, TRUE);
-    tolower(DestMac);
+    strtolower(DestMac);
     if(result)
     {
         return -1;
@@ -535,7 +535,7 @@ int getPidBySid(int Sid,list<int>*pidlist)
      return 0;
 }
 #endif // WIN32
-void tolower(char *str)
+void strtolower(char *str)
 {
     int i=0;
     for(i = 0; i <strlen(str); i++)
