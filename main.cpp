@@ -31,7 +31,7 @@ int getPidByName(char* task_name);
 int getPidBySid(int sid,list<int>*pidlist);
 #endif
 int checktime=20;
-char VER[28]="v1.81-(2016/6/8)";
+char VER[28]="v1.82-(2016/6/12)";
 int FindIP(char *mac,char *ip);
 char backhomecmd[1024]="cmd.exe";//返回家
 char gohomecmd[1024]="cmd.exe";//离开家
