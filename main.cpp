@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
     list<int>pidlist;
     getPidBySid(828,&pidlist);
     CPing ping;
-    int xx=ping.PingCheckV3("192.168.8.241");
+    int xx=ping.PingCheckV3("192.168.43.123");
     printf("xx:%d\r\n",xx);
     if(strlen(btmac)==0&&strlen(mac)==0){
         printf("use  -mac  -bcmd -gcmd  [-reloadarp] or -bmac  -bcmd -gcmd\r\n");
@@ -459,7 +459,7 @@ int getlocalip(list<string>*iplist)
                if(((ifr->ifr_flags & IFF_LOOPBACK) == 0) && (ifr->ifr_flags & IFF_UP))
                {
                        sprintf(ip,"%s",inet_ntoa(sin->sin_addr));
-                       printf("ip:%s\r\n",ip);
+                       //printf("ip:%s\r\n",ip);
                        (*iplist).insert((*iplist).begin(),string(ip));
                }
                ifr++;
