@@ -74,8 +74,8 @@ int main(int argc, char *argv[])
      if(getArgValue(argc, argv,(char*) "-bmac",arg)==0){
         sprintf(btmac,"%s",arg); // "btmac"
      }
-     char blex[255]="00:1f:23:12:1e:00";
-         CheckBtMacLe(blex);
+    // char blex[255]="00:1f:23:12:1e:00";
+      //   CheckBtMacLe(blex);
 
     if(strlen(btmac)==0&&strlen(mac)==0){
         printf("use  -mac  -bcmd -gcmd  [-reloadarp] or -bmac  -bcmd -gcmd\r\n");
@@ -156,7 +156,7 @@ bool CheckBtMacLe(char *btmac){
      FILE  *stream2=popen("hciconfig hci0 up", "r");
      fgets( buf, 1024,   stream2);
      pclose(stream2);
-     //sleeps(1000*3);
+     sleeps(1000*3);
      //Á¬½Óble
      sprintf(btcmd,"hcitool lecc %s",btmac);
      printf("btcmd:%s\r\n",btcmd);
