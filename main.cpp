@@ -148,7 +148,7 @@ bool CheckBtMacLe(char *btmac){
      char btcmd[255]={0};
      char   buf[1024]={0};
      tolower(btmac);
-
+     printf("sfsd\r\n");
      FILE  *stream1=popen("hciconfig hci0 down", "r");
      fgets( buf, 1024,   stream1);
       sleeps(2);
