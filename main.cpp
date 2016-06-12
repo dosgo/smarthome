@@ -81,7 +81,9 @@ int main(int argc, char *argv[])
         printf("use  -mac  -bcmd -gcmd  [-reloadarp] or -bmac  -bcmd -gcmd\r\n");
         return -1;
     }
-
+      CPing ping;
+    int xxx=  ping.PingCheckV3("192.168.8.135");
+    printf("xxx:%d\r\n",xxx);
     while(true){
         int info=0;
         if(strlen(btmac)>0)
