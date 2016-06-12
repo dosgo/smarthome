@@ -149,12 +149,15 @@ bool CheckBtMacLe(char *btmac){
      char btcmd[255]={0};
      char   buf[1024]={0};
      tolower(btmac);
-     printf("sfsd\r\n");
+     printf("down start\r\n");
      FILE  *stream1=popen("hciconfig hci0 down", "r");
      fgets( buf, 1024,   stream1);
+      printf("down end\r\n");
       sleeps(2);
+       printf("up start\r\n");
      FILE  *stream2=popen("hciconfig hci0 up", "r");
      fgets( buf, 1024,   stream2);
+      printf("up end\r\n");
      sleeps(2);
      //Á¬½Óble
      sprintf(btcmd,"hcitool lecc %s",btmac);
