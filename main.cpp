@@ -538,7 +538,7 @@ int getPidBySid(int Sid,list<int>*pidlist)
 void tolower(char *str)
 {
     int i=0;
-    for(i = 0; i <(int) sizeof(str); i++)
+    for(i = 0; i <strlen(str); i++)
     {
            str[i] = tolower(str[i]);
     }
