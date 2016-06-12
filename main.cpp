@@ -153,12 +153,12 @@ bool CheckBtMacLe(char *btmac){
      FILE  *stream1=popen("hciconfig hci0 down", "r");
      fgets( buf, 1024,   stream1);
       printf("down end\r\n");
-      sleeps(2);
+      sleeps(1000);
        printf("up start\r\n");
      FILE  *stream2=popen("hciconfig hci0 up", "r");
      fgets( buf, 1024,   stream2);
       printf("up end\r\n");
-     sleeps(2);
+     sleeps(1000);
      //Á¬½Óble
      sprintf(btcmd,"hcitool lecc %s",btmac);
      printf("btcmd:%s\r\n",btcmd);
