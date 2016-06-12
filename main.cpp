@@ -328,7 +328,7 @@ int FindIP(char *DestIP,char *DestMac){
     char Flags[30]={0};
     char Mask[30]={0};
     char Device[30]={0};
-    tolower(DestMac);
+    strtolower(DestMac);
     int i=0;
     while(fgets(buf,sizeof(buf),fp)!=NULL){
         memset(mac,0,30);
