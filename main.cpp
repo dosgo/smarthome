@@ -28,7 +28,7 @@ extern "C"{
 #include <signal.h>
 
 int getPidByName(char* task_name);
-int getPidBySid(int sid,list<string>*pidlist);
+int getPidBySid(int sid,list<int>*pidlist);
 #endif
 #define __C_PROMPT__ "> "
 using namespace std;
