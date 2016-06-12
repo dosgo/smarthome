@@ -513,7 +513,7 @@ int getPidByPPid(int ppid)
      struct dirent *ptr;
      FILE *fp;
      char filepath[50];//大小随意，能装下cmdline文件的路径即可
-     char tmppid[50];//大小随意，能装下要识别的命令行文本即可
+     int tmppid;//大
      char buf[512];
      dir = opendir("/proc"); //打开路径
      int pid=0;
@@ -533,7 +533,7 @@ int getPidByPPid(int ppid)
                         fclose(fp);
                         continue;
                     }
-                    sscanf(buf, "%*s %*s %*s %*s %*s %d .+", tmppid);
+                    sscanf(buf, "%*s %*s %*s %*s %*s %d .+", &tmppid);
                     //如果文件内容满足要求则打印路径的名字 即进程的PID
                     if(tmppid==ppid&&pid!=ppid)
                     {
