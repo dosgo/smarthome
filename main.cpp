@@ -459,6 +459,7 @@ int getlocalip(list<string>*iplist)
                if(((ifr->ifr_flags & IFF_LOOPBACK) == 0) && (ifr->ifr_flags & IFF_UP))
                {
                        sprintf(ip,"%s",inet_ntoa(sin->sin_addr));
+                       printf("ip:%s\r\n",ip);
                        (*iplist).insert((*iplist).begin(),string(ip));
                }
                ifr++;
