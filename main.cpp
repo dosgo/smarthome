@@ -9,6 +9,7 @@ extern "C"{
 #include <stdio.h>
 #include <time.h>
 #include <list>
+using namespace std;
 #if WIN32
 #include <windows.h>
 #include <Iphlpapi.h>
@@ -26,12 +27,9 @@ extern "C"{
 #include <arpa/inet.h>
 #include <dirent.h>
 #include <signal.h>
-
 int getPidByName(char* task_name);
 int getPidBySid(int sid,list<int>*pidlist);
 #endif
-#define __C_PROMPT__ "> "
-using namespace std;
 int checktime=20;
 char VER[28]="v1.81-(2016/6/8)";
 int FindIP(char *mac,char *ip);
