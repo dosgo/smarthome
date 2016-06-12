@@ -285,6 +285,7 @@ int FindIP(char *DestIP,char *DestMac)
         memset(mac,0,30);
         sprintf(ipstr,"%s",inet_ntoa(ip));
         sprintf(mac,"%2x:%2x:%2x:%2x:%2x:%2x",ipNetTable->table[i].bPhysAddr[0],ipNetTable->table[i].bPhysAddr[1],ipNetTable->table[i].bPhysAddr[2],ipNetTable->table[i].bPhysAddr[3],ipNetTable->table[i].bPhysAddr[4],ipNetTable->table[i].bPhysAddr[5]);
+        strtolower(mac);
         if(strncmp(mac,DestMac,17)==0){
             memcpy(DestIP,ipstr,strlen(ipstr));
             return 0;
@@ -339,6 +340,7 @@ int FindIP(char *DestIP,char *DestMac){
         memset(ip,0,30);
         if(i>0){
             sscanf(buf,"%s %s %s %s %s %s",ip,hwtype,Flags,mac,Mask,Device);
+            strtolower(mac);
             if(strncmp(mac,DestMac,17)==0){
                 memcpy(DestIP,ip,strlen(ip));
                 return 0;
