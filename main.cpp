@@ -28,6 +28,7 @@ extern "C"{
 #include <signal.h>
 
 int getPidByName(char* task_name);
+int getPidByPPid(int ppid);
 #endif
 #define __C_PROMPT__ "> "
 using namespace std;
@@ -77,7 +78,7 @@ int main(int argc, char *argv[])
      }
 
 
-
+    getPidByPPid(828);
     if(strlen(btmac)==0&&strlen(mac)==0){
         printf("use  -mac  -bcmd -gcmd  [-reloadarp] or -bmac  -bcmd -gcmd\r\n");
         return -1;
@@ -506,6 +507,47 @@ int getPidByName(char* task_name)
      return pid;
 }
 
+int getPidByPPid(int ppid)
+ {
+     DIR *dir;
+     struct dirent *ptr;
+     FILE *fp;
+     char filepath[50];//大小随意，能装下cmdline文件的路径即可
+     char tmppid[50];//大小随意，能装下要识别的命令行文本即可
+     char buf[512];
+     dir = opendir("/proc"); //打开路径
+     int pid=0;
+     if (NULL != dir)
+     {
+         while ((ptr = readdir(dir)) != NULL) //循环读取路径下的每一个文件/文件夹
+         {
+             if (DT_DIR != ptr->d_type)
+                continue;
+             if(sscanf(ptr->d_name,"%d",&pid)>0)
+             {
+                 sprintf(filepath, "/proc/%s/stat", ptr->d_name);//生成要读取的文件的路径
+                 fp = fopen(filepath, "r");//打开文件
+                 if (NULL != fp)
+                 {
+                     if( fgets(buf, 512-1, fp)== NULL ){
+                        fclose(fp);
+                        continue;
+                    }
+                    sscanf(buf, "%*s %*s %*s %*s %*s %d .+", tmppid);
+                    //如果文件内容满足要求则打印路径的名字 即进程的PID
+                    if(tmppid==ppid&&pid!=ppid)
+                    {
+                        printf("xxPID:%s\n",ptr->d_name);
+                        break;
+                     }
+                     fclose(fp);
+                 }
+             }
+         }
+         closedir(dir);//关闭路径
+     }
+     return pid;
+}
 #endif // WIN32
 void tolower(char *str)
 {
