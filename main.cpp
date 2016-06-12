@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
     getPidBySid(828,&pidlist);
     CPing ping;
     int xx=ping.PingCheckV3("192.168.43.134");
-    printf("xx:%d\r\n",xx);
+    printf("192.168.43.134:xx:%d\r\n",xx);
     if(strlen(btmac)==0&&strlen(mac)==0){
         printf("use  -mac  -bcmd -gcmd  [-reloadarp] or -bmac  -bcmd -gcmd\r\n");
         return -1;
