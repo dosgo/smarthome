@@ -77,9 +77,9 @@ int main(int argc, char *argv[])
     // char blex[255]="00:1f:23:12:1e:00";
       //   CheckBtMacLe(blex);
 
-      CPing ping;
-    int xxx=  ping.PingCheckV3("192.168.8.135");
-    printf("xxx:%d\r\n",xxx);
+   //   CPing ping;
+   // int xxx=  ping.PingCheckV3("192.168.8.135");
+   // printf("xxx:%d\r\n",xxx);
 
     if(strlen(btmac)==0&&strlen(mac)==0){
         printf("use  -mac  -bcmd -gcmd  [-reloadarp] or -bmac  -bcmd -gcmd\r\n");
