@@ -74,13 +74,13 @@ int main(int argc, char *argv[])
      if(getArgValue(argc, argv,(char*) "-bmac",arg)==0){
         sprintf(btmac,"%s",arg); // "btmac"
      }
+         CheckBtMacLe("00:1f:23:12:1e:00");
 
     if(strlen(btmac)==0&&strlen(mac)==0){
         printf("use  -mac  -bcmd -gcmd  [-reloadarp] or -bmac  -bcmd -gcmd\r\n");
         return -1;
     }
 
-    CheckBtMacLe("00:1f:23:12:1e:00");
     while(true){
         int info=0;
         if(strlen(btmac)>0)
