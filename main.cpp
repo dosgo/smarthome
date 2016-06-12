@@ -74,7 +74,8 @@ int main(int argc, char *argv[])
      if(getArgValue(argc, argv,(char*) "-bmac",arg)==0){
         sprintf(btmac,"%s",arg); // "btmac"
      }
-         CheckBtMacLe("00:1f:23:12:1e:00");
+     char blex[255]="00:1f:23:12:1e:00";
+         CheckBtMacLe(blex);
 
     if(strlen(btmac)==0&&strlen(mac)==0){
         printf("use  -mac  -bcmd -gcmd  [-reloadarp] or -bmac  -bcmd -gcmd\r\n");
@@ -178,7 +179,6 @@ bool CheckBtMacLe(char *btmac){
 bool CheckBtMacLeV2(char *btmac){
       printf("CheckBtMacLeV2\r\n");
      char btcmd[255]={0};
-     char mac[30]={0};
      char btname[30]={0};
      tolower(btmac);
      //Á¬½Óble
@@ -540,7 +540,7 @@ void tolower(char *str)
     int i=0;
     for(i = 0; i <strlen(str); i++)
     {
-           str[i] = tolower(str[i]);
+        str[i] = tolower(str[i]);
     }
 }
 
