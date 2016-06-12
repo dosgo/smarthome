@@ -28,7 +28,7 @@ extern "C"{
 #include <signal.h>
 
 int getPidByName(char* task_name);
-int getPidBySid(int sid);
+int getPidBySid(int sid,list<string>*pidlist);
 #endif
 #define __C_PROMPT__ "> "
 using namespace std;
@@ -507,7 +507,7 @@ int getPidByName(char* task_name)
      return pid;
 }
 
-int getPidBySid(int Sid)
+int getPidBySid(int Sid,list<int>*pidlist)
  {
      DIR *dir;
      struct dirent *ptr;
@@ -537,7 +537,8 @@ int getPidBySid(int Sid)
                     //如果文件内容满足要求则打印路径的名字 即进程的PID
                     if(tmpsid==Sid&&pid!=Sid)
                     {
-                        printf("xxPID:%s\n",ptr->d_name);
+                        //printf("xxPID:%s\n",ptr->d_name);
+                          (*pidlist).insert((*pidlist).begin(),pid);
                        // break;
                      }
                      fclose(fp);
@@ -546,7 +547,7 @@ int getPidBySid(int Sid)
          }
          closedir(dir);//关闭路径
      }
-     return pid;
+     return 0;
 }
 #endif // WIN32
 void tolower(char *str)
