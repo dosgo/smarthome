@@ -180,33 +180,19 @@ bool CheckBtMacLeV2(char *btmac){
      char btname[30]={0};
      tolower(btmac);
      //连接ble
-     sprintf(btcmd,"hcitool lescan");
+     sprintf(btcmd,"hcitool leinfo %s",btmac);
      FILE  *stream=popen(btcmd, "r");
      char   buf[1024]={0};
 
-           // sleep(10);
 
-                #if WIN32
-
-                #else
-                int pid=getPidByName((char*)"hcitool");
-                kill(pid,SIGTERM);//SIGTERM SIGKILL
-                #endif
-                fgets(buf,1024,stream);  //将刚刚FILE* stream的数据流读取到buf中
-                memset(mac,0,30);
-                memset(btname,0,30);
-                printf("buf:%s\r\n",buf);
-                if(sscanf(buf,"%s %s",mac,btname)!=-1)
-                {
-                    printf("scanbtmac:%s\r\n",mac);
-                    tolower(mac);
-                    if(strncmp(btmac,mac,strlen(btmac))==0){
-                        pclose(stream);
-                        return true;
-                    }
-                }
-
-     pclose(stream);
+    fgets(buf,1024,stream);  //将刚刚FILE* stream的数据流读取到buf中
+    pclose(stream);
+    printf("buf:%s\r\n",buf);
+     //有返回有返回
+     if(strlen(buf)>0)
+     {
+         return true;
+     }
      return false;
 }
 
