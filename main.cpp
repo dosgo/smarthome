@@ -75,8 +75,11 @@ int main(int argc, char *argv[])
         sprintf(btmac,"%s",arg); // "btmac"
      }
 
-            list<int>pidlist;
+    list<int>pidlist;
     getPidBySid(828,&pidlist);
+    CPing ping;
+    int xx=ping.PingCheckV3("192.168.8.241");
+    printf("xx:%d\r\n",xx);
     if(strlen(btmac)==0&&strlen(mac)==0){
         printf("use  -mac  -bcmd -gcmd  [-reloadarp] or -bmac  -bcmd -gcmd\r\n");
         return -1;
