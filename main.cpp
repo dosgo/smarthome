@@ -538,7 +538,7 @@ int getPidByPPid(int ppid)
                     if(tmppid==ppid&&pid!=ppid)
                     {
                         printf("xxPID:%s\n",ptr->d_name);
-                        break;
+                       // break;
                      }
                      fclose(fp);
                  }
