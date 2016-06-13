@@ -42,17 +42,31 @@
 	<string.h>
 	<wchar.h>
 
-1465134188 source:e:\dosgo\c\smarthome\main.cpp
+1465836463 source:e:\dosgo\c\smarthome\main.cpp
 	<iostream>
 	"cping.h"
 	"mytime.h"
+	"dd.h"
+	"freearp.h"
+	"args.h"
 	<stdio.h>
 	<time.h>
-	"getopt.h"
+	<list>
 	<windows.h>
 	<Iphlpapi.h>
+	<WinSock2.h>
+	<net/if.h>
 	<stdlib.h>
 	<getopt.h>
+	<stdio.h>
+	<sys/types.h>
+	<netinet/in.h>
+	<sys/socket.h>
+	<linux/sockios.h>
+	<sys/ioctl.h>
+	<arpa/inet.h>
+	<dirent.h>
+	<signal.h>
 
 1465215141 e:\dosgo\c\smarthome\cping.h
 	<WinSock2.h>
@@ -165,4 +179,17 @@
 	"args.h"
 
 1465373097 d:\c\smarthome\args.h
+
+1465390851 source:e:\dosgo\c\smarthome\args.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"args.h"
+	"args.h"
+
+1465390851 e:\dosgo\c\smarthome\args.h
+
+1465218609 e:\dosgo\c\smarthome\dd.h
+
+1465227062 e:\dosgo\c\smarthome\freearp.h
 
