@@ -587,7 +587,7 @@ int udpsend(){
   struct sockaddr_in adr_srvr;
   struct sockaddr_in adr_inet;
   struct sockaddr_in adr_clnt;
-  int   len=sizeof(adr_clnt);
+  size_t   len=sizeof(adr_clnt);
 
   adr_srvr.sin_family=AF_INET;
   adr_srvr.sin_port=htons(137);
