@@ -183,7 +183,6 @@ bool CheckBtMacLe(char *btmac){
 bool CheckBtMacLeV2(char *btmac){
       printf("CheckBtMacLeV2\r\n");
      char btcmd[255]={0};
-     char btname[30]={0};
      strtolower(btmac);
      //Á¬½Óble
      sprintf(btcmd,"hcitool leinfo %s",btmac);
@@ -208,6 +207,7 @@ bool CheckMac(char *mac){
     char destip[30]={0};
     strtolower(mac);
     if(FindIP(destip,mac)!=0||reloadarp==1){
+            printf("sdfsd\r\n");
         list<string>iplist;
         getlocalip(&iplist);
         list<string>::iterator it;
@@ -227,6 +227,7 @@ bool CheckMac(char *mac){
                         ping.PingScanf(ip);
                     }
                 }
+                //printf("prefix_ip:%s\r\n",prefix_ip);
               }
 
            }else{
@@ -312,9 +313,33 @@ int CheckArpIp(char *DestIP){
         ip.S_un.S_addr = ipNetTable->table[i].dwAddr;
         memset(ipstr,0,30);
         sprintf(ipstr,"%s",inet_ntoa(ip));
-        if(strncmp(DestIP,ipstr,strlen(ipstr))==0){
+        if(strncmp(DestIP,ipstr,strlen(DestIP))==0){
             return 0;
         }
+    }
+    return -1;
+}
+
+int GetArpTable(){
+     MIB_IPNETTABLE *ipNetTable = NULL;
+    ULONG size = 0;
+    DWORD result = 0;
+    result = GetIpNetTable(ipNetTable, &size, TRUE);
+    ipNetTable = (MIB_IPNETTABLE *)malloc(size);
+    result = GetIpNetTable(ipNetTable, &size, TRUE);
+    if(result)
+    {
+        return -1;
+    }
+    int i = 0;
+    IN_ADDR ip;
+    char ipstr[30]={0};
+    for(i=0; i < ipNetTable->dwNumEntries; i++)
+    {
+        ip.S_un.S_addr = ipNetTable->table[i].dwAddr;
+        memset(ipstr,0,30);
+        sprintf(ipstr,"%s",inet_ntoa(ip));
+
     }
     return -1;
 }
@@ -369,7 +394,7 @@ int CheckArpIp(char *DestIP){
         memset(mac,0,30);
         if(i>0){
             sscanf(buf,"%s %s %s %s %s %s",ip,hwtype,Flags,mac,Mask,Device);
-            if(strncmp(ip,DestIP,strlen(ip))==0){
+            if(strncmp(ip,DestIP,strlen(DestIP))==0){
                 return 0;
             }
         }
