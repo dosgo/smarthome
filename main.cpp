@@ -611,11 +611,9 @@ char recvbuf[1024]={0};
   sockfd=socket(AF_INET,SOCK_DGRAM,0);
   if(sockfd==-1){
     printf("socket error!");
-
   }
       bool optval=true;
-      setsockopt(sockfd,SOL_SOCKET,SO_BROADCAST,(char FAR *)&optval,sizeof(optval));
-
+      setsockopt(sockfd,SOL_SOCKET,SO_BROADCAST,(char FAR*)&optval,sizeof(optval));
   z=bind(sockfd,(struct sockaddr *)&adr_inet,sizeof(adr_inet));
    if(z==-1){
 
