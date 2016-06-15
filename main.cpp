@@ -735,7 +735,7 @@ char recvbuf[1024]={0};
 }
 
 int GetDeviceNamev1(char *ip,char *name){
-    HOSTENT *lpHostEnt=NULL;
+    struct  hostent  *lpHostEnt=NULL;
     struct in_addr ina = { 0 };
     #if WIN32
     ina.S_un.S_addr = inet_addr(ip); //获取本地主机信息
