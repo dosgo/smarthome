@@ -737,8 +737,16 @@ char recvbuf[1024]={0};
 int GetDeviceNamev1(char *ip,char *name){
     HOSTENT *lpHostEnt=NULL;
     struct in_addr ina = { 0 };
+    #if WIN32
     ina.S_un.S_addr = inet_addr(ip); //获取本地主机信息
     lpHostEnt = gethostbyaddr((char*)&ina.S_un.S_addr, 4, AF_INET);
+    #else
+    if(!inet_aton(ip,ina))
+    {
+        return -1;
+    }
+    lpHostEnt = gethostbyaddr(&ina,4,AF_INET)
+    #endif
     if(lpHostEnt!=NULL){
       sprintf(name,"%s",lpHostEnt->h_name);
       return 0;
