@@ -358,14 +358,19 @@ int GetArpTable(){
     char ipstr[30]={0};
     char mac[30]={0};
     char name[30]={0};
+    char zero6[6]={0};
     for(i=0; i < ipNetTable->dwNumEntries; i++)
     {
+        //过滤为零的
+        if(memcmp(ipNetTable->table[i].bPhysAddr,zero6,6)==0){
+            continue;
+        }
         ip.S_un.S_addr = ipNetTable->table[i].dwAddr;
         memset(ipstr,0,30);
-         memset(mac,0,30);
-           memset(name,0,30);
+        memset(mac,0,30);
+        memset(name,0,30);
         sprintf(ipstr,"%s",inet_ntoa(ip));
-         sprintf(mac,"%02x:%02x:%02x:%02x:%02x:%02x",ipNetTable->table[i].bPhysAddr[0],ipNetTable->table[i].bPhysAddr[1],ipNetTable->table[i].bPhysAddr[2],ipNetTable->table[i].bPhysAddr[3],ipNetTable->table[i].bPhysAddr[4],ipNetTable->table[i].bPhysAddr[5]);
+        sprintf(mac,"%02x:%02x:%02x:%02x:%02x:%02x",ipNetTable->table[i].bPhysAddr[0],ipNetTable->table[i].bPhysAddr[1],ipNetTable->table[i].bPhysAddr[2],ipNetTable->table[i].bPhysAddr[3],ipNetTable->table[i].bPhysAddr[4],ipNetTable->table[i].bPhysAddr[5]);
         strtolower(mac);
         GetDeviceName(ipstr,name);
         printf("ip:%s--%s--%s\r\n",ipstr,mac,name);
@@ -448,6 +453,7 @@ int GetArpTable(){
    // char Device[30]={0};
     int i=0;
     char name[30]={0};
+    char zeromac[17]="00:00:00:00:00:00";
     while(fgets(buf,sizeof(buf),fp)!=NULL){
         memset(ip,0,30);
         memset(mac,0,30);
@@ -455,6 +461,10 @@ int GetArpTable(){
         if(i>0){
             sscanf(buf,"%s %*s %*s %s %*s %*s",ip,mac);
             strtolower(mac);
+               //过滤为零的
+            if(strncmp(mac,zeromac,17)==0){
+                continue;
+            }
             GetDeviceName(ip,name);
             printf("ip:%s--%s--%s\r\n",ip,mac,name);
         }
