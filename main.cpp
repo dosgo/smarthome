@@ -28,7 +28,7 @@ typedef struct _NCB {
   unsigned char   ncb_name[16];
   unsigned char   ncb_rto;
   unsigned char   ncb_sto;
-  void   (CALLBACK *ncb_post)( struct *NCB);
+  void (CALLBACK *ncb_post)(struct _NCB*);
   unsigned char   ncb_lana_num;
   unsigned char   ncb_cmd_cplt;
   unsigned char   ncb_reserve[10];
