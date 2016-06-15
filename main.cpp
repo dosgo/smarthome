@@ -16,7 +16,7 @@ using namespace std;
 #include <WinSock2.h>
 #else
 /*net bios*/
-#define NCB_POST void CALLBACK
+
 typedef struct _NCB {
   unsigned char  ncb_command;
   unsigned char   ncb_retcode;
@@ -28,7 +28,7 @@ typedef struct _NCB {
   unsigned char   ncb_name[16];
   unsigned char   ncb_rto;
   unsigned char   ncb_sto;
-  void (CALLBACK *NCB_POST)(struct _NCB*);
+  void (CALLBACK *callback)(struct _NCB*);
   unsigned char   ncb_lana_num;
   unsigned char   ncb_cmd_cplt;
   unsigned char   ncb_reserve[10];
