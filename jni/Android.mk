@@ -16,7 +16,7 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_MODULE    := ngrok-c
+LOCAL_MODULE    := smarthome
 LOCAL_SRC_FILES := ../cping.cpp ../main.cpp ../args.c 
 LOCAL_CFLAGS += -pie -fPIE
 LOCAL_LDFLAGS += -pie -fPIE
