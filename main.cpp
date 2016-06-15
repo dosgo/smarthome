@@ -453,7 +453,7 @@ int GetArpTable(){
    // char Device[30]={0};
     int i=0;
     char name[30]={0};
-    char zeromac[17]="00:00:00:00:00:00";
+    char *zeromac="00:00:00:00:00:00";
     while(fgets(buf,sizeof(buf),fp)!=NULL){
         memset(ip,0,30);
         memset(mac,0,30);
