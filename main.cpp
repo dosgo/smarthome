@@ -11,10 +11,12 @@ extern "C"{
 #include <list>
 using namespace std;
 #if WIN32
+#include<ws2tcpip.h>
 #include <windows.h>
 #include <Iphlpapi.h>
 #include <WinSock2.h>
 #else
+#include <arpa/inet.h>
 /*net bios*/
 #define NCB_POST void CALLBACK
 typedef struct _NCB {
@@ -74,6 +76,7 @@ void strtolower(char *str);
 int udpscan(char *ip);
 int GetArpTable();
 int GetDeviceName(char *ip,char *name);
+int GetDeviceNamev1(char *ip,char *name);
 int main(int argc, char *argv[])
 {
     printf("smarthome %s\r\n",VER);
@@ -377,7 +380,10 @@ int GetArpTable(){
         sprintf(ipstr,"%s",inet_ntoa(ip));
         sprintf(mac,"%02x:%02x:%02x:%02x:%02x:%02x",ipNetTable->table[i].bPhysAddr[0],ipNetTable->table[i].bPhysAddr[1],ipNetTable->table[i].bPhysAddr[2],ipNetTable->table[i].bPhysAddr[3],ipNetTable->table[i].bPhysAddr[4],ipNetTable->table[i].bPhysAddr[5]);
         strtolower(mac);
-        GetDeviceName(ipstr,name);
+        if(GetDeviceNamev1(ipstr,name)==-1)
+            {
+                GetDeviceName(ipstr,name);
+            }
         printf("ip:%s--%s--%s\r\n",ipstr,mac,name);
 
     }
@@ -470,7 +476,10 @@ int GetArpTable(){
             if(strncmp(mac,zeromac,17)==0){
                 continue;
             }
-            GetDeviceName(ip,name);
+            if(GetDeviceNamev1(ip,name)==-1)
+            {
+                GetDeviceName(ip,name);
+            }
             printf("ip:%s--%s--%s\r\n",ip,mac,name);
         }
         i++;
@@ -720,11 +729,22 @@ char recvbuf[1024]={0};
    #else
    close(sockfd);
    #endif
+   sleeps(5000);
    GetArpTable();
    exit(1);
 }
 
-
+int GetDeviceNamev1(char *ip,char *name){
+    HOSTENT *lpHostEnt=NULL;
+    struct in_addr ina = { 0 };
+    ina.S_un.S_addr = inet_addr(ip); //获取本地主机信息
+    lpHostEnt = gethostbyaddr((char*)&ina.S_un.S_addr, 4, AF_INET);
+    if(lpHostEnt!=NULL){
+      sprintf(name,"%s",lpHostEnt->h_name);
+      return 0;
+    }
+    return -1;
+}
 int GetDeviceName(char *ip,char *name){
     srand((unsigned) time(NULL));
     #if WIN32
@@ -778,7 +798,7 @@ int GetDeviceName(char *ip,char *name){
 	FD_ZERO(&fds);
 	FD_SET(sockfd, &fds);
 	wait.tv_sec =0;
-	wait.tv_usec =100*1000;
+	wait.tv_usec =1000*1000;
     if (select(sockfd + 1, &fds, NULL, NULL, &wait) > 0){
          recvfrom(sockfd,recvbuf,1024,0,(struct sockaddr *)&adr_clnt,&len);
          PNCB ncb = (PNCB) (recvbuf+31 );
