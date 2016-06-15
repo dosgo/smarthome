@@ -29,7 +29,7 @@ typedef struct _NCB {
   void   (CALLBACK *ncb_post)( struct *NCB);
   unsigned char   ncb_lana_num;
   unsigned char   ncb_cmd_cplt;
-  unsigned char   ncb_reserve[X];
+  unsigned char   ncb_reserve[10];
   void * ncb_event;
 } NCB, *PNCB;
 #include <net/if.h>
