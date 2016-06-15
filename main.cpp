@@ -745,7 +745,7 @@ int GetDeviceNamev1(char *ip,char *name){
     {
         return -1;
     }
-    lpHostEnt = gethostbyaddr(&ina,4,AF_INET)
+    lpHostEnt = gethostbyaddr(&ina,4,AF_INET);
     #endif
     if(lpHostEnt!=NULL){
       sprintf(name,"%s",lpHostEnt->h_name);
