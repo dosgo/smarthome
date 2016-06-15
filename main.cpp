@@ -22,8 +22,8 @@ typedef struct _NCB {
   unsigned char   ncb_num;
   unsigned char * ncb_buffer;
   short int   ncb_length;
-  unsigned char   ncb_callname[NCBNAMSZ];
-  unsigned char   ncb_name[NCBNAMSZ];
+  unsigned char   ncb_callname[16];
+  unsigned char   ncb_name[16];
   unsigned char   ncb_rto;
   unsigned char   ncb_sto;
   void   (CALLBACK *ncb_post)( struct *NCB);
