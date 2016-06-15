@@ -733,7 +733,7 @@ int GetDeviceName(char *ip,char *name){
       #if WIN32
       int   len=sizeof(adr_clnt);
       #else
-      size_t   len=sizeof(adr_clnt);
+      socklen_t   len=sizeof(adr_clnt);
       #endif
 
       adr_srvr.sin_family=AF_INET;

@@ -2,9 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #if WIN32
-
-    #include "args.h"
-
+#include "args.h"
 #else
 extern "C"{
     #include "args.h"
