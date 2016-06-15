@@ -15,6 +15,8 @@ using namespace std;
 #include <Iphlpapi.h>
 #include <WinSock2.h>
 #else
+/*net bios*/
+#define NCB_POST void CALLBACK
 typedef struct _NCB {
   unsigned char  ncb_command;
   unsigned char   ncb_retcode;
