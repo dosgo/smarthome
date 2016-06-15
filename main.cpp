@@ -307,7 +307,7 @@ int FindIP(char *DestIP,char *DestMac)
         memset(ipstr,0,30);
         memset(mac,0,30);
         sprintf(ipstr,"%s",inet_ntoa(ip));
-        sprintf(mac,"%2x:%2x:%2x:%2x:%2x:%2x",ipNetTable->table[i].bPhysAddr[0],ipNetTable->table[i].bPhysAddr[1],ipNetTable->table[i].bPhysAddr[2],ipNetTable->table[i].bPhysAddr[3],ipNetTable->table[i].bPhysAddr[4],ipNetTable->table[i].bPhysAddr[5]);
+        sprintf(mac,"%02x:%02x:%02x:%02x:%02x:%02x",ipNetTable->table[i].bPhysAddr[0],ipNetTable->table[i].bPhysAddr[1],ipNetTable->table[i].bPhysAddr[2],ipNetTable->table[i].bPhysAddr[3],ipNetTable->table[i].bPhysAddr[4],ipNetTable->table[i].bPhysAddr[5]);
         strtolower(mac);
         if(strncmp(mac,DestMac,17)==0){
             memcpy(DestIP,ipstr,strlen(ipstr));
@@ -414,19 +414,49 @@ int CheckArpIp(char *DestIP){
     char buf[1024]={0};
     char ip[30]={0};
     char mac[30]={0};
-    char hwtype[30]={0};
-    char Flags[30]={0};
-    char Mask[30]={0};
-    char Device[30]={0};
+    //char hwtype[30]={0};
+    //char Flags[30]={0};
+   // char Mask[30]={0};
+   // char Device[30]={0};
     int i=0;
     while(fgets(buf,sizeof(buf),fp)!=NULL){
         memset(ip,0,30);
         memset(mac,0,30);
         if(i>0){
-            sscanf(buf,"%s %s %s %s %s %s",ip,hwtype,Flags,mac,Mask,Device);
+            sscanf(buf,"%s %*s %*s %s %*s %*s",ip,mac);
             if(strncmp(ip,DestIP,strlen(DestIP))==0){
                 return 0;
             }
+        }
+        i++;
+    }
+    return -1;
+}
+
+int GetArpTable(){
+    FILE *fp = fopen("/proc/net/arp","r");
+    if(fp==NULL)
+    {
+       return -1;
+    }
+    char buf[1024]={0};
+    char ip[30]={0};
+    char mac[30]={0};
+   // char hwtype[30]={0};
+   // char Flags[30]={0};
+   // char Mask[30]={0};
+   // char Device[30]={0};
+    int i=0;
+    char name[30]={0};
+    while(fgets(buf,sizeof(buf),fp)!=NULL){
+        memset(ip,0,30);
+        memset(mac,0,30);
+        memset(name,0,30);
+        if(i>0){
+            sscanf(buf,"%s %*s %*s %s %*s %*s",ip,mac);
+            strtolower(mac);
+            GetDeviceName(ipstr,name);
+            printf("ip:%s--%s--%s\r\n",ipstr,mac,name);
         }
         i++;
     }
