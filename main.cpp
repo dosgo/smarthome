@@ -679,7 +679,7 @@ int udpscan(){
 
   adr_srvr.sin_family=AF_INET;
   adr_srvr.sin_port=htons(137);
-  adr_srvr.sin_addr.s_addr =inet_addr("192.168.43.255");
+  adr_srvr.sin_addr.s_addr =inet_addr("192.168.8.255");
 
 char buf[50]={0x82,0x28,0x00,0x00,0x00,0x01,0x00,0x00,
              0x00,0x00,0x00,0x00,0x20,0x43,0x4b,0x41,
