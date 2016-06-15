@@ -16,21 +16,21 @@ using namespace std;
 #include <WinSock2.h>
 #else
 typedef struct _NCB {
-  UCHAR  ncb_command;
-  UCHAR  ncb_retcode;
-  UCHAR  ncb_lsn;
-  UCHAR  ncb_num;
-  PUCHAR ncb_buffer;
-  WORD   ncb_length;
-  UCHAR  ncb_callname[NCBNAMSZ];
-  UCHAR  ncb_name[NCBNAMSZ];
-  UCHAR  ncb_rto;
-  UCHAR  ncb_sto;
+  unsigned char  ncb_command;
+  unsigned char   ncb_retcode;
+  unsigned char   ncb_lsn;
+  unsigned char   ncb_num;
+  unsigned char * ncb_buffer;
+  short int   ncb_length;
+  unsigned char   ncb_callname[NCBNAMSZ];
+  unsigned char   ncb_name[NCBNAMSZ];
+  unsigned char   ncb_rto;
+  unsigned char   ncb_sto;
   void   (CALLBACK *ncb_post)( struct *NCB);
-  UCHAR  ncb_lana_num;
-  UCHAR  ncb_cmd_cplt;
-  UCHAR  ncb_reserve[X];
-  HANDLE ncb_event;
+  unsigned char   ncb_lana_num;
+  unsigned char   ncb_cmd_cplt;
+  unsigned char   ncb_reserve[X];
+  void * ncb_event;
 } NCB, *PNCB;
 #include <net/if.h>
 #include <stdlib.h>
