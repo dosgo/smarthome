@@ -455,8 +455,8 @@ int GetArpTable(){
         if(i>0){
             sscanf(buf,"%s %*s %*s %s %*s %*s",ip,mac);
             strtolower(mac);
-            GetDeviceName(ipstr,name);
-            printf("ip:%s--%s--%s\r\n",ipstr,mac,name);
+            GetDeviceName(ip,name);
+            printf("ip:%s--%s--%s\r\n",ip,mac,name);
         }
         i++;
     }
