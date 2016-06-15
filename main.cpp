@@ -59,7 +59,7 @@ char gohomecmd[1024]="cmd.exe";//离开家
 char mac[30]={0};
 char btmac[30]={0};//蓝牙mac
 
-char ip[30]="192.168.0.255";
+char ip[30]="192.168.0.0";
 //-config[BackHomeCmd:"",GoHomeCmd:cmd.exe,Mac:xxx,IP:""]
 int lastinfo=-1;
 int reloadarp=0;//是否强制刷新arp表
@@ -720,7 +720,7 @@ char recvbuf[1024]={0};
    if(z==-1){
         return -1;
    }
-   printf("scaning  ...\r\n");
+   printf("scaning %s ...\r\n",ip);
    sendto(sockfd,buf,50,0,(struct sockaddr *)&adr_srvr,sizeof(adr_srvr));
    sendto(sockfd,buf,50,0,(struct sockaddr *)&adr_srvr,sizeof(adr_srvr));
    int i=0;
@@ -748,7 +748,6 @@ int GetDeviceNamev1(char *ip,char *name){
     lpHostEnt = gethostbyaddr((char*)&ina,4,AF_INET);
     #endif
     if(lpHostEnt!=NULL){
-      printf("xxx\r\n");
       sprintf(name,"%s",lpHostEnt->h_name);
       return 0;
     }
