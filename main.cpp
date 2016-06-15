@@ -51,8 +51,9 @@ int getlocalip(list<string>*iplist);
 int CheckArpIp(char *DestIP);
 int GetIPType(const char * ipAddress);
 void strtolower(char *str);
-int udpsend();
+int udpscan();
 int GetArpTable();
+int GetDeviceName(char *ip,char *name);
 int main(int argc, char *argv[])
 {
     printf("smarthome %s\r\n",VER);
@@ -82,7 +83,7 @@ int main(int argc, char *argv[])
    //   CPing ping;
    // int xxx=  ping.PingCheckV3("192.168.8.135");
    // printf("xxx:%d\r\n",xxx);
-    udpsend();
+    udpscan();
     if(strlen(btmac)==0&&strlen(mac)==0){
         printf("use  -mac  -bcmd -gcmd  [-reloadarp] or -bmac  -bcmd -gcmd\r\n");
         return -1;
@@ -337,20 +338,18 @@ int GetArpTable(){
     IN_ADDR ip;
     char ipstr[30]={0};
     char mac[30]={0};
+    char name[30]={0};
     for(i=0; i < ipNetTable->dwNumEntries; i++)
     {
         ip.S_un.S_addr = ipNetTable->table[i].dwAddr;
         memset(ipstr,0,30);
          memset(mac,0,30);
+           memset(name,0,30);
         sprintf(ipstr,"%s",inet_ntoa(ip));
-         sprintf(mac,"%2x:%2x:%2x:%2x:%2x:%2x\r\n",ipNetTable->table[i].bPhysAddr[0],ipNetTable->table[i].bPhysAddr[1],ipNetTable->table[i].bPhysAddr[2],ipNetTable->table[i].bPhysAddr[3],ipNetTable->table[i].bPhysAddr[4],ipNetTable->table[i].bPhysAddr[5]);
- strtolower(mac);
-        printf("ip:%s--%s",ipstr,mac);
-
-
-
-
-
+         sprintf(mac,"%02x:%02x:%02x:%02x:%02x:%02x",ipNetTable->table[i].bPhysAddr[0],ipNetTable->table[i].bPhysAddr[1],ipNetTable->table[i].bPhysAddr[2],ipNetTable->table[i].bPhysAddr[3],ipNetTable->table[i].bPhysAddr[4],ipNetTable->table[i].bPhysAddr[5]);
+        strtolower(mac);
+        GetDeviceName(ipstr,name);
+        printf("ip:%s--%s--%s\r\n",ipstr,mac,name);
 
     }
     return -1;
@@ -604,7 +603,7 @@ BYTE ncb_cmd_cplt;
 BYTE ncb_reserved[14];
 } NCB, *PNCB;
 */
-int udpsend(){
+int udpscan(){
    #if WIN32
    WSADATA wsaData;
    WSAStartup(MAKEWORD(2,2),&wsaData);
@@ -646,30 +645,88 @@ char recvbuf[1024]={0};
       setsockopt(sockfd,SOL_SOCKET,SO_BROADCAST,(char *)&optval,sizeof(optval));
   z=bind(sockfd,(struct sockaddr *)&adr_inet,sizeof(adr_inet));
    if(z==-1){
-
-     exit(1);
+        return -1;
    }
-printf("scaning  ...\r\n");
-  z=sendto(sockfd,buf,50,0,(struct sockaddr *)&adr_srvr,sizeof(adr_srvr));
-  z=sendto(sockfd,buf,50,0,(struct sockaddr *)&adr_srvr,sizeof(adr_srvr));
-  if(z<1){
-
-    printf("sfsd:%d\r\n",z);
-  }
-  int i=0;
-    while(1){
-     z=recvfrom(sockfd,recvbuf,1024,0,(struct sockaddr *)&adr_clnt,&len);
-
-
-         PNCB ncb = (PNCB) (recvbuf+31 );
-         printf("name:%s \r\n",ncb->ncb_name);
-         if(i>0){
-            break;
-         }
-         i++;
-   }
+   printf("scaning  ...\r\n");
+   sendto(sockfd,buf,50,0,(struct sockaddr *)&adr_srvr,sizeof(adr_srvr));
+   sendto(sockfd,buf,50,0,(struct sockaddr *)&adr_srvr,sizeof(adr_srvr));
+   int i=0;
+   #if WIN32
+   closesocket(sockfd);
+   #else
+   close(sockfd);
+   #endif
    GetArpTable();
-    exit(1);
+   exit(1);
+}
+
+
+int GetDeviceName(char *ip,char *name){
+    srand((unsigned) time(NULL));
+    #if WIN32
+    WSADATA wsaData;
+    WSAStartup(MAKEWORD(2,2),&wsaData);
+    #endif
+    int sockfd;
+    struct sockaddr_in adr_srvr;
+      struct sockaddr_in adr_inet;
+      struct sockaddr_in adr_clnt;
+      #if WIN32
+      int   len=sizeof(adr_clnt);
+      #else
+      size_t   len=sizeof(adr_clnt);
+      #endif
+
+      adr_srvr.sin_family=AF_INET;
+      adr_srvr.sin_port=htons(137);
+      adr_srvr.sin_addr.s_addr =inet_addr(ip);
+
+      char buf[50]={0x82,0x28,0x00,0x00,0x00,0x01,0x00,0x00,
+             0x00,0x00,0x00,0x00,0x20,0x43,0x4b,0x41,
+             0x41,0x41,0x41,0x41,0x41,0x41,0x41,0x41,
+             0x41,0x41,0x41,0x41,0x41,0x41,0x41,0x41,
+             0x41,0x41,0x41,0x41,0x41,0x41,0x41,0x41,
+             0x41,0x41,0x41,0x41,0x41,0x00,0x00,0x21,0x00,0x1};
+             char recvbuf[1024]={0};
+       adr_inet.sin_family=AF_INET;
+       adr_inet.sin_port=htons(45534+rand()%101);
+       adr_inet.sin_addr.s_addr=htonl(INADDR_ANY);
+
+
+      memset(&(adr_srvr.sin_zero),0,8);
+      memset(&(adr_inet.sin_zero),0,8);
+      int z=0;
+      sockfd=socket(AF_INET,SOCK_DGRAM,0);
+      if(sockfd==-1){
+        printf("socket error!");
+        return -1;
+      }
+      int optval=true;
+      setsockopt(sockfd,SOL_SOCKET,SO_BROADCAST,(char *)&optval,sizeof(optval));
+      z=bind(sockfd,(struct sockaddr *)&adr_inet,sizeof(adr_inet));
+      if(z==-1){
+        return -1;
+      }
+    sendto(sockfd,buf,50,0,(struct sockaddr *)&adr_srvr,sizeof(adr_srvr));
+    sendto(sockfd,buf,50,0,(struct sockaddr *)&adr_srvr,sizeof(adr_srvr));
+    struct timeval  wait;
+    fd_set fds;
+	FD_ZERO(&fds);
+	FD_SET(sockfd, &fds);
+	wait.tv_sec =0;
+	wait.tv_usec =100*1000;
+    if (select(sockfd + 1, &fds, NULL, NULL, &wait) > 0){
+         recvfrom(sockfd,recvbuf,1024,0,(struct sockaddr *)&adr_clnt,&len);
+         PNCB ncb = (PNCB) (recvbuf+31 );
+         sprintf(name,"%s",ncb->ncb_name);
+    }
+
+     #if WIN32
+      closesocket(sockfd);
+      #else
+      close(sockfd);
+      #endif
+    return 0;
 }
 
 
