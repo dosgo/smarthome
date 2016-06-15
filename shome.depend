@@ -171,11 +171,10 @@
 1453431126 d:\c\smarthome\ccargs.h
 	<stdio.h>
 
-1465374499 source:d:\c\smarthome\args.c
+1465976521 source:d:\c\smarthome\args.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
-	"args.h"
 	"args.h"
 
 1465373097 d:\c\smarthome\args.h

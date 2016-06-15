@@ -56,7 +56,8 @@ char backhomecmd[1024]="cmd.exe";//返回家
 char gohomecmd[1024]="cmd.exe";//离开家
 char mac[30]={0};
 char btmac[30]={0};//蓝牙mac
-//char ip[30]={0};
+
+char ip[30]="192.168.0.255";
 //-config[BackHomeCmd:"",GoHomeCmd:cmd.exe,Mac:xxx,IP:""]
 int lastinfo=-1;
 int reloadarp=0;//是否强制刷新arp表
@@ -70,7 +71,7 @@ int getlocalip(list<string>*iplist);
 int CheckArpIp(char *DestIP);
 int GetIPType(const char * ipAddress);
 void strtolower(char *str);
-int udpscan();
+int udpscan(char *ip);
 int GetArpTable();
 int GetDeviceName(char *ip,char *name);
 int main(int argc, char *argv[])
@@ -96,13 +97,17 @@ int main(int argc, char *argv[])
      if(getArgValue(argc, argv,(char*) "-bmac",arg)==0){
         sprintf(btmac,"%s",arg); // "btmac"
      }
+     if(getArgValue(argc, argv,(char*) "-ip",arg)==0){
+        sprintf(ip,"%s",arg); // "btmac"
+     }
+
     // char blex[255]="00:1f:23:12:1e:00";
       //   CheckBtMacLe(blex);
 
    //   CPing ping;
    // int xxx=  ping.PingCheckV3("192.168.8.135");
    // printf("xxx:%d\r\n",xxx);
-    udpscan();
+    udpscan(ip);
     if(strlen(btmac)==0&&strlen(mac)==0){
         printf("use  -mac  -bcmd -gcmd  [-reloadarp] or -bmac  -bcmd -gcmd\r\n");
         return -1;
@@ -662,7 +667,7 @@ BYTE ncb_cmd_cplt;
 BYTE ncb_reserved[14];
 } NCB, *PNCB;
 */
-int udpscan(){
+int udpscan(char *ip){
    #if WIN32
    WSADATA wsaData;
    WSAStartup(MAKEWORD(2,2),&wsaData);
@@ -679,7 +684,7 @@ int udpscan(){
 
   adr_srvr.sin_family=AF_INET;
   adr_srvr.sin_port=htons(137);
-  adr_srvr.sin_addr.s_addr =inet_addr("192.168.8.255");
+  adr_srvr.sin_addr.s_addr =inet_addr(ip);
 
 char buf[50]={0x82,0x28,0x00,0x00,0x00,0x01,0x00,0x00,
              0x00,0x00,0x00,0x00,0x20,0x43,0x4b,0x41,
