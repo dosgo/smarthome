@@ -741,7 +741,7 @@ int GetDeviceNamev1(char *ip,char *name){
     ina.S_un.S_addr = inet_addr(ip); //获取本地主机信息
     lpHostEnt = gethostbyaddr((char*)&ina.S_un.S_addr, 4, AF_INET);
     #else
-    if(!inet_aton(ip,ina))
+    if(!inet_aton(ip,&ina))
     {
         return -1;
     }
