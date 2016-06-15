@@ -52,6 +52,7 @@ int CheckArpIp(char *DestIP);
 int GetIPType(const char * ipAddress);
 void strtolower(char *str);
 int udpsend();
+int GetArpTable();
 int main(int argc, char *argv[])
 {
     printf("smarthome %s\r\n",VER);
@@ -335,11 +336,21 @@ int GetArpTable(){
     int i = 0;
     IN_ADDR ip;
     char ipstr[30]={0};
+    char mac[30]={0};
     for(i=0; i < ipNetTable->dwNumEntries; i++)
     {
         ip.S_un.S_addr = ipNetTable->table[i].dwAddr;
         memset(ipstr,0,30);
+         memset(mac,0,30);
         sprintf(ipstr,"%s",inet_ntoa(ip));
+         sprintf(mac,"%2x:%2x:%2x:%2x:%2x:%2x\r\n",ipNetTable->table[i].bPhysAddr[0],ipNetTable->table[i].bPhysAddr[1],ipNetTable->table[i].bPhysAddr[2],ipNetTable->table[i].bPhysAddr[3],ipNetTable->table[i].bPhysAddr[4],ipNetTable->table[i].bPhysAddr[5]);
+ strtolower(mac);
+        printf("ip:%s--%s",ipstr,mac);
+
+
+
+
+
 
     }
     return -1;
@@ -575,23 +586,42 @@ void strtolower(char *str)
         str[i] = toupper(str[i]);//ด๓ะด//tolower
     }
 }
-
-
-
+/*
+typedef struct _NCB {
+BYTE ncb_command;
+BYTE ncb_retcode;
+BYTE ncb_lsn;
+BYTE ncb_num;
+DWORD ncb_buffer;
+WORD ncb_length;
+BYTE ncb_callName[16];
+BYTE ncb_name[16];
+BYTE ncb_rto;
+BYTE ncb_sto;
+BYTE ncb_post;
+BYTE ncb_lana_num;
+BYTE ncb_cmd_cplt;
+BYTE ncb_reserved[14];
+} NCB, *PNCB;
+*/
 int udpsend(){
-     #if WIN32
-    WSADATA wsaData;
-    WSAStartup(MAKEWORD(2,2),&wsaData);
-    #endif
+   #if WIN32
+   WSADATA wsaData;
+   WSAStartup(MAKEWORD(2,2),&wsaData);
+  #endif
   int sockfd;
   struct sockaddr_in adr_srvr;
   struct sockaddr_in adr_inet;
   struct sockaddr_in adr_clnt;
+  #if WIN32
+  int   len=sizeof(adr_clnt);
+  #else
   size_t   len=sizeof(adr_clnt);
+  #endif
 
   adr_srvr.sin_family=AF_INET;
   adr_srvr.sin_port=htons(137);
-  adr_srvr.sin_addr.s_addr = inet_addr("192.168.8.255");
+  adr_srvr.sin_addr.s_addr =inet_addr("192.168.2.255");
 
 char buf[50]={0x82,0x28,0x00,0x00,0x00,0x01,0x00,0x00,
              0x00,0x00,0x00,0x00,0x20,0x43,0x4b,0x41,
@@ -612,27 +642,34 @@ char recvbuf[1024]={0};
   if(sockfd==-1){
     printf("socket error!");
   }
-      bool optval=true;
-      setsockopt(sockfd,SOL_SOCKET,SO_BROADCAST,&optval,sizeof(optval));
+      int optval=true;
+      setsockopt(sockfd,SOL_SOCKET,SO_BROADCAST,(char *)&optval,sizeof(optval));
   z=bind(sockfd,(struct sockaddr *)&adr_inet,sizeof(adr_inet));
    if(z==-1){
 
      exit(1);
    }
-printf("send to\r\n");
+printf("scaning  ...\r\n");
   z=sendto(sockfd,buf,50,0,(struct sockaddr *)&adr_srvr,sizeof(adr_srvr));
   z=sendto(sockfd,buf,50,0,(struct sockaddr *)&adr_srvr,sizeof(adr_srvr));
   if(z<1){
 
     printf("sfsd:%d\r\n",z);
   }
+  int i=0;
     while(1){
      z=recvfrom(sockfd,recvbuf,1024,0,(struct sockaddr *)&adr_clnt,&len);
 
-     printf("recvbuf:%s z:%d\r\n",recvbuf,z);
 
+         PNCB ncb = (PNCB) (recvbuf+31 );
+         printf("name:%s \r\n",ncb->ncb_name);
+         if(i>0){
+            break;
+         }
+         i++;
    }
-
+   GetArpTable();
+    exit(1);
 }
 
 
