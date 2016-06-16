@@ -52,7 +52,7 @@ int getPidByName(char* task_name);
 int getPidBySid(int sid,list<int>*pidlist);
 #endif
 int checktime=20;
-char VER[28]="v1.83-(2016/6/15)";
+char VER[28]="v1.85-(2016/6/16)";
 int FindIP(char *mac,char *ip);
 char backhomecmd[1024]="cmd.exe";//返回家
 char gohomecmd[1024]="cmd.exe";//离开家
@@ -703,7 +703,7 @@ char buf[50]={0x82,0x28,0x00,0x00,0x00,0x01,0x00,0x00,
              0x41,0x41,0x41,0x41,0x41,0x00,0x00,0x21,0x00,0x1};
 char recvbuf[1024]={0};
    adr_inet.sin_family=AF_INET;
-   adr_inet.sin_port=htons(45534);
+   adr_inet.sin_port=htons(45534+rand()%100);
    adr_inet.sin_addr.s_addr=htonl(INADDR_ANY);
 
 
@@ -712,16 +712,20 @@ char recvbuf[1024]={0};
   int z=0;
   sockfd=socket(AF_INET,SOCK_DGRAM,0);
   if(sockfd==-1){
-    printf("socket error!");
+    printf("socket error!\r\n");
   }
       int optval=true;
       setsockopt(sockfd,SOL_SOCKET,SO_BROADCAST,(char *)&optval,sizeof(optval));
   z=bind(sockfd,(struct sockaddr *)&adr_inet,sizeof(adr_inet));
    if(z==-1){
+        printf("bind error!\r\n");
         return -1;
    }
    printf("scaning %s ...\r\n",ip);
-   sendto(sockfd,buf,50,0,(struct sockaddr *)&adr_srvr,sizeof(adr_srvr));
+   int sendlen=sendto(sockfd,buf,50,0,(struct sockaddr *)&adr_srvr,sizeof(adr_srvr));
+   if(sendlen<1){
+     printf("sendto error!\r\n");
+   }
    sendto(sockfd,buf,50,0,(struct sockaddr *)&adr_srvr,sizeof(adr_srvr));
    int i=0;
    #if WIN32
@@ -729,7 +733,7 @@ char recvbuf[1024]={0};
    #else
    close(sockfd);
    #endif
-   sleeps(5000);
+   sleeps(2000);
    GetArpTable();
    exit(1);
 }
@@ -781,7 +785,7 @@ int GetDeviceName(char *ip,char *name){
              0x41,0x41,0x41,0x41,0x41,0x00,0x00,0x21,0x00,0x1};
              char recvbuf[1024]={0};
        adr_inet.sin_family=AF_INET;
-       adr_inet.sin_port=htons(45534+rand()%101);
+       adr_inet.sin_port=htons(45534+rand()%100);
        adr_inet.sin_addr.s_addr=htonl(INADDR_ANY);
 
 
