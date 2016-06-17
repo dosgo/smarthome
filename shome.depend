@@ -120,7 +120,7 @@
 	<string.h>
 	<wchar.h>
 
-1465971572 source:d:\c\smarthome\main.cpp
+1466133968 source:d:\c\smarthome\main.cpp
 	<iostream>
 	"cping.h"
 	"mytime.h"
@@ -130,9 +130,11 @@
 	<stdio.h>
 	<time.h>
 	<list>
+	<ws2tcpip.h>
 	<windows.h>
 	<Iphlpapi.h>
 	<WinSock2.h>
+	<arpa/inet.h>
 	<net/if.h>
 	<stdlib.h>
 	<getopt.h>

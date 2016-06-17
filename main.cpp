@@ -52,14 +52,14 @@ int getPidByName(char* task_name);
 int getPidBySid(int sid,list<int>*pidlist);
 #endif
 int checktime=20;
-char VER[28]="v1.85-(2016/6/16)";
+char VER[28]="v1.86-(2016/6/17)";
 int FindIP(char *mac,char *ip);
 char backhomecmd[1024]="cmd.exe";//返回家
 char gohomecmd[1024]="cmd.exe";//离开家
 char mac[30]={0};
 char btmac[30]={0};//蓝牙mac
 
-char ip[30]="192.168.0.0";
+char ip[30]={0};
 //-config[BackHomeCmd:"",GoHomeCmd:cmd.exe,Mac:xxx,IP:""]
 int lastinfo=-1;
 int reloadarp=0;//是否强制刷新arp表
@@ -133,11 +133,12 @@ int main(int argc, char *argv[])
             {
                   printf("noble:%d\r\n",ble);
                 info=(int)CheckBtMac(btmac);
+
             }
         }
         else
         {
-           info=(int)CheckMac(mac);
+            info=(int)CheckMacV2(btmac);
         }
 
         if(info!=lastinfo||lastinfo==-1){
@@ -288,6 +289,61 @@ bool CheckMac(char *mac){
     return false;
 }
 
+/*检测mac地址是否在内网 */
+bool CheckMacV2(char *mac){
+     CPing ping;
+     char destip[30]={0};
+     strtolower(mac);
+    if(FindIP(destip,mac)!=0||reloadarp==1){
+        if(GetIPType(ip)>0){
+            udpscan(ip);
+        }
+        else
+        {
+            list<string>iplist;
+            getlocalip(&iplist);
+            list<string>::iterator it;
+            char ip[32]={0};
+            for(it = iplist.begin();it!=iplist.end();it++){
+                memset(ip,0,32);
+                memcpy(ip,(*it).c_str(),strlen((*it).c_str()));
+               if(GetIPType(ip)>0){
+                  char prefix_ip[30]={0};
+                  char *prefix_pos=strrchr(ip,'.');
+                  if(prefix_pos!=NULL){
+                        memcpy(prefix_ip,ip,prefix_pos-ip);//截取强最
+                        sprintf(ip,"%s.%d",prefix_ip,255);
+                        udpscan(ip);
+                  }
+               }else{
+                   printf("ipeerr:%s\r\n",ip);
+               }
+            }
+            //清空
+            iplist.clear();
+         }
+    }
+
+    sleeps(1*1000);//1ms
+    //memset(ip,0,30);
+
+    if(FindIP(destip,mac)==0){
+        printf("find ip:%s\r\n",destip);
+        #if WIN32
+        return ping.PingCheckV2(destip);
+        #else
+        uid_t uid = getuid();
+        //root权限
+        if(uid==0){
+                return ping.PingCheckV3(destip);
+        }else{
+            return ping.PingCheckV2(destip);
+        }
+        #endif
+    }
+    return false;
+}
+
 
 /*读取mac查询IP*/
 #if WIN32
@@ -309,7 +365,7 @@ int FindIP(char *DestIP,char *DestMac)
 
     char ipstr[30]={0};
     char mac[30]={0};
-    for(i=0; i < ipNetTable->dwNumEntries; i++)
+    for(i=0; i < ( int )ipNetTable->dwNumEntries; i++)
     {
         ip.S_un.S_addr = ipNetTable->table[i].dwAddr;
         memset(ipstr,0,30);
@@ -338,7 +394,7 @@ int CheckArpIp(char *DestIP){
     int i = 0;
     IN_ADDR ip;
     char ipstr[30]={0};
-    for(i=0; i < ipNetTable->dwNumEntries; i++)
+    for(i=0; i < (int)ipNetTable->dwNumEntries; i++)
     {
         ip.S_un.S_addr = ipNetTable->table[i].dwAddr;
         memset(ipstr,0,30);
@@ -367,7 +423,7 @@ int GetArpTable(){
     char mac[30]={0};
     char name[30]={0};
     char zero6[6]={0};
-    for(i=0; i < ipNetTable->dwNumEntries; i++)
+    for(i=0; i < ( int )ipNetTable->dwNumEntries; i++)
     {
         //过滤为零的
         if(memcmp(ipNetTable->table[i].bPhysAddr,zero6,6)==0){
@@ -653,7 +709,7 @@ int getPidBySid(int Sid,list<int>*pidlist)
 void strtolower(char *str)
 {
     int i=0;
-    for(i = 0; i <strlen(str); i++)
+    for(i = 0; i <(int)strlen(str); i++)
     {
         str[i] = toupper(str[i]);//大写//tolower
     }
@@ -684,12 +740,7 @@ int udpscan(char *ip){
   int sockfd;
   struct sockaddr_in adr_srvr;
   struct sockaddr_in adr_inet;
-  struct sockaddr_in adr_clnt;
-  #if WIN32
-  int   len=sizeof(adr_clnt);
-  #else
-  size_t   len=sizeof(adr_clnt);
-  #endif
+
 
   adr_srvr.sin_family=AF_INET;
   adr_srvr.sin_port=htons(137);
@@ -701,7 +752,7 @@ char buf[50]={0x82,0x28,0x00,0x00,0x00,0x01,0x00,0x00,
              0x41,0x41,0x41,0x41,0x41,0x41,0x41,0x41,
              0x41,0x41,0x41,0x41,0x41,0x41,0x41,0x41,
              0x41,0x41,0x41,0x41,0x41,0x00,0x00,0x21,0x00,0x1};
-char recvbuf[1024]={0};
+
    adr_inet.sin_family=AF_INET;
    adr_inet.sin_port=htons(45534+rand()%100);
    adr_inet.sin_addr.s_addr=htonl(INADDR_ANY);
@@ -716,10 +767,9 @@ char recvbuf[1024]={0};
   }
       int optval=true;
       setsockopt(sockfd,SOL_SOCKET,SO_BROADCAST,(char *)&optval,sizeof(optval));
-  z=bind(sockfd,(struct sockaddr *)&adr_inet,sizeof(adr_inet));
+   z=bind(sockfd,(struct sockaddr *)&adr_inet,sizeof(adr_inet));
    if(z==-1){
         printf("bind error!\r\n");
-        return -1;
    }
    printf("scaning %s ...\r\n",ip);
    int sendlen=sendto(sockfd,buf,50,0,(struct sockaddr *)&adr_srvr,sizeof(adr_srvr));
@@ -727,15 +777,12 @@ char recvbuf[1024]={0};
      printf("sendto error!\r\n");
    }
    sendto(sockfd,buf,50,0,(struct sockaddr *)&adr_srvr,sizeof(adr_srvr));
-   int i=0;
    #if WIN32
    closesocket(sockfd);
    #else
    close(sockfd);
    #endif
-   sleeps(2000);
-   GetArpTable();
-   exit(1);
+   return 0;
 }
 
 int GetDeviceNamev1(char *ip,char *name){
