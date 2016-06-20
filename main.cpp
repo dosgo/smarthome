@@ -294,6 +294,7 @@ bool CheckMacV2(char *mac){
      CPing ping;
      char tempip[32]={0};
      char destip[30]={0};
+     char prefix_ip[30]={0};
      strtolower(mac);
     if(FindIP(destip,mac)!=0||reloadarp==1){
         if(GetIPType(ip)>0){
@@ -314,7 +315,6 @@ bool CheckMacV2(char *mac){
                 memset(tempip,0,32);
                 memcpy(tempip,(*it).c_str(),strlen((*it).c_str()));
                if(GetIPType(tempip)>0){
-                  char prefix_ip[30]={0};
                   char *prefix_pos=strrchr(tempip,'.');
                   if(prefix_pos!=NULL){
                         memcpy(prefix_ip,tempip,prefix_pos-ip);//½ØÈ¡Ç¿×î
