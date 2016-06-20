@@ -734,7 +734,7 @@ BYTE ncb_cmd_cplt;
 BYTE ncb_reserved[14];
 } NCB, *PNCB;
 */
-int udpscan(char *ip){
+int udpscan(char *destip){
    #if WIN32
    WSADATA wsaData;
    WSAStartup(MAKEWORD(2,2),&wsaData);
@@ -746,7 +746,7 @@ int udpscan(char *ip){
 
   adr_srvr.sin_family=AF_INET;
   adr_srvr.sin_port=htons(137);
-  adr_srvr.sin_addr.s_addr =inet_addr(ip);
+  adr_srvr.sin_addr.s_addr =inet_addr(destip);
 
 char buf[50]={0x82,0x28,0x00,0x00,0x00,0x01,0x00,0x00,
              0x00,0x00,0x00,0x00,0x20,0x43,0x4b,0x41,
