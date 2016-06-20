@@ -773,7 +773,7 @@ char buf[50]={0x82,0x28,0x00,0x00,0x00,0x01,0x00,0x00,
    if(z==-1){
         printf("bind error!\r\n");
    }
-   printf("scaning %s ...\r\n",ip);
+   printf("scaning %s ...\r\n",destip);
    int sendlen=sendto(sockfd,buf,50,0,(struct sockaddr *)&adr_srvr,sizeof(adr_srvr));
    if(sendlen<1){
      printf("sendto error!\r\n");
