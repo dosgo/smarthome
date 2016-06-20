@@ -52,7 +52,7 @@ int getPidByName(char* task_name);
 int getPidBySid(int sid,list<int>*pidlist);
 #endif
 int checktime=20;
-char VER[28]="v1.86-(2016/6/17)";
+char VER[28]="v1.87-(2016/6/18)";
 int FindIP(char *mac,char *ip);
 char backhomecmd[1024]="cmd.exe";//返回家
 char gohomecmd[1024]="cmd.exe";//离开家
@@ -110,7 +110,7 @@ int main(int argc, char *argv[])
    //   CPing ping;
    // int xxx=  ping.PingCheckV3("192.168.8.135");
    // printf("xxx:%d\r\n",xxx);
-    udpscan(ip);
+    //udpscan(ip);
     if(strlen(btmac)==0&&strlen(mac)==0){
         printf("use  -mac  -bcmd -gcmd  [-reloadarp] or -bmac  -bcmd -gcmd\r\n");
         return -1;
