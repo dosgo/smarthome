@@ -138,7 +138,7 @@ int main(int argc, char *argv[])
         }
         else
         {
-            info=(int)CheckMacV2(btmac);
+            info=(int)CheckMacV2(mac);
         }
 
         if(info!=lastinfo||lastinfo==-1){
