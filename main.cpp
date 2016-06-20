@@ -456,17 +456,13 @@ int FindIP(char *DestIP,char *DestMac){
     char buf[1024]={0};
     char ip[30]={0};
     char mac[30]={0};
-    char hwtype[30]={0};
-    char Flags[30]={0};
-    char Mask[30]={0};
-    char Device[30]={0};
     strtolower(DestMac);
     int i=0;
     while(fgets(buf,sizeof(buf),fp)!=NULL){
         memset(mac,0,30);
         memset(ip,0,30);
         if(i>0){
-            sscanf(buf,"%s %s %s %s %s %s",ip,hwtype,Flags,mac,Mask,Device);
+            sscanf(buf,"%s %*s %*s %s %*s %*s",ip,mac);
             strtolower(mac);
             if(strncmp(mac,DestMac,17)==0){
                 memcpy(DestIP,ip,strlen(ip));
