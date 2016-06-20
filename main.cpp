@@ -303,6 +303,9 @@ bool CheckMacV2(char *mac){
                         memcpy(prefix_ip,ip,prefix_pos-ip);//½ØÈ¡Ç¿×î
                         sprintf(tempip,"%s.%d",prefix_ip,255);
                         udpscan(tempip);
+                        memset(tempip,0,32);
+                        sprintf(tempip,"%s.%d",prefix_ip,0);
+                        udpscan(tempip);
                   }
         }
         else
