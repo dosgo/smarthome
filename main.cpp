@@ -292,28 +292,34 @@ bool CheckMac(char *mac){
 /*检测mac地址是否在内网 */
 bool CheckMacV2(char *mac){
      CPing ping;
+     char tempip[32]={0};
      char destip[30]={0};
      strtolower(mac);
     if(FindIP(destip,mac)!=0||reloadarp==1){
         if(GetIPType(ip)>0){
-            udpscan(ip);
+
+             char *prefix_pos=strrchr(ip,'.');
+                  if(prefix_pos!=NULL){
+                        memcpy(prefix_ip,ip,prefix_pos-ip);//截取强最
+                        sprintf(tempip,"%s.%d",prefix_ip,255);
+                        udpscan(tempip);
+                  }
         }
         else
         {
             list<string>iplist;
             getlocalip(&iplist);
             list<string>::iterator it;
-            char ip[32]={0};
             for(it = iplist.begin();it!=iplist.end();it++){
-                memset(ip,0,32);
-                memcpy(ip,(*it).c_str(),strlen((*it).c_str()));
-               if(GetIPType(ip)>0){
+                memset(tempip,0,32);
+                memcpy(tempip,(*it).c_str(),strlen((*it).c_str()));
+               if(GetIPType(tempip)>0){
                   char prefix_ip[30]={0};
-                  char *prefix_pos=strrchr(ip,'.');
+                  char *prefix_pos=strrchr(tempip,'.');
                   if(prefix_pos!=NULL){
-                        memcpy(prefix_ip,ip,prefix_pos-ip);//截取强最
-                        sprintf(ip,"%s.%d",prefix_ip,255);
-                        udpscan(ip);
+                        memcpy(prefix_ip,tempip,prefix_pos-ip);//截取强最
+                        sprintf(tempip,"%s.%d",prefix_ip,255);
+                        udpscan(tempip);
                   }
                }else{
                    printf("ipeerr:%s\r\n",ip);
