@@ -52,7 +52,7 @@ int getPidByName(char* task_name);
 int getPidBySid(int sid,list<int>*pidlist);
 #endif
 int checktime=20;
-char VER[28]="v1.87-(2016/6/20)";
+char VER[28]="v1.88-(2016/6/20)";
 int FindIP(char *mac,char *ip);
 char backhomecmd[1024]="cmd.exe";//返回家
 char gohomecmd[1024]="cmd.exe";//离开家
@@ -238,7 +238,6 @@ bool CheckMac(char *mac){
     char destip[30]={0};
     strtolower(mac);
     if(FindIP(destip,mac)!=0||reloadarp==1){
-            printf("sdfsd\r\n");
         list<string>iplist;
         getlocalip(&iplist);
         list<string>::iterator it;
@@ -470,12 +469,9 @@ int FindIP(char *DestIP,char *DestMac){
         if(i>0){
             sscanf(buf,"%s %*s %*s %s %*s %*s",ip,mac);
             strtolower(mac);
-
             if(strncmp(mac,DestMac,17)==0){
                 memcpy(DestIP,ip,strlen(ip));
                 return 0;
-            }else{
-            printf("mac:%s DestMac:%s\r\n",mac,DestMac);
             }
         }
         i++;
