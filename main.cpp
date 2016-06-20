@@ -470,9 +470,12 @@ int FindIP(char *DestIP,char *DestMac){
         if(i>0){
             sscanf(buf,"%s %*s %*s %s %*s %*s",ip,mac);
             strtolower(mac);
+
             if(strncmp(mac,DestMac,17)==0){
                 memcpy(DestIP,ip,strlen(ip));
                 return 0;
+            }else{
+            printf("mac:%s DestMac:%s\r\n",mac,DestMac);
             }
         }
         i++;
