@@ -82,6 +82,7 @@ int NetbiosGetName(char *ip,char *name);
 int main(int argc, char *argv[])
 {
     printf("smarthome %s\r\n",VER);
+    fflush(stdout);
      char arg[255]={0};
      if(getArgValue(argc, argv,(char*) "-mac",arg)==0){
         sprintf(mac,"%s",arg); // "mac"
@@ -423,6 +424,7 @@ int GetArpTable(){
                 NetbiosGetName(ipstr,name);
             }
         printf("ip:%s--%s--%s\r\n",ipstr,mac,name);
+        fflush(stdout);
 
     }
     return -1;
@@ -508,6 +510,7 @@ int GetArpTable(){
                 NetbiosGetName(ip,name);
             }
             printf("ip:%s--%s--%s\r\n",ip,mac,name);
+            fflush(stdout);
         }
         i++;
     }
