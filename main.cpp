@@ -853,18 +853,13 @@ int DnsScan(char *scanip){
                 printf("scan %s\r\n",tempip);
                 fflush(stdout);
                 //检测是否在arp表
-               // if(CheckArpIp(tempip)!=0){
-                    #if WIN32
-                    ina.S_un.S_addr = inet_addr(tempip); //获取本地主机信息
-                    lpHostEnt = gethostbyaddr((char*)&ina.S_un.S_addr, 4, AF_INET);
-                    #else
-                    if(!inet_aton(tempip,&ina))
-                    {
-                        return -1;
-                    }
-                    lpHostEnt = gethostbyaddr((char*)&ina,4,AF_INET);
-                    #endif
-                //}
+                #if WIN32
+                ina.S_un.S_addr = inet_addr(tempip); //获取本地主机信息
+                gethostbyaddr((char*)&ina.S_un.S_addr, 4, AF_INET);
+                #else
+                inet_aton(tempip,&ina);
+                gethostbyaddr((char*)&ina,4,AF_INET);
+                #endif
            }
   }
   return 0;
