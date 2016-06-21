@@ -849,8 +849,11 @@ int DnsScan(char *scanip){
             memcpy(prefix_ip,scanip,prefix_pos-scanip);//截取强最
             for(int i=1;i<255;i++){
                 sprintf(tempip,"%s.%d",prefix_ip,i);
+
+                printf("scan %s\r\n",tempip);
+                fflush(stdout);
                 //检测是否在arp表
-                if(CheckArpIp(tempip)!=0){
+               // if(CheckArpIp(tempip)!=0){
                     #if WIN32
                     ina.S_un.S_addr = inet_addr(tempip); //获取本地主机信息
                     lpHostEnt = gethostbyaddr((char*)&ina.S_un.S_addr, 4, AF_INET);
@@ -861,7 +864,7 @@ int DnsScan(char *scanip){
                     }
                     lpHostEnt = gethostbyaddr((char*)&ina,4,AF_INET);
                     #endif
-                }
+                //}
            }
   }
   return 0;
