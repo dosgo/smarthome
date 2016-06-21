@@ -10,7 +10,6 @@ CPing::CPing()
 
     if( m_socket == INVALID_SOCKET )
     {
-
         #if WIN32
         WSACleanup();
         #endif
@@ -439,9 +438,7 @@ u_short CPing::CheckSum(u_short *pBuf,int nLen)
 unsigned long GetTickCount()
 {
     struct timespec ts;
-
     clock_gettime(CLOCK_MONOTONIC, &ts);
-
     return (ts.tv_sec * 1000 + ts.tv_nsec / 1000000);
 }
 #endif // WIN32
