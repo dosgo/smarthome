@@ -77,8 +77,8 @@ int UdpScan(char *ip);
 int PingScan(char *scanip);
 int DnsScan(char *scanip);
 int GetArpTable();
-int GetDeviceName(char *ip,char *name);
-int GetDeviceNamev1(char *ip,char *name);
+int DnsGetName(char *ip,char *name);
+int NetbiosGetName(char *ip,char *name);
 int main(int argc, char *argv[])
 {
     printf("smarthome %s\r\n",VER);
@@ -418,9 +418,9 @@ int GetArpTable(){
         sprintf(ipstr,"%s",inet_ntoa(ip));
         sprintf(mac,"%02x:%02x:%02x:%02x:%02x:%02x",ipNetTable->table[i].bPhysAddr[0],ipNetTable->table[i].bPhysAddr[1],ipNetTable->table[i].bPhysAddr[2],ipNetTable->table[i].bPhysAddr[3],ipNetTable->table[i].bPhysAddr[4],ipNetTable->table[i].bPhysAddr[5]);
         strtolower(mac);
-        if(GetDeviceNamev1(ipstr,name)==-1)
+        if(DnsGetName(ipstr,name)==-1)
             {
-                GetDeviceName(ipstr,name);
+                NetbiosGetName(ipstr,name);
             }
         printf("ip:%s--%s--%s\r\n",ipstr,mac,name);
 
@@ -746,7 +746,7 @@ int UdpScan(char *destip){
    return 0;
 }
 
-int GetDeviceNamev1(char *ip,char *name){
+int DnsGetName(char *ip,char *name){
     struct  hostent  *lpHostEnt=NULL;
     struct in_addr ina = { 0 };
     #if WIN32
@@ -765,7 +765,7 @@ int GetDeviceNamev1(char *ip,char *name){
     }
     return -1;
 }
-int GetDeviceName(char *ip,char *name){
+int NetbiosGetName(char *ip,char *name){
     srand((unsigned) time(NULL));
     #if WIN32
     WSADATA wsaData;
