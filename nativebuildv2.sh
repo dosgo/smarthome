@@ -13,7 +13,6 @@ CP=g++
 YH="-Wall   -fexceptions -O2 -DOPENSSL=1 -DOPENSSLDL=1"
 $CP $YH -c  cping.cpp -o build/cping.o
 $CP $YH -c  main.cpp -o build/main.o
-$CP $YH -c  dd.cpp -o build/dd.o
 $CP $YH -c  freearp.cpp -o build/freearp.o
 $CC $YH -c  args.c -o build/args.o
 $CP  -s build/main.o build/cping.o build/dd.o build/freearp.o build/args.o -o build/smarthome 
