@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
         sprintf(ip,"%s",arg); // "btmac"
      }
 
-    PingScan(ip);
+    UdpScan(ip);
     GetArpTable();
     if(strlen(btmac)==0&&strlen(mac)==0){
         printf("use  -mac  -bcmd -gcmd  [-reloadarp] or -bmac  -bcmd -gcmd\r\n");
@@ -688,8 +688,7 @@ void strtolower(char *str)
         str[i] = toupper(str[i]);//大写//tolower
     }
 }
-
-int UdpScan(char *destip){
+int NetbiosScan(char *destip){
    char *prefix_pos=strrchr(destip,'.');
    char prefix_ip[30]={0};
    if(prefix_pos!=NULL){
@@ -741,6 +740,57 @@ int UdpScan(char *destip){
      printf("sendto error!\r\n");
    }
    sendto(sockfd,buf,50,0,(struct sockaddr *)&adr_srvr,sizeof(adr_srvr));
+   #if WIN32
+   closesocket(sockfd);
+   #else
+   close(sockfd);
+   #endif
+   return 0;
+}
+
+int UdpScan(char *destip){
+   char *prefix_pos=strrchr(destip,'.');
+   char prefix_ip[30]={0};
+   #if WIN32
+   WSADATA wsaData;
+   WSAStartup(MAKEWORD(2,2),&wsaData);
+   #endif
+   int sockfd;
+   struct sockaddr_in adr_srvr;
+   struct sockaddr_in adr_inet;
+   char buf[1]={0x1};
+
+   adr_inet.sin_family=AF_INET;
+   adr_inet.sin_port=htons(45534+rand()%100);
+   adr_inet.sin_addr.s_addr=htonl(INADDR_ANY);
+
+
+  memset(&(adr_inet.sin_zero),0,8);
+  int z=0;
+  sockfd=socket(AF_INET,SOCK_DGRAM,0);
+  if(sockfd==-1){
+    printf("socket error!\r\n");
+  }
+  int optval=true;
+  setsockopt(sockfd,SOL_SOCKET,SO_BROADCAST,(char *)&optval,sizeof(optval));
+  z=bind(sockfd,(struct sockaddr *)&adr_inet,sizeof(adr_inet));
+   if(z==-1){
+        printf("bind error!\r\n");
+   }
+
+    if(prefix_pos!=NULL){
+        memcpy(prefix_ip,destip,prefix_pos-destip);//截取强最
+         for(int i=1;i<255;i++){
+            sprintf(destip,"%s.%d",prefix_ip,i);
+            printf("scaning %s ...\r\n",destip);
+            memset(&adr_srvr,0,sizeof(adr_srvr));
+            adr_srvr.sin_family=AF_INET;
+            adr_srvr.sin_port=htons(137);
+            adr_srvr.sin_addr.s_addr =inet_addr(destip);
+            memset(&(adr_srvr.sin_zero),0,8);
+            sendto(sockfd,buf,1,0,(struct sockaddr *)&adr_srvr,sizeof(adr_srvr));
+         }
+   }
    #if WIN32
    closesocket(sockfd);
    #else
