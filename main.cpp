@@ -105,7 +105,7 @@ int main(int argc, char *argv[])
         sprintf(ip,"%s",arg); // "btmac"
      }
 
-    DnsScan("192.168.2.45");
+    DnsScan(ip);
     GetArpTable();
     if(strlen(btmac)==0&&strlen(mac)==0){
         printf("use  -mac  -bcmd -gcmd  [-reloadarp] or -bmac  -bcmd -gcmd\r\n");
