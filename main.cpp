@@ -514,6 +514,7 @@ int GetArpTable(){
         }
         i++;
     }
+    printf("deive num:%d\r\n",i);
     return -1;
 }
 #endif

@@ -392,9 +392,7 @@ bool CPing::RecvData(char* buf,int nBufLen,sockaddr_in* pRecvAddr,int &nRecvLen)
     #endif
     if( -1 == nRet )
     {
-
-            return false;
-
+        return false;
     }
 
     nRecvLen = nRet;
