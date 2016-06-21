@@ -82,7 +82,6 @@ int NetbiosGetName(char *ip,char *name);
 int main(int argc, char *argv[])
 {
     printf("smarthome %s\r\n",VER);
-
      char arg[255]={0};
      if(getArgValue(argc, argv,(char*) "-mac",arg)==0){
         sprintf(mac,"%s",arg); // "mac"
@@ -106,7 +105,8 @@ int main(int argc, char *argv[])
         sprintf(ip,"%s",arg); // "btmac"
      }
 
-
+    DnsScan("192.168.2.45");
+    GetArpTable();
     if(strlen(btmac)==0&&strlen(mac)==0){
         printf("use  -mac  -bcmd -gcmd  [-reloadarp] or -bmac  -bcmd -gcmd\r\n");
         return -1;
