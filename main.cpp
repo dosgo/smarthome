@@ -503,9 +503,9 @@ int GetArpTable(){
             if(strncmp(mac,zeromac,17)==0){
                 continue;
             }
-            if(GetDeviceNamev1(ip,name)==-1)
+            if(DnsGetName(ip,name)==-1)
             {
-                GetDeviceName(ip,name);
+                NetbiosGetName(ip,name);
             }
             printf("ip:%s--%s--%s\r\n",ip,mac,name);
         }
