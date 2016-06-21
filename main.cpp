@@ -844,7 +844,6 @@ int DnsScan(char *scanip){
     char *prefix_pos=strrchr(scanip,'.');
     char tempip[30]={0};
     struct in_addr ina = { 0 };
-    struct  hostent  *lpHostEnt=NULL;
     if(prefix_pos!=NULL){
             memcpy(prefix_ip,scanip,prefix_pos-scanip);//截取强最
             for(int i=1;i<255;i++){
@@ -874,6 +873,8 @@ int PingScan(char *scanip){
     memcpy(prefix_ip,scanip,prefix_pos-scanip);//截取强最
     for(int i=1;i<255;i++){
         sprintf(tempip,"%s.%d",prefix_ip,i);
+        printf("scan %s\r\n",tempip);
+        fflush(stdout);
         //检测是否在arp表
         if(CheckArpIp(tempip)!=0){
             ping.PingScanf(tempip);
