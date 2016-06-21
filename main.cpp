@@ -1,7 +1,6 @@
 #include <iostream>
 #include "cping.h"
 #include "mytime.h"
-#include "dd.h"
 #include "freearp.h"
 extern "C"{
 #include "args.h"
