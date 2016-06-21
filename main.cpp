@@ -52,7 +52,7 @@ int getPidByName(char* task_name);
 int getPidBySid(int sid,list<int>*pidlist);
 #endif
 int checktime=20;
-char VER[28]="v1.89-(2016/6/20)";
+char VER[28]="v1.90-(2016/6/20)";
 int FindIP(char *mac,char *ip);
 char backhomecmd[1024]="cmd.exe";//返回家
 char gohomecmd[1024]="cmd.exe";//离开家
@@ -68,7 +68,6 @@ bool CheckMac(char *mac);
 bool CheckBtMac(char *btmac);
 bool CheckBtMacLe(char *btmac);
 bool CheckBtMacLeV2(char *btmac);
-bool CheckMacV2(char *mac);
 int getlocalip(list<string>*iplist);
 int CheckArpIp(char *DestIP);
 int GetIPType(const char * ipAddress);
@@ -79,6 +78,7 @@ int DnsScan(char *scanip);
 int GetArpTable();
 int DnsGetName(char *ip,char *name);
 int NetbiosGetName(char *ip,char *name);
+int ScanType=0;
 int main(int argc, char *argv[])
 {
     printf("smarthome %s\r\n",VER);
@@ -105,9 +105,10 @@ int main(int argc, char *argv[])
      if(getArgValue(argc, argv,(char*) "-ip",arg)==0){
         sprintf(ip,"%s",arg); // "btmac"
      }
+     if(getArgValue(argc, argv,(char*) "-scantype",arg)==0){
+        sscanf(arg,"%d",&ScanType);  // "btmac"
+     }
 
-    UdpScan(ip);
-    GetArpTable();
     if(strlen(btmac)==0&&strlen(mac)==0){
         printf("use  -mac  -bcmd -gcmd  [-reloadarp] or -bmac  -bcmd -gcmd\r\n");
         return -1;
@@ -236,7 +237,12 @@ bool CheckMac(char *mac){
     strtolower(mac);
     if(FindIP(destip,mac)!=0||reloadarp==1){
         if(GetIPType(ip)>0){
-            PingScan(ip);
+                //扫描方法
+                if(ScanType==0){
+                    PingScan(ip);
+                }else{
+                    UdpScan(ip);
+                }
         }
         else
         {
@@ -248,7 +254,13 @@ bool CheckMac(char *mac){
                 memset(ip,0,32);
                 memcpy(ip,(*it).c_str(),strlen((*it).c_str()));
                if(GetIPType(ip)>0){
-                 PingScan(ip);
+                    //扫描方法
+                    if(ScanType==0){
+                    PingScan(ip);
+                    }else{
+                         UdpScan(ip);
+                    }
+
                }else{
                    printf("ipeerr:%s\r\n",ip);
                }
@@ -278,54 +290,7 @@ bool CheckMac(char *mac){
     return false;
 }
 
-/*检测mac地址是否在内网 */
-bool CheckMacV2(char *mac){
-     CPing ping;
-     char tempip[32]={0};
-     char destip[30]={0};
-     strtolower(mac);
-    if(FindIP(destip,mac)!=0||reloadarp==1){
-        if(GetIPType(ip)>0){
-            UdpScan(ip);
-        }
-        else
-        {
-            list<string>iplist;
-            getlocalip(&iplist);
-            list<string>::iterator it;
-            for(it = iplist.begin();it!=iplist.end();it++){
-                memset(tempip,0,32);
-                memcpy(tempip,(*it).c_str(),strlen((*it).c_str()));
-               if(GetIPType(tempip)>0){
-                   UdpScan(tempip);
-               }else{
-                   printf("ipeerr:%s\r\n",ip);
-               }
-            }
-            //清空
-            iplist.clear();
-         }
-    }
 
-    sleeps(1*1000);//1ms
-    //memset(ip,0,30);
-
-    if(FindIP(destip,mac)==0){
-        printf("find ip:%s\r\n",destip);
-        #if WIN32
-        return ping.PingCheckV2(destip);
-        #else
-        uid_t uid = getuid();
-        //root权限
-        if(uid==0){
-                return ping.PingCheckV3(destip);
-        }else{
-            return ping.PingCheckV2(destip);
-        }
-        #endif
-    }
-    return false;
-}
 
 
 /*读取mac查询IP*/
@@ -926,10 +891,7 @@ int PingScan(char *scanip){
         sprintf(tempip,"%s.%d",prefix_ip,i);
         printf("scan %s\r\n",tempip);
         fflush(stdout);
-        //检测是否在arp表
-        if(CheckArpIp(tempip)!=0){
-            ping.PingScanf(tempip);
-        }
+        ping.PingScanf(tempip);
     }
   }
   return 0;
