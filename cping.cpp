@@ -309,6 +309,10 @@ bool CPing::PingCheckV3(std::string strAddr)
     #else
     icmp_id= getpid();
     #endif
+    //·¢ËÍ4´Î
+    ret=sendto(udpsock,(char *)&icmp_id,2,0,(struct sockaddr *)&udpaddr,sizeof(sockaddr));
+    ret=sendto(udpsock,(char *)&icmp_id,2,0,(struct sockaddr *)&udpaddr,sizeof(sockaddr));
+    ret=sendto(udpsock,(char *)&icmp_id,2,0,(struct sockaddr *)&udpaddr,sizeof(sockaddr));
     ret=sendto(udpsock,(char *)&icmp_id,2,0,(struct sockaddr *)&udpaddr,sizeof(sockaddr));
     if (ret < 0)  {
         return false;
