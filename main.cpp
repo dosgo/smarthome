@@ -49,6 +49,7 @@ typedef struct _NCB {
 #include <signal.h>
 int getPidByName(char* task_name);
 int getPidBySid(int sid,list<int>*pidlist);
+
 #endif
 int checktime=20;
 char VER[28]="v1.91-(2016/6/22)";
@@ -78,6 +79,7 @@ int GetArpTable();
 int DnsGetName(char *ip,char *name);
 int NetbiosGetName(char *ip,char *name);
 int ScanType=0;
+void write_log_file(char* filename, char* buffer);
 int main(int argc, char *argv[])
 {
     printf("smarthome %s\r\n",VER);
@@ -142,11 +144,13 @@ int main(int argc, char *argv[])
             //进入wifi
             if(info==1){
                  printf("backhome\r\n");
+                 write_log_file("log.log","backhome\r\n");
                  popen(backhomecmd, "r");
 
             }else{
                 //离开wifi
                 printf("gohome\r\n");
+                write_log_file("log.log","gohome\r\n");
                  popen(gohomecmd, "r");
             }
             lastinfo=info;
@@ -290,7 +294,35 @@ bool CheckMac(char *mac){
 }
 
 
+void write_log_file(char* filename, char* buffer)
+{
+    if (filename != NULL && buffer != NULL)
+    {
 
+        // 写日志
+        {
+            FILE *fp;
+            fp = fopen(filename, "at+");
+            if (fp != NULL)
+            {
+                char now[32];
+                memset(now, 0, sizeof(now));
+                time_t rawtime;
+                struct tm* timeinfo;
+                time(&rawtime);
+                timeinfo = localtime(&rawtime);
+                sprintf(now, "%04d-%02d-%02d %02d:%02d:%02d",
+                (timeinfo->tm_year+1900), timeinfo->tm_mon, timeinfo->tm_mday,
+                timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
+
+                fwrite(now, strlen(now)+1, 1, fp);
+                fwrite(buffer, strlen(buffer), 1, fp);
+                fclose(fp);
+                fp = NULL;
+            }
+        }
+    }
+}
 
 /*读取mac查询IP*/
 #if WIN32
