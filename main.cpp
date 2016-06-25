@@ -117,9 +117,10 @@ int main(int argc, char *argv[])
 
     while(true){
              CPing ping;
-             sleeps(20*1000);//ms
+
          int xx=ping.PingCheckV3("192.168.8.135");
         printf("xx:%d\r\n",xx);
+             sleeps(10*1000);//ms
         continue;
         int info=0;
         if(strlen(btmac)>0)
