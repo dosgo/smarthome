@@ -119,7 +119,7 @@ int main(int argc, char *argv[])
              CPing ping;
 
        //  int xx=ping.PingCheckV3("192.168.8.135");
-          int xx1=ping.PingCheckV2("192.168.8.135");
+          int xx1=ping.PingCheckV3("192.168.8.135");
         printf(" xx1:%d\r\n",xx1);
              sleeps(10*1000);//ms
         continue;
