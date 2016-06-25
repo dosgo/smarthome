@@ -144,13 +144,13 @@ int main(int argc, char *argv[])
             //½øÈëwifi
             if(info==1){
                  printf("backhome\r\n");
-                 write_log_file("log.log","backhome\r\n");
+                 //write_log_file("log.log","backhome\r\n");
                  popen(backhomecmd, "r");
 
             }else{
                 //Àë¿ªwifi
                 printf("gohome\r\n");
-                write_log_file("log.log","gohome\r\n");
+               // write_log_file("log.log","gohome\r\n");
                  popen(gohomecmd, "r");
             }
             lastinfo=info;
