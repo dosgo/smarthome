@@ -52,7 +52,7 @@ int getPidBySid(int sid,list<int>*pidlist);
 
 #endif
 int checktime=55;
-char VER[28]="v1.93-(2016/6/25)";
+char VER[28]="v1.94-(2016/6/25)";
 int FindIP(char *mac,char *ip);
 char backhomecmd[1024]="cmd.exe";//返回家
 char gohomecmd[1024]="cmd.exe";//离开家
@@ -116,13 +116,6 @@ int main(int argc, char *argv[])
     }
 
     while(true){
-             CPing ping;
-
-       //  int xx=ping.PingCheckV3("192.168.8.135");
-          int xx1=ping.PingCheckV3("192.168.8.135");
-        printf(" xx1:%d\r\n",xx1);
-             sleeps(10*1000);//ms
-        continue;
         int info=0;
         if(strlen(btmac)>0)
         {
@@ -284,20 +277,16 @@ bool CheckMac(char *mac){
     sleeps(1*1000);//1ms
     //memset(ip,0,30);
     if(FindIP(destip,mac)==0){
-        printf("find ip:%s\r\n",destip);
-        write_log_file("log.log","find ip:");
-        write_log_file("log.log",destip);
-        write_log_file("log.log","\r\n");
         #if WIN32
         return ping.PingCheckV2(destip);
         #else
-        uid_t uid = getuid();
+       // uid_t uid = getuid();
         //root权限
-        if(uid==0){
-                return ping.PingCheckV3(destip);
-        }else{
+        //if(uid==0){
+        //        return ping.PingCheckV3(destip);
+       // }else{
             return ping.PingCheckV2(destip);
-        }
+        //}
         #endif
     }
     return false;

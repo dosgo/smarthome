@@ -20,7 +20,7 @@ CPing::CPing()
 
 CPing::~CPing()
 {
-    if( INVALID_SOCKET != m_socket )
+    if( -1 != m_socket )
     {
          #if WIN32
          closesocket(m_socket);
@@ -318,8 +318,7 @@ bool CPing::PingCheckV3(std::string strAddr)
         return false;
     }
     char packet[512]={0};
-    int nCount = 4;
-    int statistic=0;
+    int nCount = 5;
     while ( nCount-- )
     {
         fd_set fds;
@@ -376,7 +375,7 @@ bool CPing::SendData(char* buf,int nBufLen,sockaddr_in* pAddr)
 
 bool CPing::RecvData(char* buf,int nBufLen,sockaddr_in* pRecvAddr,int &nRecvLen)
 {
-    if( INVALID_SOCKET == m_socket )
+    if( -1 == m_socket )
         return false;
 
 
