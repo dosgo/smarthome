@@ -51,8 +51,8 @@ int getPidByName(char* task_name);
 int getPidBySid(int sid,list<int>*pidlist);
 
 #endif
-int checktime=20;
-char VER[28]="v1.92-(2016/6/24)";
+int checktime=55;
+char VER[28]="v1.93-(2016/6/25)";
 int FindIP(char *mac,char *ip);
 char backhomecmd[1024]="cmd.exe";//返回家
 char gohomecmd[1024]="cmd.exe";//离开家
@@ -116,6 +116,8 @@ int main(int argc, char *argv[])
     }
 
     while(true){
+         int xx=ping.PingCheckV3("192.168.8.135");
+        printf("xx:%d\r\n",xx);
         int info=0;
         if(strlen(btmac)>0)
         {
