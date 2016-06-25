@@ -318,20 +318,25 @@ bool CPing::PingCheckV3(std::string strAddr)
         return false;
     }
     char packet[512]={0};
-    fd_set fds;
-	struct timeval  wait;
-	socklen_t fromlen = sizeof(sockaddr);
-	FD_ZERO(&fds);
-	FD_SET(icmps, &fds);
-	wait.tv_sec =0;
-	wait.tv_usec =100*1000;
-    if (select(icmps + 1, &fds, NULL, NULL, &wait) > 0){
-        ret = recvfrom(icmps, (char *)packet, 512, 0, (struct sockaddr *)&from, &fromlen);
-        if(ret>0){
-            short backicmp_id=0;
-            memcpy(&backicmp_id,packet+sizeof(IPHDR)+sizeof(ICMPHDR)+sizeof(IPHDR)+4,2);
-            if(icmp_id==backicmp_id){
-                return true;
+    int nCount = 4;
+    int statistic=0;
+    while ( nCount-- )
+    {
+        fd_set fds;
+        struct timeval  wait;
+        socklen_t fromlen = sizeof(sockaddr);
+        FD_ZERO(&fds);
+        FD_SET(icmps, &fds);
+        wait.tv_sec =0;
+        wait.tv_usec =100*1000;
+        if (select(icmps + 1, &fds, NULL, NULL, &wait) > 0){
+            ret = recvfrom(icmps, (char *)packet, 512, 0, (struct sockaddr *)&from, &fromlen);
+            if(ret>0){
+                short backicmp_id=0;
+                memcpy(&backicmp_id,packet+sizeof(IPHDR)+sizeof(ICMPHDR)+sizeof(IPHDR)+4,2);
+                if(icmp_id==backicmp_id){
+                    return true;
+                }
             }
         }
     }
