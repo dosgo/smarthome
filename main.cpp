@@ -278,7 +278,9 @@ bool CheckMac(char *mac){
     //memset(ip,0,30);
     if(FindIP(destip,mac)==0){
         printf("find ip:%s\r\n",destip);
-        write_log_file("log.log","find ip:%s\r\n",destip);
+        write_log_file("log.log","find ip:");
+        write_log_file("log.log",destip);
+        write_log_file("log.log","\r\n");
         #if WIN32
         return ping.PingCheckV2(destip);
         #else
